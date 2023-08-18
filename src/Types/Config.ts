@@ -43,6 +43,8 @@ export interface ConfigExemplar
     /**
      * Bot embeds colors
      * 
+     * Default color is `default`
+     * 
      * **Warning! You need to convert string HEX to number: replace `#` with `0x`**
      */
     colors?: {

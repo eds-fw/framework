@@ -20,7 +20,7 @@ export async function templateEmbedReply(
     ephemeral: boolean,
     title?: string,
     content?: string,
-    type?: string,
+    type: string = "default",
     components?: APIActionRowComponent<APIMessageActionRowComponent>[]
 ) {
     if ((!content || content === "") && (!title || title === "")) return;
@@ -66,7 +66,7 @@ export async function templateEmbedEditReply(
     ephemeral: boolean,
     title?: string | undefined | null,
     content?: string | undefined | null,
-    type?: string | undefined | null,
+    type: string | undefined | null = "default",
     components?: APIActionRowComponent<APIMessageActionRowComponent>[] | undefined | null
 ) {
     if ((!content || content === "") && (!title || title === "")) return;
