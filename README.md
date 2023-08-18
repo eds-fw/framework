@@ -1,8 +1,10 @@
-<span align="center">
-<img align="center" src="./assets/icon.png" />
+<p align="center"><img src="./assets/icon.png" /></p>
 
-Simply TypeScript framework for your discord.js bots
-</span>
+<b align="center">
+    
+    Simply TypeScript framework for your discord.js bots
+    
+</b>
 <hr>
 
 # Requirements
@@ -46,6 +48,10 @@ const config: eds.ConfigExemplar = {
     logsPath: "./logs/", //optional. You can disable logs
     slashOnly: true, //default value
     includeBuiltinCommands: true, //default value
+    colors: {
+        default: 0xffffff //'0x' + HEX color without '#'
+        info: 0x00FFEA,
+    },
 };
 
 const bot = eds.createBot(config);
@@ -66,15 +72,16 @@ export default bot;
 ```ts
 // src/commands/cake.ts
 import { ComponentType, ButtonStyle } from "discord.js";
-import eds from "@easy-ds-bot/framework";
+import { eds } from "@easy-ds-bot/framework";
 
 //eds components are resistant to bot restarts
 eds.createButton({
     custom_id: "get cake"
 }, async (context, options) => { //"get cake" button code
     await context.reply(
-        true,
-        ":cake:"
+        true, //epemeral?
+        undefined, //title
+        "# :cake:" //description
     );
 })
 
