@@ -1,0 +1,7 @@
+guides/
+src/
+benchmarks/
+node_modules/
+test/
+assets/*.psd
+**/vault.json

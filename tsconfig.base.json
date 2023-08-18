@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "module": "CommonJS",
+        "moduleResolution": "node",
+        "target": "ESNext",
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "resolveJsonModule": true,
+        "sourceMap": false,
+        "allowJs": true,
+        "declaration": true,
+        "declarationMap": false,
+        "pretty": true,
+        "importHelpers": true,
+        "skipLibCheck": false,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "lib": ["ESNext"]
+    }
+}

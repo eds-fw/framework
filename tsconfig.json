@@ -1,0 +1,16 @@
+{
+    "exclude": [
+        "./vault.json",
+        "./dist/",
+        "./node_modules/",
+        "./logs/",
+        "./benchmarks/",
+        "./launcher.js",
+        "./test/"
+    ],
+    "extends": "./tsconfig.base.json",
+    "compilerOptions": {
+        "rootDir": "src",
+        "outDir": "dist"
+    }
+}
