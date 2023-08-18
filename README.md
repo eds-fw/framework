@@ -49,7 +49,7 @@ const config: eds.ConfigExemplar = {
     slashOnly: true, //default value
     includeBuiltinCommands: true, //default value
     colors: {
-        default: 0xffffff //'0x' + HEX color without '#'
+        default: 0xffffff, //'0x' + HEX color without '#'
         info: 0x00FFEA,
     },
 };
@@ -138,3 +138,5 @@ read -p "" #keeps window open after bot crash
 6. Execute (open) `start.bat` file. Voila! It's alive!
 
 # [Documentation](https://easy-ds-bot.gitbook.io/docs/)
+# [Source (git)](https://github.com/easy-ds-bot/framework)
+# [Issues (git)](https://github.com/easy-ds-bot/framework/issues)
