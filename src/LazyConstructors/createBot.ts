@@ -17,7 +17,7 @@ export function createBot(config: eds.ConfigExemplar): KnownRuntimeProperties
     runtime.setProp("config",                 config);
     runtime.setProp("logger",                 new eds.Logger(config.logsPath, config.timeOffset));
     runtime.setProp("componentManager",       new eds.ComponentManager);
-    runtime.setProp("loader",                 new eds.Loader(config.commandsPath, false));
+    runtime.setProp("loader",                 new eds.Loader(config.commandsPath, false, config.doNotLoadFilesStartsWith));
     runtime.setProp("client",                 new eds.Client(config));
     runtime.setProp("contextFactory",         new eds.ContextFactory);
     runtime.setProp("slashCommandsManager",   new eds.SlashCommandsManager);

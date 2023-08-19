@@ -22,7 +22,7 @@ export class Loader
      * 
      * **WARNING!** The path is based on your main file that you are running
      */
-    path: string, private noLog: boolean = false)
+    path: string, private noLog: boolean = false, private ignorePrefixes: string[] = ['#'])
     {
         if (path.startsWith('/') || path.startsWith('\\'))
             this._path = process.cwd() + path.replace(/(\/|\\)/g, sep);
@@ -81,7 +81,7 @@ export class Loader
                 delete require.cache[require.resolve(path)];
             }
 
-            if (file?.pragmaSkip === true || path.split(sep).at(-1)!.startsWith('#'))
+            if (file?.pragmaSkip === true || this._checkIgnorePrefix(path))
             {
                 if (!this.noLog)
                     console.log(messages.Loader.templateLoadCommandSkipped(path));
@@ -167,6 +167,11 @@ export class Loader
             }
             return false;
         }
+    }
+
+    private _checkIgnorePrefix(path: string)
+    {
+        return new RegExp(`^${this.ignorePrefixes.join('|^')}`, 'gi').test(path.split(sep).at(-1) ?? '');
     }
 }
 
