@@ -95,10 +95,25 @@ export interface ConfigExemplar
     doNotLoadFilesStartsWith?: string[];
     /**
      * Add built-in bot commands: `help`, `devtools`
-     * @default true
+     * @default { help: true, devtools: true }
      */
-    includeBuiltinCommands?: boolean;
-//==========
+    includeBuiltinCommands?: {
+        help: boolean;
+        devtools: boolean;
+    };
+    /**
+     * Some built-in commands settings
+     */
+    builtinCommandsSettings?: {
+        /**
+         * @default "All bot commands:"
+         */
+        helpTitleText?: string;
+        /**
+         * @default "General"
+         */
+        helpCommandCategory?: string;
+    };
 //LOGGER OPTIONS
     /**
      * Time offset relative to GMT in hours

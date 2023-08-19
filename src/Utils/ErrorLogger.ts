@@ -1,5 +1,4 @@
-import { eds } from "..";
-import runtimeStorage from "../runtime";
+import { eds, runtimeStorage } from "..";
 
 export async function reportError(error: string, ctx: eds.SlashCommandContext | eds.TextCommandContext | eds.InteractionContext | null)
 {

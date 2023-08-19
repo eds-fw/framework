@@ -1,5 +1,4 @@
-import { eds } from "..";
-import runtime from "../runtime";
+import { eds, runtimeStorage } from "..";
 
 type KnownRuntimeProperties = {
     config:                 eds.ConfigExemplar,
@@ -14,13 +13,13 @@ type KnownRuntimeProperties = {
 
 export function createBot(config: eds.ConfigExemplar): KnownRuntimeProperties
 {
-    runtime.setProp("config",                 config);
-    runtime.setProp("logger",                 new eds.Logger(config.logsPath, config.timeOffset));
-    runtime.setProp("componentManager",       new eds.ComponentManager);
-    runtime.setProp("loader",                 new eds.Loader(config.commandsPath, false, config.doNotLoadFilesStartsWith));
-    runtime.setProp("client",                 new eds.Client(config));
-    runtime.setProp("contextFactory",         new eds.ContextFactory);
-    runtime.setProp("slashCommandsManager",   new eds.SlashCommandsManager);
-    runtime.setProp("handler",                new eds.Handler);
-    return runtime.get<KnownRuntimeProperties>("config", "logger", "client", "componentManager", "loader", "contextFactory", "handler", "slashCommandsManager");
+    runtimeStorage.setProp("config",                 config);
+    runtimeStorage.setProp("logger",                 new eds.Logger(config.logsPath, config.timeOffset));
+    runtimeStorage.setProp("client",                 new eds.Client(config));
+    runtimeStorage.setProp("componentManager",       new eds.ComponentManager);
+    runtimeStorage.setProp("slashCommandsManager",   new eds.SlashCommandsManager);
+    runtimeStorage.setProp("loader",                 new eds.Loader(config.commandsPath, false, config.doNotLoadFilesStartsWith, config.includeBuiltinCommands));
+    runtimeStorage.setProp("contextFactory",         new eds.ContextFactory);
+    runtimeStorage.setProp("handler",                new eds.Handler);
+    return runtimeStorage.get<KnownRuntimeProperties>("config", "logger", "client", "componentManager", "loader", "contextFactory", "handler", "slashCommandsManager");
 }

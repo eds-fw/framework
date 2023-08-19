@@ -1,9 +1,8 @@
 import type { ApplicationCommandData } from "discord.js";
-import type { eds } from "..";
-import runtime from "../runtime";
+import { type eds, runtimeStorage } from "..";
 
 export function createSlashCommand(options: ApplicationCommandData)
 {
-    let slashCommandsManager = runtime.getProp<eds.SlashCommandsManager>("slashCommandsManager");
+    let slashCommandsManager = runtimeStorage.getProp<eds.SlashCommandsManager>("slashCommandsManager");
     slashCommandsManager.create(options);
 }

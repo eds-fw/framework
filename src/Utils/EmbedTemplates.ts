@@ -8,9 +8,8 @@ import {
     Message,
     MessageActionRowComponentData,
 } from "discord.js";
-import { eds } from "..";
+import { eds, runtimeStorage } from "..";
 import * as errors from "../errors";
-import runtimeStorage from "../runtime";
 
 let previous: Message | {} = {};
 let previousInteraction: InteractionResponse | Message | {} = {};;

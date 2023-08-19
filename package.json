@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "@types/array-equal": "^1.0.0",
     "@types/node": "^20.5.0"
   },
   "scripts": {
@@ -7,7 +8,6 @@
     "TS_build": "npx tsc"
   },
   "dependencies": {
-    "@types/array-equal": "^1.0.0",
     "array-equal": "^1.0.0",
     "discord.js": "^14.12.1",
     "fast-deep-equal": "^3.1.3",

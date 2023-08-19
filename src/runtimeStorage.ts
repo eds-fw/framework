@@ -1,7 +1,7 @@
 import { assertions } from "./errors";
 import { includesAll } from "./Utils/Util";
 
-export default new class
+export const runtimeStorage = new class
 {
     [key: string]: any;
     public get<T extends Record<string, any>>(...keys: (keyof T)[])

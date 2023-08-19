@@ -1,7 +1,6 @@
 import { ApplicationCommandData } from "discord.js";
 import equal from "fast-deep-equal";
-import type { eds } from "..";
-import runtime from "../runtime";
+import { type eds, runtimeStorage } from "..";
 import { eds_errors } from "../errors";
 
 /**
@@ -13,7 +12,7 @@ export class SlashCommandsManager
     private runtime;
     public constructor() {
         this.runtime = {
-            client: runtime.getProp<eds.Client>("client")
+            client: runtimeStorage.getProp<eds.Client>("client")
         };
     };
 

@@ -18,7 +18,7 @@ npm i easy-ds-bot
 2. Create `tsconfig.json` file:
 ```json
 {
-    "extends": "./node_modules/easy-ds-bot/tsconfig.base.json",
+    "extends": "./node_modules/@easy-ds-bot/framework/tsconfig.base.json",
     "exclude": [
         "node_modules/",
         "logs/",
@@ -98,7 +98,7 @@ export = {
                 components: [{
                     type: ComponentType.Button,
                     style: ButtonStyle.Secondary, //gray
-                    customId: "get cake",
+                    custom_id: "get cake",
                     label: "Get cake"
                 }]
             }]
@@ -116,7 +116,7 @@ export = {
         usage: '',
         hidden: true,
     }
-} as eds.CommandFile<true>;
+} satisfies eds.CommandFile<true>;
 ```
 
 5. A) Create `start.bat` file (WINDOWS ONLY) for easily compile & launch your bot:

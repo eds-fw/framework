@@ -1,6 +1,5 @@
 import { ChatInputCommandInteraction, Message } from "discord.js";
-import { eds } from "..";
-import runtimeStorage from "../runtime";
+import { eds, runtimeStorage } from "..";
 
 /**
  * Creates a context from message/interaction

@@ -101,5 +101,3 @@ export namespace ComponentManager
     {
     }
 }
-
-export default ComponentManager;

@@ -131,3 +131,13 @@ export async function wait(time_ms: number)
 {
     await setTimeout(time_ms);
 }
+
+export function arrayFromIterator<T>(iterator: IterableIterator<T>)
+{
+    return new Promise<T[]>((resolve, reject) => {
+        let result = [];
+        for (const value of iterator)
+            result.push(value);
+        resolve(result);
+    });
+} 

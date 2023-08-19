@@ -2,6 +2,8 @@ export * as all from ".";
 export * as eds from ".";
 import { all as __this } from ".";
 
+export * from "./runtimeStorage";
+
 export * from "./Classes/AutoCommandHelp";
 export * from "./Classes/Client";
 export * from "./Classes/ComponentManager";

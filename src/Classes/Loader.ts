@@ -1,5 +1,5 @@
 import { sep } from "path";
-import { CommandFile, CommandHelpInfo, expandDirs } from "..";
+import { CommandFile, CommandHelpInfo, ConfigExemplar, expandDirs } from "..";
 import * as messages from "../errors";
 import { AutoCommandHelp } from "./AutoCommandHelp";
 
@@ -22,7 +22,7 @@ export class Loader
      * 
      * **WARNING!** The path is based on your main file that you are running
      */
-    path: string, private noLog: boolean = false, private ignorePrefixes: string[] = ['#'])
+    path: string, private noLog: boolean = false, private ignorePrefixes: string[] = ['#'], private builtinCommands: ConfigExemplar["includeBuiltinCommands"])
     {
         if (path.startsWith('/') || path.startsWith('\\'))
             this._path = process.cwd() + path.replace(/(\/|\\)/g, sep);
@@ -61,11 +61,34 @@ export class Loader
         this.commandHelp.pages.clear();
     }
 
-    public async load()
+    public async loadBuiltin()
     {
         if (!this.noLog)
             console.log(`==============================`);
+        if (this.builtinCommands?.help !== false)
+        {
+            let path = "@easy-ds-bot/framework/dist/BuiltinCommands/help";
+            let file = require(path);
+            this._loadFile(file, path);
+            this.commandHelp.reg(file);
+            delete require.cache[require.resolve(path)];
+            if (!this.noLog)
+                console.log(messages.Loader.templateLoadBuiultinCommand("help"));
+        }
+        if (this.builtinCommands?.devtools !== false)
+        {
+            let path = "@easy-ds-bot/framework/dist/BuiltinCommands/devtools";
+            let file = require(path);
+            this._loadFile(file, path);
+            this.commandHelp.reg(file);
+            delete require.cache[require.resolve(path)];
+            if (!this.noLog)
+                console.log(messages.Loader.templateLoadBuiultinCommand("devtools"));
+        }
+    }
 
+    public async load()
+    {
         let paths: string[] = (await expandDirs(this._path)).filter($ => $.endsWith('.js'));
         paths.forEach(path => {
             let file: CommandFile<boolean>;
@@ -174,5 +197,3 @@ export class Loader
         return new RegExp(`^${this.ignorePrefixes.join('|^')}`, 'gi').test(path.split(sep).at(-1) ?? '');
     }
 }
-
-export default Loader;

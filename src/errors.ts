@@ -21,6 +21,8 @@ export const Loader = {
         (name: string) => `| > ${name}`,
     templateLoadCommandSuccessSlash:
         (name: string) => `| / ${name}`,
+    templateLoadBuiultinCommand:
+        (name: string) => `| / ${name} [BUILT-IN]`,
 };
 
 export const Utils = {

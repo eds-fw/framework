@@ -1,5 +1,4 @@
-import type { eds } from "..";
-import runtimeStorage from "../runtime";
+import { type eds, runtimeStorage } from "..";
 
 /**
  * Automatically generates the message text of the help command. Also generates detailed help for each command.
@@ -21,7 +20,7 @@ export class AutoCommandHelp
         commandSlash: (usage: string, desc?: string) => `> \`/${usage}\` ${desc ? '― ' + desc : ''}\n`,
         commandText: (usage: string, desc?: string) => `> \`${this.runtime.config.prefix}${usage}\` ${desc ? '― ' + desc : ''}\n`,
         page: (usage: string, slash: boolean, desc?: string, usageDocs: string = '') =>
-            `\`\`\`d\n${slash ? '/' : this.runtime.config.prefix}${usage} ― ${desc ?? this.templates.noDesc}\`\`\`\n\n${usageDocs ? '>>> ' + usageDocs : ''}`,
+            `\`\`\`\n${slash ? '/' : this.runtime.config.prefix}${usage} ― ${desc ?? this.templates.noDesc}\`\`\`\n\n${usageDocs ? '>>> ' + usageDocs : ''}`,
     };
 
     public pages = new Map<string, string>();

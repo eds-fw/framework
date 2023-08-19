@@ -5,7 +5,7 @@ import { JSONSupportedDataTypes } from "../Types/JSONSupportedDataTypes";
 /**
  * A simple JSON database. Built on a `Map`-object
  */
-export class Database<V extends JSONSupportedDataTypes>
+export class Database<V extends JSONSupportedDataTypes = JSONSupportedDataTypes>
 {
     private _Map: Map<string, Database.Value<V>>;
 
@@ -130,6 +130,27 @@ export class Database<V extends JSONSupportedDataTypes>
         });
 
         return '{' + entries.slice(1) + '\n}';
+    }
+
+    /**
+     * Deletes all elements with `$weak$` tag
+     * @returns number of deleted elements
+     */
+    public clearWeakData()
+    {
+        return new Promise<number>((resolve, reject) => {
+            let i = 0;
+            for (const [key, value] of this._Map.entries())
+            {
+                if (value[1]?.$weak$)
+                {
+                    this._Map.delete(key);
+                    i++;
+                }
+            }
+            this.save();
+            resolve(i);
+        });
     }
 }
 

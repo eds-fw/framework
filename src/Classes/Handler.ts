@@ -4,8 +4,7 @@ import {
     InteractionType,
     Message
 } from "discord.js";
-import { eds } from "..";
-import runtimeStorage from "../runtime";
+import { eds, runtimeStorage } from "..";
 import * as errors from "../errors";
 
 const logTemplateText = (
@@ -45,6 +44,7 @@ export class Handler
             contextFactory: eds.ContextFactory,
             componentManager: eds.ComponentManager
         }>("config", "logger", "loader", "client", "contextFactory");
+        this.runtime.loader.loadBuiltin();
         this.runtime.loader.load();
         this._init({
             CallMap:        this.runtime.loader.getCallMap,

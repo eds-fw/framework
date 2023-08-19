@@ -1,5 +1,4 @@
-import type { eds } from "..";
-import runtimeStorage from "../runtime";
+import { type eds, runtimeStorage } from "..";
 
 export function createButton(options: eds.ComponentManager.ButtonOptions, code: eds.ComponentManager.ButtonCode)
 {
