@@ -3,7 +3,6 @@
     "@types/node": "^20.5.0"
   },
   "scripts": {
-    "NPM_update": "npm update",
     "TS_watch": "npx tsc --watch",
     "TS_build": "npx tsc"
   },
