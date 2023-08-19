@@ -1,5 +1,6 @@
 import arr_equal from "array-equal";
 import obj_equal from "fast-deep-equal";
+import { setTimeout } from "timers/promises";
 
 /**
  * Converts all time values found to milliseconds. Example: `4h7m` -> `14820000`
@@ -121,4 +122,12 @@ export function includesAll<T extends any[]>(arr: T, values: T)
         if (!arr.includes(value)) return false;
     }
     return true;
+}
+
+/**
+ * Stops code execution for the specified duration
+ */
+export async function wait(time_ms: number)
+{
+    await setTimeout(time_ms);
 }
