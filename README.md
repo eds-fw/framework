@@ -137,6 +137,5 @@ read -p "" #keeps window open after bot crash
 
 6. Execute (open) `start.bat` file. Voila! It's alive!
 
-# [Documentation](https://easy-ds-bot.gitbook.io/docs/)
 # [Source (git)](https://github.com/easy-ds-bot/framework)
 # [Issues (git)](https://github.com/easy-ds-bot/framework/issues)
