@@ -15,7 +15,7 @@
     "typescript": "^5.3.0-dev.20230817"
   },
   "name": "@easy-ds-bot/framework",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Simply TypeScript framework for your discord.js bots",
   "main": "dist/index.js",
   "repository": {
