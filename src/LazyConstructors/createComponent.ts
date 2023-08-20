@@ -12,8 +12,8 @@ export function createMenu<T extends eds.ComponentManager.MenuOptions>(options: 
     componentManager.createMenu<T>(options, code);
 }
 
-export function createModal(options: eds.ComponentManager.ModalOptions, code: eds.ComponentManager.ModalCode)
+export function createModal(options: eds.ComponentManager.ButtonOptions, code: eds.ComponentManager.ButtonCode)
 {
     let componentManager = runtimeStorage.getProp<eds.ComponentManager>("componentManager");
-    componentManager.createModal(options, code);
+    componentManager.createButton(options, code);
 }

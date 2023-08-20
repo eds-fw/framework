@@ -55,18 +55,14 @@ export interface ConfigExemplar
     },
     /**
      * Text to be added to all `EmbedTemplates` footers
-     * 
-     * If it's an array, a random string will be selected from it
      * @default undefined
      */
-    footerText?: string | string[];
+    footerText?: string;
     /**
      * Icon to be added to all `EmbedTemplates` footers
-     * 
-     * If it's an array, a random string will be selected from it
      * @default undefined
      */
-    footerIcon?: string | string[];
+    footerIcon?: string;
 //=========
 //HANDLER OPTIONS
     /**
@@ -112,27 +108,11 @@ export interface ConfigExemplar
         /**
          * @default "All bot commands:"
          */
-        helpListTitleText?: string;
-        /**
-         * @default "Command help:"
-         */
-        helpPageTitleText?: string;
+        helpTitleText?: string;
         /**
          * @default "General"
          */
         helpCommandCategory?: string;
-        /**
-         * @default "Show a list of all bot commands"
-         */
-        helpCommandDescription?: string;
-        /**
-         * @default "Command name"
-         */
-        helpCommandArgumentDescription?: string;
-        /**
-         * @default "help"
-         */
-        helpCommandName?: string;
     };
 //LOGGER OPTIONS
     /**

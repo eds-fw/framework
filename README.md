@@ -85,7 +85,7 @@ eds.createButton({
     );
 })
 
-export default {
+export = {
     async run(context)
     {
         await context.reply(

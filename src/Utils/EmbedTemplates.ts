@@ -46,16 +46,10 @@ export async function templateEmbedReply(
             author: title ? { name: title } : undefined,
             description: content,
             color: type ? config.colors?.[type] : undefined,
-            footer: config.footerText
-            ? {
-                text: Array.isArray(config.footerText)
-                    ? config.footerText[eds.random(0, config.footerText.length - 1)]
-                    : config.footerText,
-                icon_url: Array.isArray(config.footerIcon)
-                ? config.footerIcon[eds.random(0, config.footerIcon.length - 1)]
-                : config.footerIcon
-            }
-            : undefined
+            footer: config.footerText ? {
+                text: config.footerText,
+                icon_url: config.footerIcon
+            } : undefined
         }],
         components
     }).catch((err) => eds.reportError(errors.Utils.replyMessageError(err), ctx)) ?? prevRef;
@@ -92,16 +86,10 @@ export async function templateEmbedEditReply(
     }
 
     let embed: APIEmbed | Embed = {
-        footer: config.footerText
-            ? {
-                text: Array.isArray(config.footerText)
-                    ? config.footerText[eds.random(0, config.footerText.length - 1)]
-                    : config.footerText,
-                icon_url: Array.isArray(config.footerIcon)
-                ? config.footerIcon[eds.random(0, config.footerIcon.length - 1)]
-                : config.footerIcon
-            }
-            : undefined
+        footer: config.footerText ? {
+            text: config.footerText,
+            icon_url: config.footerIcon
+        } : undefined
     };
 
     let _components: APIActionRowComponent<APIMessageActionRowComponent>[] | ActionRowData<MessageActionRowComponentData>[] | undefined = [];
