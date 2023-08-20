@@ -9,8 +9,8 @@ export = {
     async __createCommand()
     {
         slashCommandsManager.create({
-            name: "help",
-            description: "Bot commands list",
+            name: config.builtinCommandsSettings?.helpCommandName ?? "help",
+            description: config.builtinCommandsSettings?.helpCommandDescription ?? "Show a list of all bot commands",
             nsfw: false,
             type: ApplicationCommandType.ChatInput,
             defaultMemberPermissions: null,
@@ -18,7 +18,7 @@ export = {
             options: [{
                 type: ApplicationCommandOptionType.String,
                 name: "command",
-                description: "Command name",
+                description: config.builtinCommandsSettings?.helpCommandArgumentDescription ?? "Command name",
                 required: false,
                 choices: (await eds.arrayFromIterator<string>(loader.commandHelp.pages.keys())).map(elem => ({ name: elem, value: elem }))
             }]
@@ -31,12 +31,18 @@ export = {
         {
             await ctx.interaction.followUp({
                 embeds: [{
-                    title: config.builtinCommandsSettings?.helpTitleText ?? "All bot commands",
+                    title: config.builtinCommandsSettings?.helpListTitleText ?? "All bot commands:",
                     color: config.colors?.info ?? config.colors?.default,
-                    footer: config.footerText ? {
-                        text: config.footerText,
-                        icon_url: config.footerIcon,
-                    } : undefined,
+                    footer: config.footerText
+                    ? {
+                        text: Array.isArray(config.footerText)
+                            ? config.footerText[eds.random(0, config.footerText.length - 1)]
+                            : config.footerText,
+                        icon_url: Array.isArray(config.footerIcon)
+                        ? config.footerIcon[eds.random(0, config.footerIcon.length - 1)]
+                        : config.footerIcon
+                    }
+                    : undefined,
                     description: loader.commandHelp.commandList
                 }]
             });
@@ -46,12 +52,18 @@ export = {
         {
             await ctx.interaction.followUp({
                 embeds: [{
-                    title: "Command help",
+                    title: config.builtinCommandsSettings?.helpPageTitleText ?? "Command help:",
                     color: config.colors?.info ?? config.colors?.default,
-                    footer: config.footerText ? {
-                        text: config.footerText,
-                        icon_url: config.footerIcon,
-                    } : undefined,
+                    footer: config.footerText
+                    ? {
+                        text: Array.isArray(config.footerText)
+                            ? config.footerText[eds.random(0, config.footerText.length - 1)]
+                            : config.footerText,
+                        icon_url: Array.isArray(config.footerIcon)
+                        ? config.footerIcon[eds.random(0, config.footerIcon.length - 1)]
+                        : config.footerIcon
+                    }
+                    : undefined,
                     description: loader.commandHelp.pages.get(page)
                 }]
             });
@@ -65,11 +77,11 @@ export = {
         //
     },
     info: {
-        name: "help",
+        name: config.builtinCommandsSettings?.helpCommandName ?? "help",
         slash: true,
 
         usage: "[command]",
-        desc: "Shows help for bot commands",
+        desc: config.builtinCommandsSettings?.helpCommandDescription ?? "Show a list of all bot commands",
         category: runtimeStorage.getProp<eds.ConfigExemplar>("config").builtinCommandsSettings?.helpCommandCategory ?? "General",
     }
 } satisfies eds.CommandFile<true> & { __createCommand: () => Promise<void> };
