@@ -16,6 +16,7 @@ export * from "./Classes/SlashCommandsManager";
 
 export * from "./LazyConstructors/createBot";
 export * from "./LazyConstructors/createComponent";
+export * from "./LazyConstructors/createDB";
 export * from "./LazyConstructors/createSlashCommand";
 export * from "./LazyConstructors/startBot";
 
