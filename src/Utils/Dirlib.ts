@@ -41,6 +41,7 @@ async function expand(tar: string, i: number, buffer: string[], result: boolean[
     else {
         result.push(false);
     }
+    return result;
 }
 
 export async function expandDirs(path: string)
@@ -55,10 +56,10 @@ export async function expandDirs(path: string)
         let i = 0;
         for (const tar of buffer)
         {
-            expand(tar, i, buffer, result);
+            result = await expand(tar, i, buffer, result);
             i++;
         }
-    }
+    };
 
     return buffer;
 }
