@@ -12,7 +12,7 @@
 # Setup
 1. Install `easy-ds-bot` via npm:
 ```bat
-npm i easy-ds-bot
+npm i @easy-ds-bot/framework
 ```
 
 2. Create `tsconfig.json` file:
