@@ -35,9 +35,9 @@ export class Client extends DClient
         this._token = options.token;
     }
 
-    public onReady(code: () => Promise<void> | void = () => console.log("I am ready"))
+    public onReady(code: (client: DClient<true>) => Promise<void> | void = () => console.log("I am ready"))
     {
-        this.on("ready", async () => code());
+        this.on("ready", (client) => code(client));
     }
 
     /**
