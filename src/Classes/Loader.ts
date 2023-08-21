@@ -94,7 +94,7 @@ export class Loader
             let file: CommandFile<boolean>;
 
             try {
-                file = require(path);
+                file = require(path).default || require(path);
             } catch (err) {
                 throw new Error(messages.Loader.loadFileError(path, err));
             }

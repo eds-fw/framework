@@ -61,7 +61,7 @@ export class Handler
             if (message.channel.type === ChannelType.DM && this.runtime.config.guildOnly) return;
             if (message.author.bot && this.runtime.config.ignoreBots) return;
             let context = this.runtime.contextFactory.createTextContext(message);
-            maps.AlwaysCallMap.forEach(path => require(path).run(context));
+            maps.AlwaysCallMap.forEach(path => require(path).default || require(path).run(context));
             if (this.runtime.config.prefix)
             {
                 if (message.content.toLowerCase().startsWith(this.runtime.config.prefix))
@@ -72,7 +72,7 @@ export class Handler
                         if (k.includes(context.args[0]))
                         {
                             try {
-                                let file: eds.CommandFile<false> = require(v);
+                                let file: eds.CommandFile<false> = require(v).default || require(v);
                                 file.run(context);
                                 if (file.pragmaNoLog !== true)
                                     this.runtime.logger.log(logTemplateText(context.message), 'II');
@@ -94,7 +94,7 @@ export class Handler
                 this.runtime.loader.getSlashCallMap.forEach((v, k) => {
                     if (k === interaction.commandName)
                     {
-                        let file: eds.CommandFile<true> = require(v);
+                        let file: eds.CommandFile<true> = require(v).default || require(v);
                         file.run(context);
                         if (file.pragmaNoLog !== true)
                             this.runtime.logger.log(logTemplateInteraction(context.interaction), 'II');
