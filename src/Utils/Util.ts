@@ -3,44 +3,6 @@ import obj_equal from "fast-deep-equal";
 import { setTimeout } from "timers/promises";
 
 /**
- * Converts all time values found to milliseconds. Example: `4h7m` -> `14820000`
- */
-export function parseTime(time: string): number
-{
-    let regExpsNotation: {[key: string]: string} = {
-        'm': '([0-9])+m',
-        's': '([0-9])+s',
-        'h': '([0-9])+h',
-        'd': '([0-9])+d',
-
-        'м': '([0-9])+м',
-        'с': '([0-9])+с',
-        'ч': '([0-9])+ч',
-        'д': '([0-9])+д',
-    }, msInTime: {[key: string]: number} = {
-        'm': 60000,
-        's': 1000,
-        'h': 3600000,
-        'd': 86400000,
-
-        'м': 60000,
-        'с': 1000,
-        'ч': 3600000,
-        'д': 86400000,
-    }, milli = 0;
-    for (let timeNotation in regExpsNotation) {
-        let timeValRegExps = new RegExp(regExpsNotation[timeNotation]);
-        if (time.match(timeValRegExps)) {
-            let matches = time.match(timeValRegExps);
-            if (!matches) return 0;
-            let timeValRaw = matches[0].replace(timeNotation, '');
-            milli += parseInt(timeValRaw) * msInTime[timeNotation];
-        };
-    };
-    return milli;
-}
-
-/**
  * Nicely divides a number into units, tens, hundreds, thousands, etc. Example: `1234567` -> `1 234 567`
  */
 export const prettyNumber = (x: number) => x
