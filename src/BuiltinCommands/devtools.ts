@@ -52,7 +52,7 @@ componentManager.createButton({
 
 componentManager.createMenu({
     custom_id: "devtools $$ toolSelect",
-    type: "string"
+    stringSelect: true,
 }, {
     "updateCommands": async (ctx, options) => {
         await ctx.interaction.deferReply({ ephemeral: true });

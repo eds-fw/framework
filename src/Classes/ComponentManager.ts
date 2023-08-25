@@ -3,6 +3,7 @@ import {
     ButtonInteraction,
     ModalSubmitFields,
     ModalSubmitInteraction,
+    StringSelectMenuInteraction,
     UserSelectMenuInteraction
 } from "discord.js";
 
@@ -19,7 +20,7 @@ type MapVal<R, I> = {
 export class ComponentManager
 {
     private readonly _ButtonsMap = new Map<string, MapVal<ComponentManager.ButtonCode, ComponentManager.ButtonOptions>>();
-    private readonly _MenusMap = new Map<string, MapVal<ComponentManager.MenuCode | ComponentManager.MenuUserSelectCode, ComponentManager.MenuOptions>>();
+    private readonly _MenusMap = new Map<string, MapVal<ComponentManager.MenuStringSelectCode | ComponentManager.MenuUserSelectCode, ComponentManager.MenuOptions>>();
     private readonly _ModalsMap = new Map<string, MapVal<ComponentManager.ModalCode, ComponentManager.ModalOptions>>();
 
     public get getButtonsMap()
@@ -50,9 +51,9 @@ export class ComponentManager
         });
     }
     public createMenu<T extends ComponentManager.MenuOptions>(options: T,
-        code: T["type"] extends "string"
-            ? ComponentManager.MenuCode
-            : ComponentManager.MenuUserSelectCode
+        code: T["userSelect"] extends true
+                ? ComponentManager.MenuUserSelectCode
+                : ComponentManager.MenuStringSelectCode
     ): void {
         this._MenusMap.set(options.custom_id, {
             run: code,
@@ -74,11 +75,11 @@ export namespace ComponentManager
 {
     export type ButtonCode = (ctx: eds.InteractionContext<ButtonInteraction>, options: ButtonOptions) => Promise<void> | void;
 
-    export type MenuCode = {
-        [key: string]: (ctx: eds.InteractionContext<AnySelectMenuInteraction>, options: MenuOptions) => Promise<void> | void;
+    export type MenuStringSelectCode = {
+        [key: string]: (ctx: eds.InteractionContext<StringSelectMenuInteraction>, options: MenuOptions) => Promise<void> | void;
     };
 
-    export type MenuUserSelectCode = (ctx: eds.InteractionContext<UserSelectMenuInteraction>, options: MenuOptions) => Promise<void> | void
+    export type MenuUserSelectCode = (ctx: eds.InteractionContext<UserSelectMenuInteraction>, options: MenuOptions) => Promise<void> | void;
 
     export type ModalCode = (ctx: eds.InteractionContext<ModalSubmitInteraction>, fields: ModalSubmitFields, options: ModalOptions) => Promise<void> | void;
 
@@ -94,7 +95,8 @@ export namespace ComponentManager
 
     export interface MenuOptions extends BaseOptions
     {
-        type: "string" | "user"
+        userSelect?: boolean;
+        onSelect?: (ctx: eds.InteractionContext<AnySelectMenuInteraction>, options: MenuOptions) => Promise<void> | void;
     }
 
     export interface ModalOptions extends BaseOptions

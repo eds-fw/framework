@@ -119,6 +119,7 @@ export class Handler
                     this.runtime.componentManager.getMenusMap.forEach(async (v, k) => {
                         if (k == interaction.customId)
                         {
+                            v.info.onSelect?.(this.runtime.contextFactory.createInteractionContext(interaction), v.info);
                             if (interaction.isStringSelectMenu())
                             Object.keys(v.run).forEach(async val => {
                                 if (interaction.values.includes(val))

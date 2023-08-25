@@ -6,7 +6,10 @@ export function createButton(options: eds.ComponentManager.ButtonOptions, code: 
     componentManager.createButton(options, code);
 }
 
-export function createMenu<T extends eds.ComponentManager.MenuOptions>(options: T, code: T["type"] extends "string" ? eds.ComponentManager.MenuCode : eds.ComponentManager.MenuUserSelectCode)
+export function createMenu<T extends eds.ComponentManager.MenuOptions>(options: T,
+    code: T["userSelect"] extends true
+        ? eds.ComponentManager.MenuUserSelectCode
+        : eds.ComponentManager.MenuStringSelectCode)
 {
     let componentManager = runtimeStorage.getProp<eds.ComponentManager>("componentManager");
     componentManager.createMenu<T>(options, code);
