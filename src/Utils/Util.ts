@@ -32,11 +32,51 @@ export function reportMemory(): void
 }
 
 /**
- * Returns random number from `min` to `max`
+ * Returns pseudo-random number from `min` to `max`
  */
 export function random(min: number, max: number)
 {
     return Math.floor(Math.random() * (max + 1)) + min;
+}
+
+/**
+ * Returns a random array element
+ */
+export function arrRandom<T extends any>(arr: T[]): T
+{
+    return arr[random(0, arr.length - 1)];
+}
+
+/**
+ * Returns a random key of the specified object with a chance equal to the value of this key
+ * 
+ * Algorithm: https://github.com/jotson/LootTable.js
+ * @param elements object as {"key": chance}
+ */
+export function chanceRandom(elements: Record<string, number>): string
+{
+    const table = Object.entries(elements);
+    let i;
+    let totalWeight = 0;
+    
+    for (i = 0; i < table.length; i++)
+        totalWeight += table[i][1];
+
+    let choice = 0;
+    const randomNumber = Math.floor(Math.random() * totalWeight + 1);
+
+    let weight = 0;
+    for (i = 0; i < table.length; i++)
+    {
+        weight += table[i][1];
+        if (randomNumber <= weight)
+        {
+            choice = i;
+            break;
+        }
+    }
+
+    return table[choice][0];
 }
 
 /**
@@ -54,7 +94,7 @@ export function equal(v1: any, v2: any)
 /**
  * Fluently compares texts for the presence of the same
  */
-export async function quickTextCompare(v1: string, v2: string)
+export function quickTextCompare(v1: string, v2: string)
 {
     let v1w = v1.split(' '), v1eq = 0;
     let v2w = v2.split(' '), v2eq = 0;
@@ -102,4 +142,4 @@ export function arrayFromIterator<T>(iterator: IterableIterator<T>)
             result.push(value);
         resolve(result);
     });
-} 
+}
