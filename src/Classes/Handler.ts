@@ -45,12 +45,13 @@ export class Handler
             componentManager: eds.ComponentManager
         }>("config", "logger", "loader", "client", "contextFactory");
         this.runtime.loader.loadBuiltin();
-        this.runtime.loader.load();
-        this._init({
-            CallMap:        this.runtime.loader.getCallMap,
-            AlwaysCallMap:  this.runtime.loader.getAlwaysCallMap,
-            HelpInfoMap:    this.runtime.loader.getHelpInfoMap,
-        });
+        this.runtime.loader.load().then($ => {
+            this._init({
+                CallMap:        this.runtime.loader.getCallMap,
+                AlwaysCallMap:  this.runtime.loader.getAlwaysCallMap,
+                HelpInfoMap:    this.runtime.loader.getHelpInfoMap,
+            });
+        })
     };
 
     private _init(maps: _initMaps): void
@@ -61,7 +62,7 @@ export class Handler
             if (message.channel.type === ChannelType.DM && this.runtime.config.guildOnly) return;
             if (message.author.bot && this.runtime.config.ignoreBots) return;
             let context = this.runtime.contextFactory.createTextContext(message);
-            maps.AlwaysCallMap.forEach(path => require(path).default || require(path).run(context));
+            maps.AlwaysCallMap.forEach(path => require(path).default?.run(context) || require(path).run(context));
             if (this.runtime.config.prefix)
             {
                 if (message.content.toLowerCase().startsWith(this.runtime.config.prefix))
