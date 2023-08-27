@@ -1,5 +1,5 @@
 import { assertions } from "./errors";
-import { includesAll } from "./Utils/Util";
+import { includesAll } from "@easy-ds-bot/utils";
 
 export const runtimeStorage = new class
 {

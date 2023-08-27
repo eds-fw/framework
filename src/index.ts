@@ -31,7 +31,9 @@ export * from "./Types/SupportedInteractions";
 export * from "./Utils/Dirlib";
 export * from "./Utils/EmbedTemplates";
 export * from "./Utils/ErrorLogger";
-export * from "./Utils/Util";
 
+//other eds packages
+export * from "@easy-ds-bot/utils";
+export * from "@easy-ds-bot/timeparser";
 
 export default __this;
