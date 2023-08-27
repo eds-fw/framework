@@ -7,7 +7,10 @@ import { JSONSupportedDataTypes } from "../Types/JSONSupportedDataTypes";
  */
 export class Database<V extends JSONSupportedDataTypes = JSONSupportedDataTypes>
 {
-    private _Map: Map<string, Database.Value<V>>;
+    /**
+     * Raw map-object
+     */
+    public Map: Map<string, Database.Value<V>>;
 
     public constructor(private path: string, autosave?: boolean | number)
     {
@@ -18,7 +21,7 @@ export class Database<V extends JSONSupportedDataTypes = JSONSupportedDataTypes>
         }
 
         const entries: [string, Database.Value<V>][] = Object.entries(JSON.parse(readFileSync(path).toString() ?? "{}"));
-        this._Map = new Map(entries);
+        this.Map = new Map(entries);
 
         if (autosave)
         setInterval(() => this.save(), typeof autosave === "number" ? autosave : 60_000);
@@ -31,7 +34,7 @@ export class Database<V extends JSONSupportedDataTypes = JSONSupportedDataTypes>
 
     public set(key: string, value: V, tags?: Database.TagsValues, save?: boolean): void
     {
-        this._Map.set(key, [value, tags]);
+        this.Map.set(key, [value, tags]);
         if (save) this.save();
     }
     /**
@@ -62,7 +65,7 @@ export class Database<V extends JSONSupportedDataTypes = JSONSupportedDataTypes>
 
     public get(key: string): V | undefined
     {
-        const data = this._Map.get(key);
+        const data = this.Map.get(key);
         if (data?.[1]?.$ref$)
             return this.get(data[1].$ref$);
         else
@@ -71,7 +74,7 @@ export class Database<V extends JSONSupportedDataTypes = JSONSupportedDataTypes>
     }
     public getFull(key: string): Database.Value<V> | undefined
     {
-        const data = this._Map.get(key);
+        const data = this.Map.get(key);
         if (data?.[1]?.$ref$)
             return this.getFull(data[1].$ref$);
         else
@@ -81,12 +84,12 @@ export class Database<V extends JSONSupportedDataTypes = JSONSupportedDataTypes>
 
     public has(key: string): boolean
     {
-        return this._Map.has(key);
+        return this.Map.has(key);
     }
 
     public hasValue(value: V): boolean
     {
-        for (const val of this._Map.values())
+        for (const val of this.Map.values())
         {
             if (eds.equal(value, val[0])) return true;
         }
@@ -96,7 +99,7 @@ export class Database<V extends JSONSupportedDataTypes = JSONSupportedDataTypes>
     public getKey(value: V, single: boolean = false): string[]
     {
         let result: string[] = [];
-        for (const ent of this._Map.entries())
+        for (const ent of this.Map.entries())
             if (eds.equal(value, ent[1][0]))
                 result.push(ent[0]);
             //
@@ -106,15 +109,7 @@ export class Database<V extends JSONSupportedDataTypes = JSONSupportedDataTypes>
 
     public del(key: string): void
     {
-        this._Map.delete(key);
-    }
-
-    /**
-     * Raw `Map`-object
-     */
-    public get Map()
-    {
-        return this._Map;
+        this.Map.delete(key);
     }
 
     /**
@@ -122,10 +117,10 @@ export class Database<V extends JSONSupportedDataTypes = JSONSupportedDataTypes>
      */
     public get MapJSON(): string
     {
-        if (this._Map.size == 0) return "{}";
+        if (this.Map.size == 0) return "{}";
         let entries = "";
 
-        this._Map.forEach((v, k) => {
+        this.Map.forEach((v, k) => {
             entries += ',\n\t' + `"${k}": ${JSON.stringify(v)}`
         });
 
@@ -140,11 +135,11 @@ export class Database<V extends JSONSupportedDataTypes = JSONSupportedDataTypes>
     {
         return new Promise<number>((resolve, reject) => {
             let i = 0;
-            for (const [key, value] of this._Map.entries())
+            for (const [key, value] of this.Map.entries())
             {
                 if (value[1]?.$weak$)
                 {
-                    this._Map.delete(key);
+                    this.Map.delete(key);
                     i++;
                 }
             }
