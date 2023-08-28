@@ -1,11 +1,12 @@
 //@ts-ignore
-const suite = require("benchmark").Suite;
-const bench = new suite;
-const runtime = require("../../dist/runtime").default;
+const Benchmark = require("benchmark");
+const suite = new Benchmark.Suite;
+const runtime = require("../dist/runtimeStorage").default;
 let test, test2;
 runtime.set(`test2`, 2);
 
-bench.add("set()", () => {
+suite
+.add("set()", () => {
     runtime.set(`test`, 1);
 })
 .add("get() 1 key", () => {

@@ -1,10 +1,11 @@
 //@ts-ignore
-const suite = require("benchmark").Suite;
-const bench = new suite;
-const dirlib = require("../../../dist/framework/Utils/Dirlib");
+const Benchmark = require("benchmark");
+const suite = new Benchmark.Suite;
+const dirlib = require("../../dist/Utils/Dirlib");
 let test, test2;
 
-bench.add("expandDirs()", async () => {
+suite
+.add("expandDirs()", async () => {
     test = await dirlib.expandDirs("./src/");
 })
 .add("_isDir()", async () => {
