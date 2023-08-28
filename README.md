@@ -9,8 +9,97 @@
 </b>
 <hr>
 
+# API
+- *module* `@easy-ds-bot/utils`
+- *module* `@easy-ds-bot/timeparser`
+- `createBot(config: ConfigExemplar): KnownRuntimeProperties` *(lazyConstructor)*
+- `createButton(options: ButtonOptions, code: ButtonCode): void` *(lazyConstructor)*
+    >- runtime: `componentManager`
+- `createMenu(options: MenuOptions, code: MenuUserCode | MenuStringCode): void` *(lazyConstructor)*
+    >- runtime: `componentManager`
+- `createModal(options: ModalOptions, code: ModalCode): void` *(lazyConstructor)*
+    >- runtime: `componentManager`
+- `createDB(name: string, path: string, autosave?: boolean | number): void` *(lazyConstructor)*
+- `createSlashCommand(options: SpplicationCommandData): void` *(lazyConstructor)*
+    >- runtime: `slashCommandsManager`
+- *async* `startBot(): Promise<void>`
+    >- runtime: `slashCommandsManager, client, config`
+- *async* `reportError(error: string, ctx: anyContext | null)`
+    >- runtime: `logger`
+- *anonimous class* `runtimeStorage` *(runtime)*
+    >- `[key: string]: any`
+    >- `get<T>(..keys: (keyof T)): T`
+    >- `getProp<V>(key: string): V`
+    >- `set<T>(values: T): T`
+    >- `setProp<K, V>(key: K, value: V): { [X in K]: V }`
+- *class* `Client` *extends djs.Client*
+    >- *constructor* `new (options: Options)`
+    >- `onReady(code?: (client: djs.Client) => Promise<void> | void): void`
+    >- *async* `init(): Promise<void>`
+- *class* `ComponentsManager`
+    >- *constructor* `new (){}`
+    >- `clearMaps(): void`
+    >- `createButton(options: ButtonOptions, code: ButtonCode): void`
+    >- `createMenu(options: MenuOptions, code: MenuUserCode | MenuStringCode): void`
+    >- `createModal(options: ModalOptions, code: ModalCode): void`
+    >- *iternal* *get* `getButtonsMap: Map<string, MapVal<...>>`
+    >- *iternal* *get* `getMenusMap: Map<string, MapVal<...>>`
+    >- *iternal* *get* `getModalsMap: Map<string, MapVal<...>>`
+- *class* `Database<V>`
+    >- *field* `Map: Map<string, Value<...>>`
+    >- *constructor* `new (path: string, autosave?: boolean | number)`
+    >- `save(): void`
+    >- `set(key: string, value: V, tags?: TagsValues, save?: boolean): void`
+    >- ~~`setConst(key: string, value: V, tags?: TagsValues, auto_ref?: boolean, save?: boolean): void`~~ ***deprecated***
+    >- `get(key: string): V | undefined`
+    >- `getKey(value: V, single?: boolean): string[]`
+    >- `getFull(key: string): Value<V> | undefined`
+    >- `has(key: string): boolean`
+    >- `hasValue(value: V): boolean`
+    >- `del(key: string): void`
+    >- *iternal* *get* `MapJSON: string`
+    >- *iternal* *async* `clearWeakData(): Promise<number>`
+- *class* `Handler`
+    >- runtime: `config, logger, loader, client, contextFactory`
+    >- *constructor* `new ()`
+- *class* `Loader`
+    >- *field* `commandHelp: AutoCommandHelp`
+    >- *constructor* `new (path: string, noLog?: boolean, ignorePrefixes?: string[], builtinCommands?: ConfigExemplar.includeBuiltinCommands)`
+    >- `clearMaps(): void`
+    >- *async* `load(): Promise<void>`
+    >- *iternal* *async* `loadBuiltin(): Promise<void>`
+    >- *iternal* *get* `getCallMap: Map<string[], string>`
+    >- *iternal* *get* `getSlashCallMap: Map<string, string>`
+    >- *iternal* *get* `getAlwaysCallMap: string[]`
+    >- *iternal* *get* `getHelpInfoMap: Map<string[], CommandHelpInfo>`
+- *class* `Logger`
+    >- *field* `msgCount: number`
+    >- *constructor* `new (dirpath?: string, time_offset?: number)`
+    >- `log(message: string, level?: 'I' | 'II' | 'III') void`
+    >- *iternal* `template(message: string, level?: string): string`
+- *class* `SlashCommandsManager`
+    >- runtime: `client`
+    >- `create(options: djs.ApplicationCommandData): void`
+    >- `save(): void`
+- *iternal* *async* `expandDirs(path: string): Promise<string[]>`
+- *iternal* *async* `templateEmbedReply(...params): Promise<void>`
+- *iternal* *async* `templateEmbedEditReply(...params): Promise<void>`
+- *iternal* *class* `AutoCommandHelp`
+    >- runtime: `config`
+    >- *field* `commandList: string`
+    >- *field* `pages: Map<string, string>`
+    >- *field* `templates: {...}`
+    >- *constructor* `new ()`
+    >- `reg(file: CommandFile<boolean> as const): void`
+- *iternal* *class* `ContextFactory`
+    >- runtime: `config, logger`
+    >- *constructor* `new ()`
+    >- `createTextContext(message: djs.Message): CommandContext<false>`
+    >- `createSlashContext(interaction: djs.ChatInputCommandInteraction): CommandContext<true>`
+
 # Requirements
 - [NodeJS](https://nodejs.org/en) `v18` or newer
+
 # Setup
 1. Install `easy-ds-bot` via npm:
 ```bat
