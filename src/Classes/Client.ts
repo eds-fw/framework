@@ -1,4 +1,4 @@
-import { Client as DClient, GatewayIntentBits, GatewayIntentsString } from "discord.js";
+import { Client as DClient, GatewayIntentsString } from "discord.js";
 
 export class Client extends DClient
 {
@@ -35,7 +35,7 @@ export class Client extends DClient
         this._token = options.token;
     }
 
-    public onReady(code: (client: DClient<true>) => Promise<void> | void = () => console.log("I am ready"))
+    public onReady(code: (client: DClient<true>) => Promise<void> | void = () => console.log("I am ready")): void
     {
         this.on("ready", (client) => code(client));
     }

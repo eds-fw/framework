@@ -1,6 +1,6 @@
 import { eds, runtimeStorage } from "..";
 
-export async function reportError(error: string, ctx: eds.SlashCommandContext | eds.TextCommandContext | eds.InteractionContext | null)
+export async function reportError(error: string, ctx: eds.SlashCommandContext | eds.TextCommandContext | eds.InteractionContext | null): Promise<void>
 {
     let logger = runtimeStorage.getProp<eds.Logger>("logger");
     console.error(error);

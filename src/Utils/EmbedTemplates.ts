@@ -21,7 +21,7 @@ export async function templateEmbedReply(
     content?: string,
     type: string = "default",
     components?: APIActionRowComponent<APIMessageActionRowComponent>[]
-) {
+): Promise<void> {
     if ((!content || content === "") && (!title || title === "")) return;
     let config = runtimeStorage.getProp<eds.ConfigExemplar>("config");
 
@@ -73,7 +73,7 @@ export async function templateEmbedEditReply(
     content?: string | undefined | null,
     type: string | undefined | null = "default",
     components?: APIActionRowComponent<APIMessageActionRowComponent>[] | undefined | null
-) {
+): Promise<void> {
     if ((!content || content === "") && (!title || title === "")) return;
     let config = runtimeStorage.getProp<eds.ConfigExemplar>("config");
     
@@ -133,6 +133,7 @@ export async function templateEmbedEditReply(
         components: _components
     }).catch((err) => eds.reportError(errors.Utils.replyMessageError(err), ctx)) ?? prevRef;
 }
+
 export interface EmbedTemplateMethods
 {
     reply(

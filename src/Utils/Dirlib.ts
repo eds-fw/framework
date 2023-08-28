@@ -29,7 +29,7 @@ async function _normalize(path: string)
     } else return path;
 }
 
-async function expand(tar: string, i: number, buffer: string[], result: boolean[])
+async function _expand(tar: string, i: number, buffer: string[], result: boolean[])
 {
     if (await _isDir(tar))
     {
@@ -44,11 +44,11 @@ async function expand(tar: string, i: number, buffer: string[], result: boolean[
     return result;
 }
 
-export async function expandDirs(path: string)
+export async function expandDirs(path: string): Promise<string[]>
 {
     let buffer: string[]    = [];
     let result: boolean[]   = [];
-    await expand(path, 0, buffer, result);
+    await _expand(path, 0, buffer, result);
 
     while (result.includes(true))
     {
@@ -56,7 +56,7 @@ export async function expandDirs(path: string)
         let i = 0;
         for (const tar of buffer)
         {
-            result = await expand(tar, i, buffer, result);
+            result = await _expand(tar, i, buffer, result);
             i++;
         }
     };

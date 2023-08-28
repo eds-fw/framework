@@ -35,6 +35,7 @@ interface _initMaps
 export class Handler
 {
     private runtime;
+
     public constructor() {
         this.runtime = runtimeStorage.get<{
             config: eds.ConfigExemplar,

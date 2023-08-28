@@ -6,14 +6,9 @@ import { type eds, runtimeStorage } from "..";
 export class AutoCommandHelp
 {
     private runtime;
-    public constructor() {
-        this.runtime = {
-            config: runtimeStorage.getProp<eds.ConfigExemplar>("config")
-        }
-    };
     
     public commandList: string = '';
-
+    public pages = new Map<string, string>();
     public templates = {
         noDesc: "<no description>",
         category: (name: string) => `**${name}:**`,
@@ -23,9 +18,13 @@ export class AutoCommandHelp
             `\`\`\`\n${slash ? '/' : this.runtime.config.prefix}${usage} ― ${desc ?? this.templates.noDesc}\`\`\`\n\n${usageDocs ? '>>> ' + usageDocs : ''}`,
     };
 
-    public pages = new Map<string, string>();
+    public constructor() {
+        this.runtime = {
+            config: runtimeStorage.getProp<eds.ConfigExemplar>("config")
+        }
+    };
 
-    public reg(file: Readonly<eds.CommandFile<boolean>>)
+    public reg(file: Readonly<eds.CommandFile<boolean>>): void
     {
         if (file.info.hidden === true) return;
 

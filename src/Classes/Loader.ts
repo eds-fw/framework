@@ -8,14 +8,13 @@ import { AutoCommandHelp } from "./AutoCommandHelp";
  */
 export class Loader
 {
-    public commandHelp: AutoCommandHelp;
-
+    private _path: string;
     private readonly _CallMap = new Map<string[], string>();
     private readonly _SlashCallMap = new Map<string, string>();
     private _AlwaysCallMap: string[] = [];
     private readonly _HelpInfoMap = new Map<string[], CommandHelpInfo>();
 
-    private _path: string;
+    public commandHelp: AutoCommandHelp;
 
     public constructor(
     /** Path to the command folder.
@@ -31,26 +30,6 @@ export class Loader
         this.commandHelp = new AutoCommandHelp();
     }
 
-    public get getCallMap()
-    {
-        return this._CallMap;
-    }
-
-    public get getSlashCallMap()
-    {
-        return this._SlashCallMap;
-    }
-
-    public get getAlwaysCallMap()
-    {
-        return this._AlwaysCallMap;
-    }
-
-    public get getHelpInfoMap()
-    {
-        return this._HelpInfoMap;
-    }
-
     public clearMaps(): void
     {
         this._CallMap.clear();
@@ -61,36 +40,11 @@ export class Loader
         this.commandHelp.pages.clear();
     }
 
-    public async loadBuiltin()
-    {
-        if (!this.noLog)
-            console.log(`==============================`);
-        if (this.builtinCommands?.help !== false)
-        {
-            let path = "@easy-ds-bot/framework/dist/BuiltinCommands/help";
-            let file = require(path);
-            this._loadFile(file, path);
-            this.commandHelp.reg(file);
-            delete require.cache[require.resolve(path)];
-            if (!this.noLog)
-                console.log(messages.Loader.templateLoadBuiultinCommand("help"));
-        }
-        if (this.builtinCommands?.devtools !== false)
-        {
-            let path = "@easy-ds-bot/framework/dist/BuiltinCommands/devtools";
-            let file = require(path);
-            this._loadFile(file, path);
-            this.commandHelp.reg(file);
-            delete require.cache[require.resolve(path)];
-            if (!this.noLog)
-                console.log(messages.Loader.templateLoadBuiultinCommand("devtools"));
-        }
-    }
-
-    public async load()
+    public async load(): Promise<void>
     {
         let paths: string[] = (await expandDirs(this._path)).filter($ => $.endsWith('.js'));
-        paths.forEach(path => {
+        for (const path of paths)
+        {
             let file: CommandFile<boolean>;
 
             try {
@@ -140,11 +94,36 @@ export class Loader
             
 
             _clear();
-        });
-
+        }
 
         if (!this.noLog)
             console.log(`==============================`);
+    }
+
+    public async loadBuiltin(): Promise<void>
+    {
+        if (!this.noLog)
+            console.log(`==============================`);
+        if (this.builtinCommands?.help !== false)
+        {
+            let path = "@easy-ds-bot/framework/dist/BuiltinCommands/help";
+            let file = require(path);
+            this._loadFile(file, path);
+            this.commandHelp.reg(file);
+            delete require.cache[require.resolve(path)];
+            if (!this.noLog)
+                console.log(messages.Loader.templateLoadBuiultinCommand("help"));
+        }
+        if (this.builtinCommands?.devtools !== false)
+        {
+            let path = "@easy-ds-bot/framework/dist/BuiltinCommands/devtools";
+            let file = require(path);
+            this._loadFile(file, path);
+            this.commandHelp.reg(file);
+            delete require.cache[require.resolve(path)];
+            if (!this.noLog)
+                console.log(messages.Loader.templateLoadBuiultinCommand("devtools"));
+        }
     }
 
     private _loadFile(data: CommandFile<boolean>, path: string): boolean
@@ -192,8 +171,28 @@ export class Loader
         }
     }
 
-    private _checkIgnorePrefix(path: string)
+    private _checkIgnorePrefix(path: string): boolean
     {
         return new RegExp(`^${this.ignorePrefixes.join('|^')}`, 'gi').test(path.split(sep).at(-1) ?? '');
+    }
+
+    public get getCallMap()
+    {
+        return this._CallMap;
+    }
+
+    public get getSlashCallMap()
+    {
+        return this._SlashCallMap;
+    }
+
+    public get getAlwaysCallMap()
+    {
+        return this._AlwaysCallMap;
+    }
+
+    public get getHelpInfoMap()
+    {
+        return this._HelpInfoMap;
     }
 }

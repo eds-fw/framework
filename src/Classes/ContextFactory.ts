@@ -7,6 +7,7 @@ import { eds, runtimeStorage } from "..";
 export class ContextFactory
 {
     private runtime;
+
     public constructor() {
         this.runtime = runtimeStorage.get<{
             logger: eds.Logger,
@@ -29,7 +30,7 @@ export class ContextFactory
         return ctx;
     };
 
-    public createSlashContext(interaction: ChatInputCommandInteraction): eds.SlashCommandContext
+    public createSlashContext(interaction: ChatInputCommandInteraction): eds.CommandContext<true>
     {
         const ctx = {
             interaction,

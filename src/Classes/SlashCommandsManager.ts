@@ -8,8 +8,9 @@ import { eds_errors } from "../errors";
  */
 export class SlashCommandsManager
 {
-    private _commands: {[key: string]: ApplicationCommandData} & Object = {};
     private runtime;
+    private _commands: {[key: string]: ApplicationCommandData} & Object = {};
+
     public constructor() {
         this.runtime = {
             client: runtimeStorage.getProp<eds.Client>("client")
@@ -21,7 +22,7 @@ export class SlashCommandsManager
      * 
      * If the specified slash command already exists, the function is ignored.
      */
-    public create(options: ApplicationCommandData)
+    public create(options: ApplicationCommandData): void
     {
         if (equal(this._commands[options.name], options)) return;
         this._commands[options.name] = options;
@@ -32,7 +33,7 @@ export class SlashCommandsManager
      * 
      * **Must be called after slash commands are created.**
      */
-    public save()
+    public save(): void
     {
         if (!this.runtime.client.application)
             throw new Error(eds_errors.SlashCommandsManager.clientNotReady());

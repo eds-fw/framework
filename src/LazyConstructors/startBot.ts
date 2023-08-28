@@ -1,6 +1,6 @@
 import { type eds, runtimeStorage } from "..";
 
-export async function startBot()
+export async function startBot(): Promise<void>
 {
     const { __createCommand } = await import("../BuiltinCommands/help");
     let runtime = runtimeStorage.get<{
