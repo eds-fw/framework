@@ -4,27 +4,26 @@ import { includesAll } from "@easy-ds-bot/utils";
 export const runtimeStorage = new class
 {
     [key: string]: any;
-    public get<T extends Record<string, any>>(...keys: (keyof T)[])
+    public get<T extends Record<string, any>>(...keys: (keyof T)[]): T
     {
         if (!includesAll(Object.keys(this), keys))
             throw new TypeError(assertions.defectiveRuntimeObjectWithKeys(keys));
-        return this as Pick<this, "get" | "getProp" | "set"> & { [K in keyof T]: T[K] };
+        return this as Pick<this, "get" | "getProp" | "set" | "setProp"> & { [K in keyof T]: T[K] };
     }
-    public getProp<R>(key: string)
+    public getProp<V>(key: string): V
     {
         if (!(key in this))
             throw new TypeError(assertions.defectiveRuntimeObject(key));
-        return this[key] as R;
+        return this[key] as V;
     }
-    public set<T extends object>(values: T)
+    public set<T extends object>(values: T): T
     {
-        for (const [key, value] of Object.entries(values))
-            this[key] = value;
-        return this as Pick<this, "get" | "getProp" | "set"> & T;
+        Object.assign(this, values);
+        return this as Pick<this, "get" | "getProp" | "set" | "setProp"> & T;
     }
-    public setProp<K extends string, V>(key: K, value: V)
+    public setProp<K extends string, V>(key: K, value: V): { [X in K]: V }
     {
         this[key] = value as any;
-        return this as Pick<this, "get" | "getProp" | "set"> & { [X in K]: V };
+        return this as Pick<this, "get" | "getProp" | "set" | "setProp"> & { [X in K]: V };
     }
 }
