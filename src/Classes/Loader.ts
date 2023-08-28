@@ -43,8 +43,7 @@ export class Loader
     public async load(): Promise<void>
     {
         let paths: string[] = (await expandDirs(this._path)).filter($ => $.endsWith('.js'));
-        for (const path of paths)
-        {
+        paths.forEach(path => {
             let file: CommandFile<boolean>;
 
             try {
@@ -94,7 +93,7 @@ export class Loader
             
 
             _clear();
-        }
+        });
 
         if (!this.noLog)
             console.log(`==============================`);
