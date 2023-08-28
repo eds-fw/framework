@@ -56,4 +56,16 @@ export const assertions = {
         (keys: (string | number | symbol)[]) => `Assertions: Keys '${keys}' does not exist on the runtime object`,
 };
 
+export const Database = {
+    invalidPath:
+        (path: string, err: unknown) => `Database: File '${path}' not found:\n\t${err}`,
+};
+
+export const Logger = {
+    counterReportError:
+        (err: unknown) => `Logger: Failed to append counter report to log file:\n\t${err}`,
+    appendMessageError:
+        (err: unknown) => `Logger: Failed to append message to log file:\n\t${err}`,
+}
+
 export const eds_errors = __this;

@@ -20,8 +20,10 @@ type MapVal<R, I> = {
 export class ComponentManager
 {
     private readonly _ButtonsMap = new Map<string, MapVal<ComponentManager.ButtonCode, ComponentManager.ButtonOptions>>();
-    private readonly _MenusMap = new Map<string, MapVal<ComponentManager.MenuStringSelectCode | ComponentManager.MenuUserSelectCode, ComponentManager.MenuOptions>>();
+    private readonly _MenusMap = new Map<string, MapVal<ComponentManager.MenuStringCode | ComponentManager.MenuUserCode, ComponentManager.MenuOptions>>();
     private readonly _ModalsMap = new Map<string, MapVal<ComponentManager.ModalCode, ComponentManager.ModalOptions>>();
+
+    public constructor() {};
 
     public get getButtonsMap()
     {
@@ -36,7 +38,7 @@ export class ComponentManager
         return this._ModalsMap;
     }
 
-    public clearMaps()
+    public clearMaps(): void
     {
         this._ButtonsMap.clear();
         this._MenusMap.clear();
@@ -52,8 +54,8 @@ export class ComponentManager
     }
     public createMenu<T extends ComponentManager.MenuOptions>(options: T,
         code: T["userSelect"] extends true
-                ? ComponentManager.MenuUserSelectCode
-                : ComponentManager.MenuStringSelectCode
+                ? ComponentManager.MenuUserCode
+                : ComponentManager.MenuStringCode
     ): void {
         this._MenusMap.set(options.custom_id, {
             run: code,
@@ -67,19 +69,17 @@ export class ComponentManager
             info: options
         });
     }
-
-    public constructor() {};
 }
 
 export namespace ComponentManager
 {
     export type ButtonCode = (ctx: eds.InteractionContext<ButtonInteraction>, options: ButtonOptions) => Promise<void> | void;
 
-    export type MenuStringSelectCode = {
+    export type MenuStringCode = {
         [key: string]: (ctx: eds.InteractionContext<StringSelectMenuInteraction>, options: MenuOptions) => Promise<void> | void;
     };
 
-    export type MenuUserSelectCode = (ctx: eds.InteractionContext<UserSelectMenuInteraction>, options: MenuOptions) => Promise<void> | void;
+    export type MenuUserCode = (ctx: eds.InteractionContext<UserSelectMenuInteraction>, options: MenuOptions) => Promise<void> | void;
 
     export type ModalCode = (ctx: eds.InteractionContext<ModalSubmitInteraction>, fields: ModalSubmitFields, options: ModalOptions) => Promise<void> | void;
 

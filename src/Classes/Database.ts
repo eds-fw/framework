@@ -1,6 +1,8 @@
 import { accessSync, readFileSync, writeFileSync } from "fs";
 import { eds } from "..";
 import { JSONSupportedDataTypes } from "../Types/JSONSupportedDataTypes";
+import { eds_errors } from "../errors";
+import deprecated from "deprecated-decorator";
 
 /**
  * A simple JSON database. Built on a `Map`-object
@@ -17,7 +19,7 @@ export class Database<V extends JSONSupportedDataTypes = JSONSupportedDataTypes>
         try {
             accessSync(path);
         } catch (err) {
-            console.log(`Database: Файл не найден.\n\tПуть: '${path}'`);
+            throw new Error(eds_errors.Database.invalidPath(path, err));
         }
 
         const entries: [string, Database.Value<V>][] = Object.entries(JSON.parse(readFileSync(path).toString() ?? "{}"));
@@ -37,12 +39,15 @@ export class Database<V extends JSONSupportedDataTypes = JSONSupportedDataTypes>
         this.Map.set(key, [value, tags]);
         if (save) this.save();
     }
+    
     /**
      * Adds a constant value to the database **(VERY SLOW)**
      * 
      * There is a mechanism of "references to keys"
+     * @deprecated doesn't work
      */
-    public set_const(key: string, value: V, tags?: Database.TagsValues, auto_ref: boolean = false, save?: boolean)
+    @deprecated("set")
+    public setConst(key: string, value: V, tags?: Database.TagsValues, auto_ref: boolean = false, save?: boolean): void
     {
         if (auto_ref)
         {
@@ -72,6 +77,18 @@ export class Database<V extends JSONSupportedDataTypes = JSONSupportedDataTypes>
             return data?.[0];
         //
     }
+    public getKey(value: V, single: boolean = false): string[]
+    {
+        let result: string[] = [];
+        for (const ent of this.Map.entries())
+            if (eds.equal(value, ent[0][1]))
+            {
+                result.push(ent[0]);
+                if (single) break;
+            }
+        //
+        return result;
+    }
     public getFull(key: string): Database.Value<V> | undefined
     {
         const data = this.Map.get(key);
@@ -96,24 +113,13 @@ export class Database<V extends JSONSupportedDataTypes = JSONSupportedDataTypes>
         return false;
     }
 
-    public getKey(value: V, single: boolean = false): string[]
-    {
-        let result: string[] = [];
-        for (const ent of this.Map.entries())
-            if (eds.equal(value, ent[1][0]))
-                result.push(ent[0]);
-            //
-        //
-        return single ? [result[0]] : result;
-    }
-
     public del(key: string): void
     {
         this.Map.delete(key);
     }
 
     /**
-     * Raw `Map`-object in JSON format
+     * Raw map-object in JSON format
      */
     public get MapJSON(): string
     {
@@ -131,7 +137,7 @@ export class Database<V extends JSONSupportedDataTypes = JSONSupportedDataTypes>
      * Deletes all elements with `$weak$` tag
      * @returns number of deleted elements
      */
-    public clearWeakData()
+    public clearWeakData(): Promise<number>
     {
         return new Promise<number>((resolve, reject) => {
             let i = 0;
