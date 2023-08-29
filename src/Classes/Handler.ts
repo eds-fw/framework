@@ -46,7 +46,7 @@ export class Handler
             componentManager: eds.ComponentManager
         }>("config", "logger", "loader", "client", "contextFactory");
         this.runtime.loader.loadBuiltin();
-        this.runtime.loader.load().then($ => {
+        this.runtime.loader.load().then(() => {
             this._init({
                 CallMap:        this.runtime.loader.getCallMap,
                 AlwaysCallMap:  this.runtime.loader.getAlwaysCallMap,
@@ -97,7 +97,7 @@ export class Handler
                     if (k === interaction.commandName)
                     {
                         let file: eds.CommandFile<true> = require(v).default || require(v);
-                        file.run(context);
+                        file.run(context)?.catch(err => eds.reportError(err, context));
                         if (file.pragmaNoLog !== true)
                             this.runtime.logger.log(logTemplateInteraction(context.interaction), 'II');
                     }
@@ -110,7 +110,8 @@ export class Handler
                     this.runtime.componentManager.getButtonsMap.forEach(async (v, k) => {
                         if (k == interaction.customId)
                         {
-                            await v.run(this.runtime.contextFactory.createInteractionContext(interaction), v.info);
+                            let context = this.runtime.contextFactory.createInteractionContext(interaction);
+                            await v.run(context, v.info)?.catch(err => eds.reportError(err, context));
                             if (v.info.noLog !== true)
                                 this.runtime.logger.log(logTemplateInteraction(interaction), 'II');
                         }
@@ -127,7 +128,8 @@ export class Handler
                                 if (interaction.values.includes(val))
                                 {
                                     if (typeof v.run !== "object") return;
-                                    await v.run[val](this.runtime.contextFactory.createInteractionContext(interaction), v.info);
+                                    let context = this.runtime.contextFactory.createInteractionContext(interaction);
+                                    await v.run[val](context, v.info)?.catch(err => eds.reportError(err, context));
                                     if (v.info.noLog !== true)
                                         this.runtime.logger.log(logTemplateInteraction(interaction), 'II');
                                 }
@@ -135,7 +137,8 @@ export class Handler
                             else if (interaction.isUserSelectMenu())
                             {
                                 if (typeof v.run !== "function") return;
-                                await v.run(this.runtime.contextFactory.createInteractionContext(interaction), v.info);
+                                let context = this.runtime.contextFactory.createInteractionContext(interaction);
+                                await v.run(context, v.info)?.catch(err => eds.reportError(err, context));
                                 if (v.info.noLog !== true)
                                     this.runtime.logger.log(logTemplateInteraction(interaction), 'II');
                             }
