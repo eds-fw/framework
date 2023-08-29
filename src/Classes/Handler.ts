@@ -137,8 +137,24 @@ export class Handler
                             else if (interaction.isUserSelectMenu())
                             {
                                 if (typeof v.run !== "function") return;
+                                if (v.info.userSelect) return;
+                                else v.run = v.run as eds.ComponentManager.MenuUserCode;
+
                                 let context = this.runtime.contextFactory.createInteractionContext(interaction);
-                                await v.run(context, v.info)?.catch(err => eds.reportError(err, context));
+                                if (v.info.userSelect)
+                                    await v.run(context, v.info)?.catch(err => eds.reportError(err, context));
+                                if (v.info.noLog !== true)
+                                    this.runtime.logger.log(logTemplateInteraction(interaction), 'II');
+                            }
+                            else if (interaction.isChannelSelectMenu())
+                            {
+                                if (typeof v.run !== "function") return;
+                                if (v.info.userSelect) return;
+                                else v.run = v.run as eds.ComponentManager.MenuChannelCode;
+
+                                let context = this.runtime.contextFactory.createInteractionContext(interaction);
+                                if (v.info.channelSelect)
+                                    await v.run(context, v.info)?.catch(err => eds.reportError(err, context));
                                 if (v.info.noLog !== true)
                                     this.runtime.logger.log(logTemplateInteraction(interaction), 'II');
                             }
