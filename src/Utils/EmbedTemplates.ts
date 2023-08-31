@@ -35,7 +35,7 @@ export async function templateEmbedReply(
     }
     else {
         if (!ctx.interaction.deferred)
-            await ctx.interaction.deferReply({ ephemeral });
+            await ctx.interaction.deferReply({ ephemeral }).catch((err) => eds.reportError(errors.Utils.replyMessageError(err), ctx));
         method = ctx.interaction.followUp.bind(ctx.interaction);
         if (!method) return;
         prevRef = previousInteraction;
@@ -86,7 +86,7 @@ export async function templateEmbedEditReply(
     }
     else {
         if (!ctx.interaction.deferred)
-            await ctx.interaction.deferReply({ ephemeral });
+            await ctx.interaction.deferReply({ ephemeral }).catch((err) => eds.reportError(errors.Utils.replyMessageError(err), ctx));
         method = ctx.interaction.reply.bind(ctx.interaction);
         prevRef = previousInteraction;
     }
