@@ -24,7 +24,7 @@
   "main": "dist/index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/east-ds-bot/framework.git"
+    "url": "git+https://github.com/easy-ds-bot/framework.git"
   },
   "keywords": [
     "discord.js",
@@ -40,9 +40,9 @@
   "license": "MIT",
   "types": "./dist/index.d.ts",
   "bugs": {
-    "url": "https://github.com/east-ds-bot/framework/issues"
+    "url": "https://github.com/easy-ds-bot/framework/issues"
   },
-  "homepage": "https://github.com/east-ds-bot/framework#readme",
+  "homepage": "https://github.com/easy-ds-bot/framework#readme",
   "directories": {
     "test": "test"
   }
