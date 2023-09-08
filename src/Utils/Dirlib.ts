@@ -4,18 +4,15 @@ import { sep } from "path";
 
 async function _isDir(path: string)
 {
-    let output: boolean = true;
     let dir;
-
     try {
         dir = await opendir(path);
     }
     catch (err: any) {
-        if (err?.errno === -4052) output = false;
+        if (err?.errno === -4052) return false;
     }
     dir?.close();
-
-    return output;
+    return dir !== undefined;
 }
 
 async function _normalize(path: string)
