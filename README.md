@@ -48,7 +48,7 @@
 - *class* `Database<V>`
     >- *field* `Map: Map<string, Value<...>>`
     >- *constructor* `new (path: string, autosave?: boolean | number)`
-    >- `save(): void`
+    >- `save(): Promise<void>`
     >- `set(key: string, value: V, tags?: TagsValues, save?: boolean): void`
     >- ~~`setConst(key: string, value: V, tags?: TagsValues, auto_ref?: boolean, save?: boolean): void`~~ ***deprecated***
     >- `get(key: string): V | undefined`
