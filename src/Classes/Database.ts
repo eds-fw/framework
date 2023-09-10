@@ -3,6 +3,7 @@ import { eds } from "..";
 import { JSONSupportedDataTypes } from "../Types/JSONSupportedDataTypes";
 import { eds_errors } from "../errors";
 import deprecated from "deprecated-decorator";
+import { writeFile } from "fs/promises";
 
 /**
  * A simple JSON database. Built on a `Map`-object
@@ -29,9 +30,11 @@ export class Database<V extends JSONSupportedDataTypes = JSONSupportedDataTypes>
         setInterval(() => this.save(), typeof autosave === "number" ? autosave : 60_000);
     }
 
-    public save(): void
+    public save(): Promise<void>
     {
-        writeFileSync(this.path, this.MapJSON);
+        return new Promise<void>(() => {
+            writeFile(this.path, this.MapJSON);
+        });
     }
 
     public set(key: string, value: V, tags?: Database.TagsValues, save?: boolean): void
