@@ -2,6 +2,7 @@ import type {
     AnySelectMenuInteraction,
     ButtonInteraction,
     ChatInputCommandInteraction,
+    ModalMessageModalSubmitInteraction,
     ModalSubmitInteraction
 } from "discord.js";
 
@@ -10,4 +11,5 @@ export type SupportedInteractions =
     | ButtonInteraction
     | AnySelectMenuInteraction
     | ModalSubmitInteraction
+    | ModalMessageModalSubmitInteraction
 //

@@ -2,6 +2,7 @@ import {
     AnySelectMenuInteraction,
     ButtonInteraction,
     ChannelSelectMenuInteraction,
+    ModalMessageModalSubmitInteraction,
     ModalSubmitFields,
     ModalSubmitInteraction,
     StringSelectMenuInteraction,
@@ -82,7 +83,7 @@ export namespace ComponentManager
     export type MenuUserCode = (ctx: eds.InteractionContext<UserSelectMenuInteraction>, options: MenuOptions) => Promise<void> | void;
     export type MenuChannelCode = (ctx: eds.InteractionContext<ChannelSelectMenuInteraction>, options: MenuOptions) => Promise<void> | void;
 
-    export type ModalCode = (ctx: eds.InteractionContext<ModalSubmitInteraction>, fields: ModalSubmitFields, options: ModalOptions) => Promise<void> | void;
+    export type ModalCode = (ctx: eds.InteractionContext<ModalSubmitInteraction | ModalMessageModalSubmitInteraction>, fields: ModalSubmitFields, options: ModalOptions) => Promise<void> | void;
 
     interface BaseOptions
     {
