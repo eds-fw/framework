@@ -18,11 +18,11 @@ export async function templateEmbedReply(
     ctx: eds.CommandContext<boolean> | eds.InteractionContext,
     ephemeral: boolean,
     title?: string,
-    content?: string,
+    description?: string,
     type: string = "default",
     components?: APIActionRowComponent<APIMessageActionRowComponent>[]
 ): Promise<void> {
-    if ((!content || content === "") && (!title || title === "")) return;
+    if ((!description || description === "") && (!title || title === "")) return;
     let config = runtimeStorage.getProp<eds.ConfigExemplar>("config");
 
     let prevRef: typeof previous = {}, method;
@@ -35,7 +35,11 @@ export async function templateEmbedReply(
     }
     else {
         if (!ctx.interaction.deferred)
-            await ctx.interaction.deferReply({ ephemeral }).catch((err) => eds.reportError(errors.Utils.replyMessageError(err), ctx));
+        {
+            let error;
+            await ctx.interaction.deferReply({ ephemeral }).catch(err => error = err);
+            if (error) return eds.reportError(errors.Utils.replyMessageError(error), ctx);
+        }
         method = ctx.interaction.followUp.bind(ctx.interaction);
         if (!method) return;
         prevRef = previousInteraction;
@@ -44,7 +48,7 @@ export async function templateEmbedReply(
     prevRef = await method({
         embeds: [{
             author: title ? { name: title } : undefined,
-            description: content,
+            description: description,
             color: type ? config.colors?.[type] : undefined,
             footer: config.footerText
             ? {
@@ -70,11 +74,11 @@ export async function templateEmbedEditReply(
     ctx: eds.CommandContext<boolean> | eds.InteractionContext,
     ephemeral: boolean,
     title?: string | undefined | null,
-    content?: string | undefined | null,
+    description?: string | undefined | null,
     type: string | undefined | null = "default",
     components?: APIActionRowComponent<APIMessageActionRowComponent>[] | undefined | null
 ): Promise<void> {
-    if ((!content || content === "") && (!title || title === "")) return;
+    if ((!description || description === "") && (!title || title === "")) return;
     let config = runtimeStorage.getProp<eds.ConfigExemplar>("config");
     
     let prevRef: typeof previous = {}, method;
@@ -86,7 +90,11 @@ export async function templateEmbedEditReply(
     }
     else {
         if (!ctx.interaction.deferred)
-            await ctx.interaction.deferReply({ ephemeral }).catch((err) => eds.reportError(errors.Utils.replyMessageError(err), ctx));
+        {
+            let error;
+            await ctx.interaction.deferReply({ ephemeral }).catch(err => error = err);
+            if (error) return eds.reportError(errors.Utils.replyMessageError(error), ctx);
+        }
         method = ctx.interaction.reply.bind(ctx.interaction);
         prevRef = previousInteraction;
     }
@@ -112,8 +120,8 @@ export async function templateEmbedEditReply(
         embed.author = { name: title };
         else if (title === undefined)
             embed.author = prevRef.embeds[0].author ?? undefined;
-        if (typeof content === "string")
-            embed.description = content;
+        if (typeof description === "string")
+            embed.description = description;
         else if (title === undefined)
             embed.description = prevRef.embeds[0].description ?? undefined;
 
@@ -139,7 +147,7 @@ export interface EmbedTemplateMethods
     reply(
         ephemeral: boolean,
         title?: string,
-        content?: string,
+        description?: string,
         type?: string,
         components?: APIActionRowComponent<APIMessageActionRowComponent>[]
     ): Promise<void>;
@@ -147,7 +155,7 @@ export interface EmbedTemplateMethods
     editReply(
         ephemeral: boolean,
         title: string | null | undefined,
-        content: string | null | undefined,
+        description: string | null | undefined,
         type: string | null | undefined,
         components: APIActionRowComponent<APIMessageActionRowComponent>[] | null | undefined
     ): Promise<void>;
