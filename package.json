@@ -9,7 +9,6 @@
     "TS_build": "npx tsc"
   },
   "dependencies": {
-    "@easy-ds-bot/framework": "^1.2.1",
     "@easy-ds-bot/timeparser": "^2.0.0",
     "@easy-ds-bot/utils": "^1.0.2",
     "array-equal": "^1.0.0",
