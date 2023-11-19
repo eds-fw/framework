@@ -33,16 +33,7 @@ export = {
                 embeds: [{
                     title: config.builtinCommandsSettings?.helpListTitleText ?? "All bot commands:",
                     color: config.colors?.info ?? config.colors?.default,
-                    footer: config.footerText
-                    ? {
-                        text: Array.isArray(config.footerText)
-                            ? config.footerText[eds.random(0, config.footerText.length - 1)]
-                            : config.footerText,
-                        icon_url: Array.isArray(config.footerIcon)
-                        ? config.footerIcon[eds.random(0, config.footerIcon.length - 1)]
-                        : config.footerIcon
-                    }
-                    : undefined,
+                    footer: eds.getRandomFooterEmbed().data_api,
                     description: loader.commandHelp.commandList
                 }]
             });
@@ -54,16 +45,7 @@ export = {
                 embeds: [{
                     title: config.builtinCommandsSettings?.helpPageTitleText ?? "Command help:",
                     color: config.colors?.info ?? config.colors?.default,
-                    footer: config.footerText
-                    ? {
-                        text: Array.isArray(config.footerText)
-                            ? config.footerText[eds.random(0, config.footerText.length - 1)]
-                            : config.footerText,
-                        icon_url: Array.isArray(config.footerIcon)
-                        ? config.footerIcon[eds.random(0, config.footerIcon.length - 1)]
-                        : config.footerIcon
-                    }
-                    : undefined,
+                    footer: eds.getRandomFooterEmbed().data_api,
                     description: loader.commandHelp.pages.get(page)
                 }]
             });

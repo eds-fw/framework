@@ -11,8 +11,8 @@ import {
 import { eds, runtimeStorage } from "..";
 import * as errors from "../errors";
 
-let previous: Message | object = {};
-let previousInteraction: InteractionResponse | Message | object = {};
+let previous: Message | undefined;
+let previousInteraction: InteractionResponse | Message;
 
 export async function templateEmbedReply(
     ctx: eds.CommandContext<boolean> | eds.InteractionContext,
@@ -25,7 +25,7 @@ export async function templateEmbedReply(
     if ((!description || description === "") && (!title || title === "")) return;
     const config = runtimeStorage.getProp<eds.ConfigExemplar>("config");
 
-    let prevRef: typeof previous = {}, method;
+    let prevRef, method;
 
     if (ctx.__contextType === "text")
     {
@@ -50,16 +50,51 @@ export async function templateEmbedReply(
             author: title ? { name: title } : undefined,
             description: description,
             color: type ? config.colors?.[type] : undefined,
-            footer: config.footerText
-            ? {
-                text: Array.isArray(config.footerText)
-                    ? config.footerText[eds.random(0, config.footerText.length - 1)]
-                    : config.footerText,
-                icon_url: Array.isArray(config.footerIcon)
-                ? config.footerIcon[eds.random(0, config.footerIcon.length - 1)]
-                : config.footerIcon
-            }
-            : undefined
+            footer: eds.getRandomFooterEmbed().data_api
+        }],
+        components
+    }).catch((err) => eds.reportError(errors.Utils.replyMessageError(err), ctx)) ?? prevRef;
+}
+export async function templateEmbedUpdate(
+    ctx: eds.CommandContext<boolean> | eds.InteractionContext,
+    ephemeral: boolean,
+    title?: string,
+    description?: string,
+    type: string = "default",
+    components?: APIActionRowComponent<APIMessageActionRowComponent>[]
+): Promise<void> {
+    if ((!description || description === "") && (!title || title === "")) return;
+    const config = runtimeStorage.getProp<eds.ConfigExemplar>("config");
+
+    let prevRef, method;
+
+    if (ctx.__contextType === "text")
+    {
+        if (previous)
+            method = previous.edit.bind(ctx.message);
+        else
+            method = ctx.message.reply.bind(ctx.message);
+        if (!method) return;
+        prevRef = previous;
+    }
+    else {
+        if (!ctx.interaction.deferred)
+        {
+            let error;
+            await ctx.interaction.deferReply({ ephemeral }).catch(err => error = err);
+            if (error) return eds.reportError(errors.Utils.replyMessageError(error), ctx);
+        }
+        method = ctx.interaction.followUp.bind(ctx.interaction);
+        if (!method) return;
+        prevRef = previousInteraction;
+    }
+
+    prevRef = await method({
+        embeds: [{
+            author: title ? { name: title } : undefined,
+            description: description,
+            color: type ? config.colors?.[type] : undefined,
+            footer: eds.getRandomFooterEmbed().data_api
         }],
         components
     }).catch((err) => eds.reportError(errors.Utils.replyMessageError(err), ctx)) ?? prevRef;
@@ -81,7 +116,7 @@ export async function templateEmbedEditReply(
     if ((!description || description === "") && (!title || title === "")) return;
     const config = runtimeStorage.getProp<eds.ConfigExemplar>("config");
     
-    let prevRef: typeof previous = {}, method;
+    let prevRef, method;
 
     if (ctx.__contextType === "text")
     {
@@ -100,21 +135,12 @@ export async function templateEmbedEditReply(
     }
 
     let embed: APIEmbed | Embed = {
-        footer: config.footerText
-            ? {
-                text: Array.isArray(config.footerText)
-                    ? config.footerText[eds.random(0, config.footerText.length - 1)]
-                    : config.footerText,
-                icon_url: Array.isArray(config.footerIcon)
-                ? config.footerIcon[eds.random(0, config.footerIcon.length - 1)]
-                : config.footerIcon
-            }
-            : undefined
+        footer: eds.getRandomFooterEmbed().data_api
     };
 
     let _components: APIActionRowComponent<APIMessageActionRowComponent>[] | ActionRowData<MessageActionRowComponentData>[] | undefined = [];
 
-    if ("embeds" in prevRef)
+    if (prevRef && "embeds" in prevRef)
     {
         if (typeof title === "string")
         embed.author = { name: title };
