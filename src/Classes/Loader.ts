@@ -42,7 +42,7 @@ export class Loader
 
     public async load(): Promise<void>
     {
-        let paths: string[] = (await expandDirs(this._path)).filter($ => $.endsWith('.js'));
+        const paths: string[] = (await expandDirs(this._path)).filter($ => $.endsWith('.js'));
         paths.forEach(path => {
             let file: CommandFile<boolean>;
 
@@ -80,7 +80,7 @@ export class Loader
                 return;
             }
 
-            let isSlash = this._loadFile(file, path);
+            const isSlash = this._loadFile(file, path);
             this.commandHelp.reg(file);
 
             if (!isSlash)
@@ -105,8 +105,8 @@ export class Loader
             console.log(`==============================`);
         if (this.builtinCommands?.help !== false)
         {
-            let path = "@easy-ds-bot/framework/dist/BuiltinCommands/help";
-            let file = require(path);
+            const path = "@easy-ds-bot/framework/dist/BuiltinCommands/help";
+            const file = require(path);
             this._loadFile(file, path);
             this.commandHelp.reg(file);
             delete require.cache[require.resolve(path)];
@@ -115,8 +115,8 @@ export class Loader
         }
         if (this.builtinCommands?.devtools !== false)
         {
-            let path = "@easy-ds-bot/framework/dist/BuiltinCommands/devtools";
-            let file = require(path);
+            const path = "@easy-ds-bot/framework/dist/BuiltinCommands/devtools";
+            const file = require(path);
             this._loadFile(file, path);
             this.commandHelp.reg(file);
             delete require.cache[require.resolve(path)];

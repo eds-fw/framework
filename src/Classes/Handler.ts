@@ -53,7 +53,7 @@ export class Handler
                 HelpInfoMap:    this.runtime.loader.getHelpInfoMap,
             });
         })
-    };
+    }
 
     private _init(maps: _initMaps): void
     {
@@ -62,7 +62,7 @@ export class Handler
 
             if (message.channel.type === ChannelType.DM && this.runtime.config.guildOnly) return;
             if (message.author.bot && this.runtime.config.ignoreBots) return;
-            let context = this.runtime.contextFactory.createTextContext(message);
+            const context = this.runtime.contextFactory.createTextContext(message);
             maps.AlwaysCallMap.forEach(path => require(path).default?.run(context) || require(path).run(context));
             if (this.runtime.config.prefix)
             {
@@ -74,7 +74,7 @@ export class Handler
                         if (k.includes(context.args[0]))
                         {
                             try {
-                                let file: eds.CommandFile<false> = require(v).default || require(v);
+                                const file: eds.CommandFile<false> = require(v).default || require(v);
                                 file.run(context);
                                 if (file.pragmaNoLog !== true)
                                     this.runtime.logger.log(logTemplateText(context.message), 'II');
@@ -92,11 +92,11 @@ export class Handler
             {
                 if (!(interaction instanceof ChatInputCommandInteraction))
                     return eds.reportError(errors.Handler.interactionTypeError(), null);
-                let context = this.runtime.contextFactory.createSlashContext(interaction);
+                const context = this.runtime.contextFactory.createSlashContext(interaction);
                 this.runtime.loader.getSlashCallMap.forEach((v, k) => {
                     if (k === interaction.commandName)
                     {
-                        let file: eds.CommandFile<true> = require(v).default || require(v);
+                        const file: eds.CommandFile<true> = require(v).default || require(v);
                         file.run(context)?.catch(err => eds.reportError(err, context));
                         if (file.pragmaNoLog !== true)
                             this.runtime.logger.log(logTemplateInteraction(context.interaction), 'II');
@@ -110,7 +110,7 @@ export class Handler
                     this.runtime.componentManager.getButtonsMap.forEach(async (v, k) => {
                         if (k == interaction.customId)
                         {
-                            let context = this.runtime.contextFactory.createInteractionContext(interaction);
+                            const context = this.runtime.contextFactory.createInteractionContext(interaction);
                             await v.run(context, v.info)?.catch(err => eds.reportError(err, context));
                             if (v.info.noLog !== true)
                                 this.runtime.logger.log(logTemplateInteraction(interaction), 'II');
@@ -128,7 +128,7 @@ export class Handler
                                 if (interaction.values.includes(val))
                                 {
                                     if (typeof v.run !== "object") return;
-                                    let context = this.runtime.contextFactory.createInteractionContext(interaction);
+                                    const context = this.runtime.contextFactory.createInteractionContext(interaction);
                                     await v.run[val](context, v.info)?.catch(err => eds.reportError(err, context));
                                     if (v.info.noLog !== true)
                                         this.runtime.logger.log(logTemplateInteraction(interaction), 'II');
@@ -140,7 +140,7 @@ export class Handler
                                 if (!v.info.userSelect) return;
                                 else v.run = v.run as eds.ComponentManager.MenuUserCode;
 
-                                let context = this.runtime.contextFactory.createInteractionContext(interaction);
+                                const context = this.runtime.contextFactory.createInteractionContext(interaction);
                                 if (v.info.userSelect)
                                     await v.run(context, v.info)?.catch(err => eds.reportError(err, context));
                                 if (v.info.noLog !== true)
@@ -152,7 +152,7 @@ export class Handler
                                 if (!v.info.channelSelect) return;
                                 else v.run = v.run as eds.ComponentManager.MenuChannelCode;
 
-                                let context = this.runtime.contextFactory.createInteractionContext(interaction);
+                                const context = this.runtime.contextFactory.createInteractionContext(interaction);
                                 if (v.info.channelSelect)
                                     await v.run(context, v.info)?.catch(err => eds.reportError(err, context));
                                 if (v.info.noLog !== true)

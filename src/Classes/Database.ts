@@ -56,7 +56,7 @@ export class Database<V extends JSONSupportedDataTypes = JSONSupportedDataTypes>
         {
             if (this.hasValue(value))
             {
-                let vals = this.getKey(value).filter($ => this.getFull($)?.[1]?.$const$ === true);
+                const vals = this.getKey(value).filter($ => this.getFull($)?.[1]?.$const$ === true);
                 if (vals.length > 0)
                     this.set(key, null as V, { $const$: true, $ref$: vals[0] });
                 else
@@ -82,7 +82,7 @@ export class Database<V extends JSONSupportedDataTypes = JSONSupportedDataTypes>
     }
     public getKey(value: V, single: boolean = false): string[]
     {
-        let result: string[] = [];
+        const result: string[] = [];
         for (const ent of this.Map.entries())
             if (eds.equal(value, ent[0][1]))
             {
@@ -142,7 +142,7 @@ export class Database<V extends JSONSupportedDataTypes = JSONSupportedDataTypes>
      */
     public clearWeakData(): Promise<number>
     {
-        return new Promise<number>((resolve, reject) => {
+        return new Promise<number>((resolve) => {
             let i = 0;
             for (const [key, value] of this.Map.entries())
             {

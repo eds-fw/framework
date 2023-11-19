@@ -25,7 +25,7 @@ export class ComponentManager
     private readonly _MenusMap = new Map<string, MapVal<ComponentManager.MenuStringCode | ComponentManager.MenuUserCode | ComponentManager.MenuChannelCode, ComponentManager.MenuOptions>>();
     private readonly _ModalsMap = new Map<string, MapVal<ComponentManager.ModalCode, ComponentManager.ModalOptions>>();
 
-    public constructor() {};
+    public constructor() {}
 
     public get getButtonsMap()
     {

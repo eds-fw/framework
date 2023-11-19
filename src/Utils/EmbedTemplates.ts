@@ -11,8 +11,8 @@ import {
 import { eds, runtimeStorage } from "..";
 import * as errors from "../errors";
 
-let previous: Message | {} = {};
-let previousInteraction: InteractionResponse | Message | {} = {};;
+let previous: Message | object = {};
+let previousInteraction: InteractionResponse | Message | object = {};
 
 export async function templateEmbedReply(
     ctx: eds.CommandContext<boolean> | eds.InteractionContext,
@@ -23,7 +23,7 @@ export async function templateEmbedReply(
     components?: APIActionRowComponent<APIMessageActionRowComponent>[]
 ): Promise<void> {
     if ((!description || description === "") && (!title || title === "")) return;
-    let config = runtimeStorage.getProp<eds.ConfigExemplar>("config");
+    const config = runtimeStorage.getProp<eds.ConfigExemplar>("config");
 
     let prevRef: typeof previous = {}, method;
 
@@ -79,7 +79,7 @@ export async function templateEmbedEditReply(
     components?: APIActionRowComponent<APIMessageActionRowComponent>[] | undefined | null
 ): Promise<void> {
     if ((!description || description === "") && (!title || title === "")) return;
-    let config = runtimeStorage.getProp<eds.ConfigExemplar>("config");
+    const config = runtimeStorage.getProp<eds.ConfigExemplar>("config");
     
     let prevRef: typeof previous = {}, method;
 

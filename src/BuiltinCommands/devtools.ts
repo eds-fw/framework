@@ -15,11 +15,11 @@ slashCommandsManager.create({
     dmPermission: true,
 });
 
-let eval_buffers = new Map<string, [string, string]>();
+const eval_buffers = new Map<string, [string, string]>();
 
 componentManager.createButton({
     custom_id: "devtools $$ evalJS"
-}, async (ctx, options) => {
+}, async (ctx) => {
         await ctx.interaction.showModal({
             custom_id: "devtools $$ evalModal",
             title: "EvalMenu",
@@ -54,7 +54,7 @@ componentManager.createMenu({
     custom_id: "devtools $$ toolSelect",
     stringSelect: true,
 }, {
-    "updateCommands": async (ctx, options) => {
+    "updateCommands": async (ctx) => {
         await ctx.interaction.deferReply({ ephemeral: true });
 
         loader.clearMaps();
@@ -63,7 +63,7 @@ componentManager.createMenu({
         await ctx.reply(true, "Bot commands successfully reloaded");
     },
 
-    "clearWeakCache": async (ctx, options) => {
+    "clearWeakCache": async (ctx) => {
         await ctx.interaction.deferReply({ ephemeral: true });
         let databases;
         try {
@@ -82,9 +82,9 @@ componentManager.createMenu({
 
 componentManager.createModal({
     custom_id: "devtools $$ evalModal"
-}, async (ctx, fields, options) => {
-    let error: any = undefined;
-    let reply: any = "<noreply>";
+}, async (ctx, fields) => {
+    let error: string | undefined = undefined;
+    let reply: string | undefined = "<noreply>";
     
     if (fields.getTextInputValue("flags").includes("save"))
         eval_buffers.set(ctx.interaction.user.id, [fields.getTextInputValue("code"), fields.getTextInputValue("flags")]);
@@ -92,7 +92,7 @@ componentManager.createModal({
     try {
         reply = await eval(`;(async () => { ${fields.getTextInputValue("code")} })();`);
     } catch (err) {
-        error = err;
+        error = String(err);
     }
 
     if (error === undefined)
