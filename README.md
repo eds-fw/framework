@@ -26,6 +26,8 @@
     >- runtime: `slashCommandsManager, client, config`
 - *async* `reportError(error: string, ctx: anyContext | null)`
     >- runtime: `logger`
+- `getRandomEmbedFooter(): { get data_api(): APIEmbedFooter; get data_djs(): EmbedFooterData }`
+    >- runtime: `config`
 - *anonimous class* `runtimeStorage` *(runtime)*
     >- `[key: string]: any`
     >- `get<T>(..keys: (keyof T)): T`
