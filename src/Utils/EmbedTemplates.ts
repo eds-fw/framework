@@ -55,50 +55,6 @@ export async function templateEmbedReply(
         components
     }).catch((err) => eds.reportError(errors.Utils.replyMessageError(err), ctx)) ?? prevRef;
 }
-export async function templateEmbedUpdate(
-    ctx: eds.CommandContext<boolean> | eds.InteractionContext,
-    ephemeral: boolean,
-    title?: string,
-    description?: string,
-    type: string = "default",
-    components?: APIActionRowComponent<APIMessageActionRowComponent>[]
-): Promise<void> {
-    if ((!description || description === "") && (!title || title === "")) return;
-    const config = runtimeStorage.getProp<eds.ConfigExemplar>("config");
-
-    let prevRef, method;
-
-    if (ctx.__contextType === "text")
-    {
-        if (previous)
-            method = previous.edit.bind(ctx.message);
-        else
-            method = ctx.message.reply.bind(ctx.message);
-        if (!method) return;
-        prevRef = previous;
-    }
-    else {
-        if (!ctx.interaction.deferred)
-        {
-            let error;
-            await ctx.interaction.deferReply({ ephemeral }).catch(err => error = err);
-            if (error) return eds.reportError(errors.Utils.replyMessageError(error), ctx);
-        }
-        method = ctx.interaction.followUp.bind(ctx.interaction);
-        if (!method) return;
-        prevRef = previousInteraction;
-    }
-
-    prevRef = await method({
-        embeds: [{
-            author: title ? { name: title } : undefined,
-            description: description,
-            color: type ? config.colors?.[type] : undefined,
-            footer: eds.getRandomFooterEmbed().data_api
-        }],
-        components
-    }).catch((err) => eds.reportError(errors.Utils.replyMessageError(err), ctx)) ?? prevRef;
-}
 /**
  * Edits previous message
  * 
