@@ -24,7 +24,6 @@ export class ContextFactory
             logger: this.runtime.logger,
             __contextType: "text",
             reply: (...params: Parameters<eds.EmbedTemplateMethods["reply"]>) => eds.templateEmbedReply(ctx, ...params),
-            update: (...params: Parameters<eds.EmbedTemplateMethods["update"]>) => eds.templateEmbedReply(ctx, ...params),
             editReply: (...params: Parameters<eds.EmbedTemplateMethods["editReply"]>) => eds.templateEmbedEditReply(ctx, ...params),
         } as eds.CommandContext<false>;
 
@@ -38,7 +37,6 @@ export class ContextFactory
             logger: this.runtime.logger,
             __contextType: "slash",
             reply: (...params: Parameters<eds.EmbedTemplateMethods["reply"]>) => eds.templateEmbedReply(ctx, ...params),
-            update: (...params: Parameters<eds.EmbedTemplateMethods["update"]>) => eds.templateEmbedReply(ctx, ...params),
             editReply: (...params: Parameters<eds.EmbedTemplateMethods["editReply"]>) => eds.templateEmbedEditReply(ctx, ...params),
         } as eds.CommandContext<true>;
 
@@ -52,7 +50,6 @@ export class ContextFactory
             logger: this.runtime.logger,
             __contextType: "interaction",
             reply: (...params: Parameters<eds.EmbedTemplateMethods["reply"]>) => eds.templateEmbedReply(ctx, ...params),
-            update: (...params: Parameters<eds.EmbedTemplateMethods["update"]>) => eds.templateEmbedReply(ctx, ...params),
             editReply: (...params: Parameters<eds.EmbedTemplateMethods["editReply"]>) => eds.templateEmbedEditReply(ctx, ...params),
         } as eds.InteractionContext<T>;
 
