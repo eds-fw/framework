@@ -26,16 +26,14 @@ export const Loader = {
 };
 
 export const Utils = {
-    replyInteractionError:
-        (err: unknown) => `Utils/EmbedTemplates: IReply() APIError:\n\t${err}`,
-    editInteractionError:
-        (err: unknown) => `Utils/EmbedTemplates: IEdit() APIError:\n\t${err}`,
     replyMessageError:
-        (err: unknown) => `Utils/EmbedTemplates: MReply() APIError:\n\t${err}`,
+        (err: unknown) => `Utils/EmbedTemplates: Reply() APIError:\n\t${err}`,
     sendMessageError:
-        (err: unknown) => `Utils/EmbedTemplates: MSend() APIError:\n\t${err}`,
+        (err: unknown) => `Utils/EmbedTemplates: Send() APIError:\n\t${err}`,
     editMessageError:
-        (err: unknown) => `Utils/EmbedTemplates: MEdit() APIError:\n\t${err}`,
+        (err: unknown) => `Utils/EmbedTemplates: Edit() APIError:\n\t${err}`,
+    updateMessageError:
+        (err: unknown) => `Utils/EmbedTemplates: Update() APIError:\n\t${err}`,
     fetchUserError:
         (user: UserResolvable, err: unknown) => `Utils/Fetch: Failed to fetch user '${user}':\n\t${err}`,
 };

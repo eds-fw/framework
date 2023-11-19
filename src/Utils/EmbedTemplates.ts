@@ -3,10 +3,12 @@ import {
     APIActionRowComponent,
     APIEmbed,
     APIMessageActionRowComponent,
+    ChatInputCommandInteraction,
     Embed,
     InteractionResponse,
     Message,
     MessageActionRowComponentData,
+    ModalSubmitInteraction,
 } from "discord.js";
 import { eds, runtimeStorage } from "..";
 import * as errors from "../errors";
@@ -56,7 +58,7 @@ export async function templateEmbedReply(
     }).catch((err) => eds.reportError(errors.Utils.replyMessageError(err), ctx)) ?? prevRef;
 }
 export async function templateEmbedUpdate(
-    ctx: eds.CommandContext<boolean> | eds.InteractionContext,
+    ctx: eds.TextCommandContext | eds.InteractionContext<Exclude<eds.SupportedInteractions, ChatInputCommandInteraction | ModalSubmitInteraction>>,
     ephemeral: boolean,
     title?: string,
     description?: string,
@@ -78,13 +80,7 @@ export async function templateEmbedUpdate(
         prevRef = previous;
     }
     else {
-        if (!ctx.interaction.deferred)
-        {
-            let error;
-            await ctx.interaction.deferReply({ ephemeral }).catch(err => error = err);
-            if (error) return eds.reportError(errors.Utils.replyMessageError(error), ctx);
-        }
-        method = ctx.interaction.followUp.bind(ctx.interaction);
+        method = ctx.interaction.update.bind(ctx.interaction);
         if (!method) return;
         prevRef = previousInteraction;
     }
@@ -97,7 +93,7 @@ export async function templateEmbedUpdate(
             footer: eds.getRandomFooterEmbed().data_api
         }],
         components
-    }).catch((err) => eds.reportError(errors.Utils.replyMessageError(err), ctx)) ?? prevRef;
+    }).catch((err) => eds.reportError(errors.Utils.updateMessageError(err), ctx)) ?? prevRef;
 }
 /**
  * Edits previous message
@@ -165,12 +161,20 @@ export async function templateEmbedEditReply(
     prevRef = await method({
         embeds: [embed],
         components: _components
-    }).catch((err) => eds.reportError(errors.Utils.replyMessageError(err), ctx)) ?? prevRef;
+    }).catch((err) => eds.reportError(errors.Utils.editMessageError(err), ctx)) ?? prevRef;
 }
 
 export interface EmbedTemplateMethods
 {
     reply(
+        ephemeral: boolean,
+        title?: string,
+        description?: string,
+        type?: string,
+        components?: APIActionRowComponent<APIMessageActionRowComponent>[]
+    ): Promise<void>;
+
+    update(
         ephemeral: boolean,
         title?: string,
         description?: string,
