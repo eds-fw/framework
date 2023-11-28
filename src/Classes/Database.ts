@@ -1,6 +1,5 @@
-import { accessSync, readFileSync, writeFileSync } from "fs";
+import { accessSync, readFileSync } from "fs";
 import { eds } from "..";
-import { JSONSupportedDataTypes } from "../Types/JSONSupportedDataTypes";
 import { eds_errors } from "../errors";
 import deprecated from "deprecated-decorator";
 import { writeFile } from "fs/promises";
@@ -8,7 +7,7 @@ import { writeFile } from "fs/promises";
 /**
  * A simple JSON database. Built on a `Map`-object
  */
-export class Database<V extends JSONSupportedDataTypes = JSONSupportedDataTypes>
+export class Database<V extends eds.JSONSupportedValueTypes = eds.JSONSupportedValueTypes>
 {
     /**
      * Raw map-object

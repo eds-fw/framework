@@ -25,7 +25,6 @@ export * from "./Types/Command/CommandFile";
 export * from "./Types/Command/CommandHelpInfo";
 export * from "./Types/Command/CommandInfo";
 export * from "./Types/Config";
-export * from "./Types/JSONSupportedDataTypes";
 export * from "./Types/SupportedInteractions";
 
 export * from "./Utils/Dirlib";

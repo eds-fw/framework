@@ -1,8 +1,8 @@
-import { JSONSupportedDataTypes } from "../Types/JSONSupportedDataTypes";
+import { JSONSupportedValueTypes } from "../Types/JSONSupportedValueTypes";
 /**
  * A simple JSON database. Built on a `Map`-object
  */
-export declare class Database<V extends JSONSupportedDataTypes = JSONSupportedDataTypes> {
+export declare class Database<V extends JSONSupportedValueTypes = JSONSupportedValueTypes> {
     private path;
     /**
      * Raw map-object

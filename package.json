@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@easy-ds-bot/timeparser": "^2.0.0",
-    "@easy-ds-bot/utils": "^1.0.2",
+    "@easy-ds-bot/utils": "^1.1.0",
     "array-equal": "^1.0.0",
     "deprecated-decorator": "^0.1.6",
     "discord.js": "^14.12.1",
