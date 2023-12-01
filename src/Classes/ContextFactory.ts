@@ -9,7 +9,7 @@ export class ContextFactory
     private runtime;
 
     public constructor() {
-        this.runtime = runtimeStorage.get<{
+        this.runtime = runtimeStorage.getAll<{
             logger: eds.Logger,
             config: eds.ConfigExemplar
         }>("logger", "config");

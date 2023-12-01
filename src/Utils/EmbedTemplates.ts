@@ -4,6 +4,7 @@ import {
     APIEmbed,
     APIMessageActionRowComponent,
     Embed,
+    EmbedData,
     InteractionResponse,
     Message,
     MessageActionRowComponentData,
@@ -20,7 +21,8 @@ export async function templateEmbedReply(
     title?: string,
     description?: string,
     type: string = "default",
-    components?: APIActionRowComponent<APIMessageActionRowComponent>[]
+    components?: APIActionRowComponent<APIMessageActionRowComponent>[],
+    full_message?: EmbedData
 ): Promise<void> {
     if ((!description || description === "") && (!title || title === "")) return;
     const config = runtimeStorage.getProp<eds.ConfigExemplar>("config");
@@ -45,7 +47,7 @@ export async function templateEmbedReply(
         prevRef = previousInteraction;
     }
 
-    prevRef = await method({
+    prevRef = await method(Object.assign({}, {
         embeds: [{
             author: title ? { name: title } : undefined,
             description: description,
@@ -53,7 +55,7 @@ export async function templateEmbedReply(
             footer: eds.getRandomFooterEmbed().data_api
         }],
         components
-    }).catch((err) => eds.reportError(errors.Utils.replyMessageError(err), ctx)) ?? prevRef;
+    }, full_message ?? {})).catch((err) => eds.reportError(errors.Utils.replyMessageError(err), ctx)) ?? prevRef;
 }
 /**
  * Edits previous message
@@ -67,7 +69,8 @@ export async function templateEmbedEditReply(
     title?: string | undefined | null,
     description?: string | undefined | null,
     type: string | undefined | null = "default",
-    components?: APIActionRowComponent<APIMessageActionRowComponent>[] | undefined | null
+    components?: APIActionRowComponent<APIMessageActionRowComponent>[] | undefined | null,
+    full_message?: EmbedData
 ): Promise<void> {
     if ((!description || description === "") && (!title || title === "")) return;
     const config = runtimeStorage.getProp<eds.ConfigExemplar>("config");
@@ -118,10 +121,10 @@ export async function templateEmbedEditReply(
             _components = components;
     }
 
-    prevRef = await method({
+    prevRef = await method(Object.assign({}, {
         embeds: [embed],
         components: _components
-    }).catch((err) => eds.reportError(errors.Utils.replyMessageError(err), ctx)) ?? prevRef;
+    }, full_message ?? {})).catch((err) => eds.reportError(errors.Utils.replyMessageError(err), ctx)) ?? prevRef;
 }
 
 export interface EmbedTemplateMethods
@@ -131,7 +134,8 @@ export interface EmbedTemplateMethods
         title?: string,
         description?: string,
         type?: string,
-        components?: APIActionRowComponent<APIMessageActionRowComponent>[]
+        components?: APIActionRowComponent<APIMessageActionRowComponent>[],
+        full_message?: EmbedData
     ): Promise<void>;
 
     editReply(
@@ -139,6 +143,7 @@ export interface EmbedTemplateMethods
         title: string | null | undefined,
         description: string | null | undefined,
         type: string | null | undefined,
-        components: APIActionRowComponent<APIMessageActionRowComponent>[] | null | undefined
+        components: APIActionRowComponent<APIMessageActionRowComponent>[] | null | undefined,
+        full_message?: EmbedData
     ): Promise<void>;
 }

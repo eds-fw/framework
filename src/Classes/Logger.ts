@@ -1,9 +1,12 @@
 import { accessSync, appendFileSync, mkdirSync } from "fs";
 import { eds_errors } from "../errors";
+import deprecated from "deprecated-decorator";
 
 /**
  * Writes the specified text to .log files. Keeps count of the number of messages.
+ * @deprecated
  */
+@deprecated
 export class Logger
 {
     private _path: string = "";

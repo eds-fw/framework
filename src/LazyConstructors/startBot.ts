@@ -3,7 +3,7 @@ import { type eds, runtimeStorage } from "..";
 export async function startBot(): Promise<void>
 {
     const { __createCommand } = await import("../BuiltinCommands/help");
-    let runtime = runtimeStorage.get<{
+    let runtime = runtimeStorage.getAll<{
         slashCommandsManager: eds.SlashCommandsManager,
         client: eds.Client,
         config: eds.ConfigExemplar

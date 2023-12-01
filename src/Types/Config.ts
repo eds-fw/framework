@@ -32,6 +32,7 @@ export interface ConfigExemplar
      * 
      * **Warning! The path is counted from the folder where the `package.json` and `start.bat`/`start.sh` files are located**
      * @default undefined
+     * @deprecated
      */
     logsPath?: string;
 //==========
@@ -140,6 +141,7 @@ export interface ConfigExemplar
      * 
      * Example: `9` = `GMT+9`, `-1` = `GMT-1`
      * @default 0
+     * @deprecated
      */
     timeOffset?: number;
 }

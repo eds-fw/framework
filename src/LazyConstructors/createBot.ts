@@ -21,5 +21,5 @@ export function createBot(config: eds.ConfigExemplar): KnownRuntimeProperties
     runtimeStorage.setProp("loader",                new eds.Loader(config.commandsPath, false, config.doNotLoadFilesStartsWith, config.includeBuiltinCommands));
     runtimeStorage.setProp("contextFactory",        new eds.ContextFactory);
     runtimeStorage.setProp("handler",               new eds.Handler);
-    return runtimeStorage.get<KnownRuntimeProperties>("config", "logger", "client", "componentManager", "loader", "contextFactory", "handler", "slashCommandsManager");
+    return runtimeStorage.getAll<KnownRuntimeProperties>("config", "logger", "client", "componentManager", "loader", "contextFactory", "handler", "slashCommandsManager");
 }

@@ -37,7 +37,7 @@ export class Handler
     private runtime;
 
     public constructor() {
-        this.runtime = runtimeStorage.get<{
+        this.runtime = runtimeStorage.getAll<{
             config: eds.ConfigExemplar,
             logger: eds.Logger,
             loader: eds.Loader,
