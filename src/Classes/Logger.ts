@@ -6,7 +6,6 @@ import deprecated from "deprecated-decorator";
  * Writes the specified text to .log files. Keeps count of the number of messages.
  * @deprecated
  */
-@deprecated
 export class Logger
 {
     private _path: string = "";
@@ -14,6 +13,7 @@ export class Logger
 
     public msgCount: number = 0;
 
+    /** @deprecated */
     public constructor(private dirpath: string = "./logs", private time_offset: number = 0)
     {
         try {
@@ -32,8 +32,10 @@ export class Logger
         this._date = this._today();
     }
 
+    @deprecated()
     public template = (message: string, level: string = 'U') => `\n[${this._time()}] [${level}] (${this.msgCount + 1}) ${message}`;
 
+    @deprecated()
     public log(message: string, level?: 'I' | 'II' | 'III'): void
     {
         //load displacement
