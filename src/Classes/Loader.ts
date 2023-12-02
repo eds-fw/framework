@@ -36,8 +36,7 @@ export class Loader
         this._AlwaysCallMap = [];
         this._HelpInfoMap.clear();
 
-        this.commandHelp.commandList = '';
-        this.commandHelp.pages.clear();
+        this.commandHelp.clear();
     }
 
     public async load(): Promise<void>

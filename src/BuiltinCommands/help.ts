@@ -25,37 +25,11 @@ export = {
         })
     },
     async run(ctx) {
-        await ctx.interaction.deferReply({ ephemeral: true });
-
-        async function showList()
-        {
-            await ctx.interaction.followUp({
-                embeds: [{
-                    title: config.builtinCommandsSettings?.helpListTitleText ?? "All bot commands:",
-                    color: config.colors?.info ?? config.colors?.default,
-                    footer: eds.getRandomFooterEmbed().data_api,
-                    description: loader.commandHelp.commandList
-                }]
-            });
-        }
-
-        async function showPage(page: string)
-        {
-            await ctx.interaction.followUp({
-                embeds: [{
-                    title: config.builtinCommandsSettings?.helpPageTitleText ?? "Command help:",
-                    color: config.colors?.info ?? config.colors?.default,
-                    footer: eds.getRandomFooterEmbed().data_api,
-                    description: loader.commandHelp.pages.get(page)
-                }]
-            });
-        }
-
         if (ctx.interaction.options.getString("command") !== null
         && loader.commandHelp.pages.has(ctx.interaction.options.getString("command") as NonNullable<ReturnType<typeof ctx.interaction.options.getString>>))
-            await showPage(ctx.interaction.options.getString("command") as NonNullable<ReturnType<typeof ctx.interaction.options.getString>>);
+            await showPage(ctx, ctx.interaction.options.getString("command") as NonNullable<ReturnType<typeof ctx.interaction.options.getString>>);
         else
-            await showList();
+            await showList(ctx);
         //
     },
     info: {
@@ -67,3 +41,36 @@ export = {
         category: runtimeStorage.getProp<eds.ConfigExemplar>("config").builtinCommandsSettings?.helpCommandCategory ?? "General",
     }
 } satisfies eds.CommandFile<true> & { __createCommand: () => Promise<void> };
+
+async function showList(ctx: eds.CommandContext<true>)
+{
+    let roles: string[] = ctx.interaction.member?.roles
+        ? Array.isArray(ctx.interaction.member?.roles)
+            ? ctx.interaction.member?.roles
+            : ctx.interaction.member?.roles.cache.values()
+                ? eds.arrayFromIterator(ctx.interaction.member?.roles.cache.values()).map(role => role.id)
+                : []
+                : [];
+    await ctx.interaction.reply({
+        embeds: [{
+            title: config.builtinCommandsSettings?.helpListTitleText ?? "All bot commands:",
+            color: config.colors?.info ?? config.colors?.default,
+            footer: eds.getRandomFooterEmbed().data_api,
+            description: loader.commandHelp.getCommandList(roles)
+        }],
+        ephemeral: true
+    });
+}
+
+async function showPage(ctx: eds.CommandContext<true>, page: string)
+{
+    await ctx.interaction.reply({
+        embeds: [{
+            title: config.builtinCommandsSettings?.helpPageTitleText ?? "Command help:",
+            color: config.colors?.info ?? config.colors?.default,
+            footer: eds.getRandomFooterEmbed().data_api,
+            description: loader.commandHelp.pages.get(page)
+        }],
+        ephemeral: true
+    });
+}

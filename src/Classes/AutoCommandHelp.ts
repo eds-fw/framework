@@ -1,4 +1,4 @@
-import { type eds, runtimeStorage } from "..";
+import { eds, runtimeStorage } from "..";
 
 /**
  * Automatically generates the message text of the help command. Also generates detailed help for each command.
@@ -7,7 +7,9 @@ export class AutoCommandHelp
 {
     private runtime;
     
-    public commandList: string = '';
+    private _publicCommands: string = '';
+    private _limitedCommands = new Map<string[], string>();
+    public _fullCommandList: string = '';
     public pages = new Map<string, string>();
     public templates = {
         noDesc: "<no description>",
@@ -34,9 +36,37 @@ export class AutoCommandHelp
             file.info.desc,
             file.info.usageDocs
         ));
-        this.commandList += file.info.slash
-            ? this.templates.commandSlash(file.info.name + (file.info.usage ? ' ' + file.info.usage : ''), file.info.desc)
-            : this.templates.commandText(file.info.name + (file.info.usage ? ' ' + file.info.usage : ''), file.info.desc);
-        //
+        let buf = '';
+        if (file.info.slash)
+            buf = this.templates.commandSlash(file.info.name + (file.info.usage ? ' ' + file.info.usage : ''), file.info.desc);
+        else
+            buf = this.templates.commandText(file.info.name + (file.info.usage ? ' ' + file.info.usage : ''), file.info.desc);
+        this._fullCommandList += buf;
+        if (file.info.allowedRoles === undefined || file.info.allowedRoles.length == 0)
+            this._publicCommands += buf;
+        else
+            this._limitedCommands.set(file.info.allowedRoles, this._limitedCommands.get(file.info.allowedRoles) ?? "" + buf);
+    }
+
+    public getCommandList(roles: string[]): string
+    {
+        let baked = this._publicCommands;
+        if (roles.length == 0) return baked;
+        this._limitedCommands.forEach((command, roles) => {
+            for (const role of roles)
+                if (roles.includes(role))
+                {
+                    baked += command;
+                    break;
+                }
+        });
+        return baked;
+    }
+
+    public clear(): void
+    {
+        this._fullCommandList = '';
+        this._limitedCommands.clear();
+        this._publicCommands = '';
     }
 }

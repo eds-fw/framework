@@ -9,4 +9,6 @@ export interface CommandHelpInfo
    category?:     string;
    allowInDM?:    boolean;
    hidden?:       boolean;
+   /** Do not add 'everyone' role ID */
+   allowedRoles?: string[];
 }
