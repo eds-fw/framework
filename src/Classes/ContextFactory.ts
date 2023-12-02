@@ -10,6 +10,7 @@ export class ContextFactory
 
     public constructor() {
         this.runtime = runtimeStorage.getAll<{
+            /** @deprecated */
             logger: eds.Logger,
             config: eds.ConfigExemplar
         }>("logger", "config");
@@ -21,9 +22,11 @@ export class ContextFactory
         const ctx = {
             message,
             args,
+            /** @deprecated */
             logger: this.runtime.logger,
             __contextType: "text",
             reply: (...params: Parameters<eds.EmbedTemplateMethods["reply"]>) => eds.templateEmbedReply(ctx, ...params),
+            /** @deprecated */
             editReply: (...params: Parameters<eds.EmbedTemplateMethods["editReply"]>) => eds.templateEmbedEditReply(ctx, ...params),
         } as eds.CommandContext<false>;
 
@@ -34,9 +37,11 @@ export class ContextFactory
     {
         const ctx = {
             interaction,
+            /** @deprecated */
             logger: this.runtime.logger,
             __contextType: "slash",
             reply: (...params: Parameters<eds.EmbedTemplateMethods["reply"]>) => eds.templateEmbedReply(ctx, ...params),
+            /** @deprecated */
             editReply: (...params: Parameters<eds.EmbedTemplateMethods["editReply"]>) => eds.templateEmbedEditReply(ctx, ...params),
         } as eds.CommandContext<true>;
 
@@ -47,9 +52,11 @@ export class ContextFactory
     {
         const ctx = {
             interaction,
+            /** @deprecated */
             logger: this.runtime.logger,
             __contextType: "interaction",
             reply: (...params: Parameters<eds.EmbedTemplateMethods["reply"]>) => eds.templateEmbedReply(ctx, ...params),
+            /** @deprecated */
             editReply: (...params: Parameters<eds.EmbedTemplateMethods["editReply"]>) => eds.templateEmbedEditReply(ctx, ...params),
         } as eds.InteractionContext<T>;
 

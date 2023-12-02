@@ -16,7 +16,7 @@ export const Loader = {
     templateLoadCommandError:
         (path: string, reason: string) => `| E "${path}" [${reason}]`,
     templateLoadCommandSkipped:
-        (path: string) => `| S "${path}" [SKIPPED]`,
+        (path: string) => `|   "${path}" [SKIPPED]`,
     templateLoadCommandSuccessText:
         (name: string) => `| > ${name}`,
     templateLoadCommandSuccessSlash:
