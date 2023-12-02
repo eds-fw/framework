@@ -36,13 +36,7 @@ export async function templateEmbedReply(
         prevRef = previous;
     }
     else {
-        if (!ctx.interaction.deferred)
-        {
-            let error;
-            await ctx.interaction.deferReply({ ephemeral }).catch(err => error = err);
-            if (error) return eds.reportError(errors.Utils.replyMessageError(error), ctx);
-        }
-        method = ctx.interaction.followUp.bind(ctx.interaction);
+        method = ctx.interaction.reply.bind(ctx.interaction);
         if (!method) return;
         prevRef = previousInteraction;
     }
@@ -54,14 +48,16 @@ export async function templateEmbedReply(
             color: type ? config.colors?.[type] : undefined,
             footer: eds.getRandomFooterEmbed().data_api
         }],
-        components
-    }, full_message ?? {})).catch((err) => eds.reportError(errors.Utils.replyMessageError(err), ctx)) ?? prevRef;
+        components,
+        ephemeral
+    }, full_message ?? {})).catch((err) => console.error(err)) ?? prevRef;
 }
 /**
  * Edits previous message
  * 
  * `undefined` = without changes,
  * `null` = remove
+ * @deprecated
  */
 export async function templateEmbedEditReply(
     ctx: eds.CommandContext<boolean> | eds.InteractionContext,
@@ -72,6 +68,7 @@ export async function templateEmbedEditReply(
     components?: APIActionRowComponent<APIMessageActionRowComponent>[] | undefined | null,
     full_message?: EmbedData
 ): Promise<void> {
+console.log(`Function \`ctx.editReply()\` has been deprecated.`);
     if ((!description || description === "") && (!title || title === "")) return;
     const config = runtimeStorage.getProp<eds.ConfigExemplar>("config");
     
@@ -124,7 +121,7 @@ export async function templateEmbedEditReply(
     prevRef = await method(Object.assign({}, {
         embeds: [embed],
         components: _components
-    }, full_message ?? {})).catch((err) => eds.reportError(errors.Utils.replyMessageError(err), ctx)) ?? prevRef;
+    }, full_message ?? {})).catch((err) => console.error(err)) ?? prevRef;
 }
 
 export interface EmbedTemplateMethods
