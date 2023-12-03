@@ -41,8 +41,8 @@ export class Database<V extends eds.JSONSupportedValueTypes = eds.JSONSupportedV
 
     public save(): Promise<void>
     {
-        return new Promise<void>(() => {
-            writeFile(this.path, this.MapJSON);
+        return new Promise<void>(async () => {
+            await writeFile(this.path, this.MapJSON);
             if (this.dump_path)
             writeFile(this.dump_path, this.MapJSON);
         });
