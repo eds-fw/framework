@@ -1,4 +1,4 @@
-import { accessSync, readFileSync } from "fs";
+import { accessSync, constants, mkdirSync, openSync, readFileSync, writeFileSync } from "fs";
 import { eds } from "..";
 import { eds_errors } from "../errors";
 import deprecated from "deprecated-decorator";
@@ -22,11 +22,21 @@ export class Database<V extends eds.JSONSupportedValueTypes = eds.JSONSupportedV
             throw new Error(eds_errors.Database.invalidPath(path, err));
         }
 
-        const entries: [string, Database.Value<V>][] = Object.entries(JSON.parse(readFileSync(path).toString() ?? "{}"));
+        const entries: [string, Database.Value<V>][] = Object.entries(JSON.parse(readFileSync(path).toString() || "{}"));
         this.Map = new Map(entries);
 
         if (autosave)
         setInterval(() => this.save(), typeof autosave === "number" ? autosave : 60_000);
+
+        if (dump_path)
+        try {
+            accessSync(dump_path, constants.R_OK | constants.W_OK);
+        } catch (err)
+        {
+            const splitted = dump_path.replaceAll('\\', '/').split('/');
+            mkdirSync(splitted.slice(0, -1).join('/'), { recursive: true });
+            writeFileSync(splitted.join('/'), '{}');
+        }
     }
 
     public save(): Promise<void>
