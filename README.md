@@ -19,7 +19,7 @@
     >- runtime: `componentManager`
 - `createModal(options: ModalOptions, code: ModalCode): void` *(lazyConstructor)*
     >- runtime: `componentManager`
-- `createDB(name: string, path: string, autosave?: boolean | number): void` *(lazyConstructor)*
+- `createDB(name: string, path: string, autosave?: boolean | number, dump_path?: string): void` *(lazyConstructor)*
 - `createSlashCommand(options: SpplicationCommandData): void` *(lazyConstructor)*
     >- runtime: `slashCommandsManager`
 - *async* `startBot(): Promise<void>`
@@ -30,13 +30,12 @@
     >- runtime: `config`
 - *anonimous class* `runtimeStorage` *(runtime)*
     >- `[key: string]: any`
-    >- `get<T>(..keys: (keyof T)): T`
+    >- `getAll<T>(..keys: (keyof T)): T`
     >- `getProp<V>(key: string): V`
-    >- `set<T>(values: T): T`
+    >- `setAll<T>(values: T): T`
     >- `setProp<K, V>(key: K, value: V): { [X in K]: V }`
 - *class* `Client` *extends djs.Client*
     >- *constructor* `new (options: Options)`
-    >- `onReady(code?: (client: djs.Client) => Promise<void> | void): void`
     >- *async* `init(): Promise<void>`
 - *class* `ComponentsManager`
     >- *constructor* `new (){}`
@@ -49,10 +48,9 @@
     >- *iternal* *get* `getModalsMap: Map<string, MapVal<...>>`
 - *class* `Database<V>`
     >- *field* `Map: Map<string, Value<...>>`
-    >- *constructor* `new (path: string, autosave?: boolean | number)`
+    >- *constructor* `new (path: string, autosave?: boolean | number, dump_path?: string)`
     >- `save(): Promise<void>`
     >- `set(key: string, value: V, tags?: TagsValues, save?: boolean): void`
-    >- ~~`setConst(key: string, value: V, tags?: TagsValues, auto_ref?: boolean, save?: boolean): void`~~ ***deprecated***
     >- `get(key: string): V | undefined`
     >- `getKey(value: V, single?: boolean): string[]`
     >- `getFull(key: string): Value<V> | undefined`
@@ -88,11 +86,13 @@
 - *iternal* *async* `templateEmbedEditReply(...params): Promise<void>`
 - *iternal* *class* `AutoCommandHelp`
     >- runtime: `config`
-    >- *field* `commandList: string`
     >- *field* `pages: Map<string, string>`
     >- *field* `templates: {...}`
+    >- *field* `_fullCommandList: string`
     >- *constructor* `new ()`
     >- `reg(file: CommandFile<boolean> as const): void`
+    >- `getCommandList(roles: string[]): string`
+    >- `clear(): void`
 - *iternal* *class* `ContextFactory`
     >- runtime: `config, logger`
     >- *constructor* `new ()`

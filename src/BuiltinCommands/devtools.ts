@@ -55,8 +55,6 @@ componentManager.createMenu({
     stringSelect: true,
 }, {
     "updateCommands": async (ctx) => {
-        await ctx.interaction.deferReply({ ephemeral: true });
-
         loader.clearMaps();
         loader.load();
 
@@ -64,7 +62,6 @@ componentManager.createMenu({
     },
 
     "clearWeakCache": async (ctx) => {
-        await ctx.interaction.deferReply({ ephemeral: true });
         let databases;
         try {
             databases = Object.values(runtimeStorage.getProp<Record<string, eds.Database>>("databases"));

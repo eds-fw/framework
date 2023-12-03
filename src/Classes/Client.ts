@@ -1,3 +1,4 @@
+import deprecated from "deprecated-decorator";
 import { Client as DClient, GatewayIntentsString } from "discord.js";
 
 export class Client extends DClient
@@ -35,6 +36,8 @@ export class Client extends DClient
         this._token = options.token;
     }
 
+    /** @deprecated */
+    @deprecated()
     public onReady(code: (client: DClient<true>) => Promise<void> | void = () => console.log("I am ready")): void
     {
         this.on("ready", (client) => code(client));

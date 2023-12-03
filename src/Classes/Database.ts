@@ -14,7 +14,7 @@ export class Database<V extends eds.JSONSupportedValueTypes = eds.JSONSupportedV
      */
     public Map: Map<string, Database.Value<V>>;
 
-    public constructor(private path: string, autosave?: boolean | number)
+    public constructor(private path: string, autosave?: boolean | number, private dump_path?: string)
     {
         try {
             accessSync(path);
@@ -33,6 +33,8 @@ export class Database<V extends eds.JSONSupportedValueTypes = eds.JSONSupportedV
     {
         return new Promise<void>(() => {
             writeFile(this.path, this.MapJSON);
+            if (this.dump_path)
+            writeFile(this.dump_path, this.MapJSON);
         });
     }
 
