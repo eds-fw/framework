@@ -113,7 +113,7 @@ export = {
 
         if (!await conditions()) return;
 
-        await ctx.reply(true, undefined, "Welcome to `eds` developer menu `(>.<)`!\nYou see this message - it means that your ID is in `config.developers` array", "info", [{
+        await ctx.reply(true, undefined, "Welcome to `eds` developer menu!\nYou see this message - it means that your ID is in `config.developers` array", "info", [{
             type: ComponentType.ActionRow,
             components: [{
                 type: ComponentType.StringSelect,
@@ -142,8 +142,6 @@ export = {
     info: {
         name: "devtools",
         slash: true,
-
-        usage: "devtools",
         desc: "Open developer tools",
         hidden: true
     }

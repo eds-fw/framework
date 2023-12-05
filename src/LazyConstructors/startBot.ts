@@ -9,8 +9,10 @@ export async function startBot(): Promise<void>
         config: eds.ConfigExemplar
     }>("slashCommandsManager", "client", "config");
     
-    await __createCommand();
     runtime.client.init();
-    runtime.client.addListener("ready", () => runtime.slashCommandsManager.save());
-    runtime.client.onReady((client) => runtime.config.onReady?.(client))
+    runtime.client.once("ready", () => {
+        __createCommand();
+        runtime.slashCommandsManager.save()
+    });
+    runtime.client.once("ready", (client) => runtime.config.onReady?.(client))
 }

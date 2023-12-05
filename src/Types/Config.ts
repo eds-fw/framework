@@ -16,6 +16,7 @@ export interface ConfigExemplar
     /**
      * Code that will be run when the bot is ready
      * @default () => console.log("I am ready")
+     * @deprecated
      */
     onReady?: (client: Client) => Promise<void> | void;
 //==========
@@ -134,6 +135,15 @@ export interface ConfigExemplar
          * @default "help"
          */
         helpCommandName?: string;
+        /**
+         * @default true
+         */
+        helpEphemeral?: boolean;
+        /**
+         * Option's emoji (/help > menu)
+         * @default undefined
+         */
+        helpPageMenuEmoji?: string;
     };
 //LOGGER OPTIONS
     /**
