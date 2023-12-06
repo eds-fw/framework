@@ -9,7 +9,8 @@ import { eds_errors } from "../errors";
 export class SlashCommandsManager
 {
     private runtime;
-    private _commands: {[key: string]: ApplicationCommandData} & Object = {};
+    public _commands: {[key: string]: ApplicationCommandData} & Object = {};
+    public commandIDs: Record<string, string> = {};
 
     public constructor() {
         this.runtime = {

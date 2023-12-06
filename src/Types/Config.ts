@@ -144,6 +144,21 @@ export interface ConfigExemplar
          * @default undefined
          */
         helpPageMenuEmoji?: string;
+        /**
+         * Thumbnail icon URL
+         * @default undefined
+         */
+        helpPageThumbnail?: string;
+        /**
+         * Thumbnail icon URL
+         * @default undefined
+         */
+        helpListThumbnail?: string;
+        /**
+         * The text that will appear before the list of commands
+         * @default undefined
+         */
+        helpListAdditionalText?: string;
     };
 //LOGGER OPTIONS
     /**

@@ -38,13 +38,22 @@ export = {
     },
     async run(ctx) {
         const roles = getRoles(ctx);
-        const local_components = getMenu(roles);
         await ctx.interaction.reply({
             embeds: [{
-                title: config.builtinCommandsSettings?.helpListTitleText ?? "All bot commands:",
+                title: config.builtinCommandsSettings?.helpListAdditionalText
+                    ? undefined
+                    : config.builtinCommandsSettings?.helpListTitleText ?? "All bot commands:",
                 color: config.colors?.info ?? config.colors?.default,
                 footer: eds.getRandomFooterEmbed().data_api,
-                description: loader.commandHelp.getCommandList(roles)
+                description: config.builtinCommandsSettings?.helpListAdditionalText ?? ''
+                    + (config.builtinCommandsSettings?.helpListAdditionalText
+                        ? "\n\n### " + (config.builtinCommandsSettings?.helpListTitleText ?? "All bot commands:") + '\n'
+                        : undefined
+                    )
+                    + loader.commandHelp.getCommandList(roles),
+                thumbnail: config.builtinCommandsSettings?.helpListThumbnail ? {
+                    url: config.builtinCommandsSettings?.helpListThumbnail
+                } : undefined
             }],
             components: getMenu(roles),
             ephemeral: config.builtinCommandsSettings?.helpEphemeral ?? true,
