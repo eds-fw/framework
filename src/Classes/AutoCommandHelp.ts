@@ -61,8 +61,8 @@ export class AutoCommandHelp
     {
         let baked = this._publicCommands;
         if (roles.length == 0) return baked;
-        this._limitedCommands.forEach((command, roles) => {
-            for (const role of roles)
+        this._limitedCommands.forEach((command, command_roles) => {
+            for (const role of command_roles)
                 if (roles.includes(role))
                 {
                     baked += command;
