@@ -12,6 +12,7 @@ export class AutoCommandHelp
     private _limitedCommandsNames = new Map<string[], string>();
     public _publicCommands: string = '';
     public _fullCommandList: string = '';
+    public commandTypes = new Map<string, "slash" | "text" | "nonPrefixed">();
     public pages = new Map<string, string>();
     public descriptions = new Map<string, string>();
     public templates = {
@@ -19,6 +20,7 @@ export class AutoCommandHelp
         category: (name: string) => `**${name}:**`,
         commandSlash: (usage: string, desc?: string) => `> \`/${usage}\` ${desc ? '― ' + desc : ''}\n`,
         commandText: (usage: string, desc?: string) => `> \`${this.runtime.config.prefix}${usage}\` ${desc ? '― ' + desc : ''}\n`,
+        commandNonPrefixed: (usage: string, desc?: string) => `> \`${usage}\` ${desc ? '― ' + desc : ''}\n`,
         page: (usage: string, slash: boolean, desc?: string, usageDocs: string = '') =>
             `\`\`\`\n${slash ? '/' : this.runtime.config.prefix}${usage} ― ${desc ?? this.templates.noDesc}\`\`\`\n\n${usageDocs ? '>>> ' + usageDocs : ''}`,
     };
@@ -40,12 +42,24 @@ export class AutoCommandHelp
             file.info.usageDocs
         ));
         if (file.info.desc) this.descriptions.set(file.info.name, file.info.desc);
+
         let buf = '';
         if (file.info.slash)
+        {
             buf = this.templates.commandSlash(file.info.name + (file.info.usage ? ' ' + file.info.usage : ''), file.info.desc);
-        else
+            this.commandTypes.set(file.info.name, "slash");
+        }
+        else if (file.info.nonPrefixed)
+        {
+            buf = this.templates.commandNonPrefixed(file.info.name + (file.info.usage ? ' ' + file.info.usage : ''), file.info.desc);
+            this.commandTypes.set(file.info.name, "nonPrefixed");
+        }
+        else {
             buf = this.templates.commandText(file.info.name + (file.info.usage ? ' ' + file.info.usage : ''), file.info.desc);
+            this.commandTypes.set(file.info.name, "text");
+        }
         this._fullCommandList += buf;
+
         if (file.info.allowedRoles === undefined || file.info.allowedRoles.length == 0)
         {
             this._publicCommands += buf;
@@ -75,11 +89,32 @@ export class AutoCommandHelp
     {
         let baked = Object.assign([], this._publicCommandsNames);
         if (roles.length == 0) return baked;
-        this._limitedCommandsNames.forEach((command, roles) => {
-            for (const role of roles)
+        this._limitedCommandsNames.forEach((command, command_roles) => {
+            for (const role of command_roles)
                 if (roles.includes(role))
                 {
                     baked.push(command);
+                    break;
+                }
+        });
+        return baked;
+    }
+    /** Returns command names with prefix or slash */
+    public getBakedCommandNames(roles: string[]): string[]
+    {
+        let baked = Object.assign([], this._publicCommandsNames);
+        if (roles.length == 0) return baked;
+        this._limitedCommandsNames.forEach((command, command_roles) => {
+            for (const role of command_roles)
+                if (roles.includes(role))
+                {
+                    let type = this.commandTypes.get(command);
+                    let prefix =
+                        type == "text" ? this.runtime.config.prefix
+                        : type == "slash" ? '/'
+                        : type == "nonPrefixed" ? ''
+                        : <never>undefined;
+                    baked.push(prefix + command);
                     break;
                 }
         });

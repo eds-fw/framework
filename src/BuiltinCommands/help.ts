@@ -42,10 +42,10 @@ export = {
             embeds: [{
                 title: config.builtinCommandsSettings?.helpListAdditionalText
                     ? undefined
-                    : config.builtinCommandsSettings?.helpListTitleText ?? "All bot commands:",
+                    : (config.builtinCommandsSettings?.helpListTitleText ?? "All bot commands:"),
                 color: config.colors?.info ?? config.colors?.default,
                 footer: eds.getRandomFooterEmbed().data_api,
-                description: config.builtinCommandsSettings?.helpListAdditionalText ?? ''
+                description: (config.builtinCommandsSettings?.helpListAdditionalText ?? '')
                     + (config.builtinCommandsSettings?.helpListAdditionalText
                         ? "\n\n### " + (config.builtinCommandsSettings?.helpListTitleText ?? "All bot commands:") + '\n'
                         : undefined
@@ -84,7 +84,7 @@ function getMenu(roles: string[])
         components: [{
             type: ComponentType.StringSelect,
             customId: "help $$ commandSelect",
-            options: loader.commandHelp.getCommandNames(roles).map(command => ({
+            options: loader.commandHelp.getBakedCommandNames(roles).map(command => ({
                 label: command,
                 description: loader.commandHelp.descriptions.get(command)?.slice(0, 100),
                 value: command,
