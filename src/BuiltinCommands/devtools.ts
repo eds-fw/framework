@@ -1,14 +1,13 @@
 import { ApplicationCommandType, ButtonStyle, ComponentType, TextInputStyle } from "discord.js";
-import { eds, runtimeStorage } from "..";
+import { createSlashCommand, eds, runtimeStorage } from "..";
 
 const config = runtimeStorage.getProp<eds.ConfigExemplar>("config");
 const loader = runtimeStorage.getProp<eds.Loader>("loader");
 const componentManager = runtimeStorage.getProp<eds.ComponentManager>("componentManager");
-const slashCommandsManager = runtimeStorage.getProp<eds.SlashCommandsManager>("slashCommandsManager");
 
-slashCommandsManager.create({
-    name: "devtools",
-    description: "Open eds devtools",
+createSlashCommand({
+    name: config.builtinCommandsSettings?.devtoolsCommandName ?? "devtools",
+    description: config.builtinCommandsSettings?.devtoolsCommandDescription ?? "Open eds devtools",
     nsfw: false,
     type: ApplicationCommandType.ChatInput,
     defaultMemberPermissions: null,
@@ -72,7 +71,6 @@ componentManager.createMenu({
         let i = 0;
         for (const value of databases)
             i += await value.clearWeakData();
-        //
         await ctx.reply(true, "Success!", `Weak database data cleared. Removed \`${i}\` items`);
     }
 })

@@ -159,6 +159,15 @@ export interface ConfigExemplar
          * @default undefined
          */
         helpListAdditionalText?: string;
+
+        /**
+         * @default "devtools"
+         */
+        devtoolsCommandName?: string;
+        /**
+         * @default "Open eds devtools"
+         */
+        devtoolsCommandDescription?: string;
     };
 //LOGGER OPTIONS
     /**
