@@ -72,27 +72,34 @@
     >- *iternal* *get* `getSlashCallMap: Map<string, string>`
     >- *iternal* *get* `getAlwaysCallMap: string[]`
     >- *iternal* *get* `getHelpInfoMap: Map<string[], CommandHelpInfo>`
-- *class* `Logger`
-    >- *field* `msgCount: number`
-    >- *constructor* `new (dirpath?: string, time_offset?: number)`
-    >- `log(message: string, level?: 'I' | 'II' | 'III') void`
-    >- *iternal* `template(message: string, level?: string): string`
 - *class* `SlashCommandsManager`
     >- runtime: `client`
     >- `create(options: djs.ApplicationCommandData): void`
     >- `save(): void`
+- *type* `SupportedInteractions`
+- *type* `CommandContext<boolean>`
+- *type* `AnyContext`
+- *type* `InteractionContext<SupportedInteractions>`
+- *type* `SlashCommandContext`
+- *type* `TextCommandContext`
+- *type* `CommandFile<boolean>`
+- *type* `CommandHelpInfo`
+- *type* `CommandInfo`
+- *type* `ConfigExemplar`
 - *iternal* *async* `expandDirs(path: string): Promise<string[]>`
 - *iternal* *async* `templateEmbedReply(...params): Promise<void>`
 - *iternal* *async* `templateEmbedEditReply(...params): Promise<void>`
 - *iternal* *class* `AutoCommandHelp`
     >- runtime: `config`
     >- *field* `pages: Map<string, string>`
+    >- *field* `commandTypes: Map<string, "slash" | "text" | "nonPrefixed">`
     >- *field* `descriptions: Map<string, string>`
     >- *field* `templates: {...}`
     >- *field* `_fullCommandList: string`
     >- *constructor* `new ()`
     >- `getCommandList(roles: string[]): string`
     >- `getCommandNames(roles: string[]): string[]`
+    >- `getBakedCommandNames(roles: string[]): string[]`
     >- `clear(): void`
     >- *iternal* `reg(file: CommandFile<boolean> as const): void`
     >- *iternal* *field* `_publicCommands: string`

@@ -6,7 +6,7 @@ export type CommandContext<T extends boolean> =
     T extends true
     ? SlashCommandContext
     : TextCommandContext;
-//
+export type AnyContext = InteractionContext | SlashCommandContext | TextCommandContext;
 export interface InteractionContext<T extends SupportedInteractions = SupportedInteractions> extends eds.EmbedTemplateMethods
 {
     interaction: T;
