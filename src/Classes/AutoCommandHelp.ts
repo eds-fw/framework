@@ -18,11 +18,11 @@ export class AutoCommandHelp
     public templates = {
         noDesc: "<no description>",
         category: (name: string) => `**${name}:**`,
-        commandSlash: (usage: string, desc?: string) => `> \`/${usage}\` ${desc ? '― ' + desc : ''}\n`,
-        commandText: (usage: string, desc?: string) => `> \`${this.runtime.config.prefix}${usage}\` ${desc ? '― ' + desc : ''}\n`,
-        commandNonPrefixed: (usage: string, desc?: string) => `> \`${usage}\` ${desc ? '― ' + desc : ''}\n`,
+        commandSlash: (usage: string, desc?: string) => `- \`/${usage}\` ${desc ? '― ' + desc : ''}\n`,
+        commandText: (usage: string, desc?: string) => `- \`${this.runtime.config.prefix}${usage}\` ${desc ? '― ' + desc : ''}\n`,
+        commandNonPrefixed: (usage: string, desc?: string) => `- \`${usage}\` ${desc ? '― ' + desc : ''}\n`,
         page: (usage: string, slash: boolean, desc?: string, usageDocs: string = '') =>
-            `\`\`\`\n${slash ? '/' : this.runtime.config.prefix}${usage} ― ${desc ?? this.templates.noDesc}\`\`\`\n\n${usageDocs ? '>>> ' + usageDocs : ''}`,
+            `\`\`\`\n${slash ? '/' : this.runtime.config.prefix}${usage} ― ${desc ?? this.templates.noDesc}\`\`\`\n${usageDocs ? '>>> ' + usageDocs : ''}`,
     };
 
     public constructor() {
