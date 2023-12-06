@@ -87,12 +87,16 @@
 - *iternal* *class* `AutoCommandHelp`
     >- runtime: `config`
     >- *field* `pages: Map<string, string>`
+    >- *field* `descriptions: Map<string, string>`
     >- *field* `templates: {...}`
     >- *field* `_fullCommandList: string`
     >- *constructor* `new ()`
-    >- `reg(file: CommandFile<boolean> as const): void`
     >- `getCommandList(roles: string[]): string`
+    >- `getCommandNames(roles: string[]): string[]`
     >- `clear(): void`
+    >- *iternal* `reg(file: CommandFile<boolean> as const): void`
+    >- *iternal* *field* `_publicCommands: string`
+    >- *iternal* *field* `_fullCommandList: string`
 - *iternal* *class* `ContextFactory`
     >- runtime: `config, logger`
     >- *constructor* `new ()`

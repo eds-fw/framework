@@ -7,10 +7,10 @@ export class AutoCommandHelp
 {
     private runtime;
     
-    private _publicCommands: string = '';
     private _publicCommandsNames: string[] = [];
     private _limitedCommands = new Map<string[], string>();
     private _limitedCommandsNames = new Map<string[], string>();
+    public _publicCommands: string = '';
     public _fullCommandList: string = '';
     public pages = new Map<string, string>();
     public descriptions = new Map<string, string>();
