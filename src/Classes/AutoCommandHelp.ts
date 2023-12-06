@@ -1,5 +1,7 @@
 import { eds, runtimeStorage } from "..";
 
+type CommandType = "slash" | "text" | "nonPrefixed";
+
 /**
  * Automatically generates the message text of the help command. Also generates detailed help for each command.
  */
@@ -12,7 +14,7 @@ export class AutoCommandHelp
     private _limitedCommandsNames = new Map<string[], string>();
     public _publicCommands: string = '';
     public _fullCommandList: string = '';
-    public commandTypes = new Map<string, "slash" | "text" | "nonPrefixed">();
+    public commandTypes = new Map<string, CommandType>();
     public pages = new Map<string, string>();
     public descriptions = new Map<string, string>();
     public templates = {
@@ -21,8 +23,8 @@ export class AutoCommandHelp
         commandSlash: (usage: string, desc?: string) => `- \`/${usage}\` ${desc ? '― ' + desc : ''}\n`,
         commandText: (usage: string, desc?: string) => `- \`${this.runtime.config.prefix}${usage}\` ${desc ? '― ' + desc : ''}\n`,
         commandNonPrefixed: (usage: string, desc?: string) => `- \`${usage}\` ${desc ? '― ' + desc : ''}\n`,
-        page: (usage: string, slash: boolean, desc?: string, usageDocs: string = '') =>
-            `\`\`\`\n${slash ? '/' : this.runtime.config.prefix}${usage} ― ${desc ?? this.templates.noDesc}\`\`\`\n${usageDocs ? '>>> ' + usageDocs : ''}`,
+        page: (usage: string, type: CommandType, desc?: string, usageDocs: string = '') =>
+            `\`\`\`\n${type == "slash" ? '/' : type == "text" ? this.runtime.config.prefix : ''}${usage} ― ${desc ?? this.templates.noDesc}\`\`\`\n${usageDocs ? '>>> ' + usageDocs : ''}`,
     };
 
     public constructor() {
@@ -37,7 +39,7 @@ export class AutoCommandHelp
 
         this.pages.set(file.info.name, this.templates.page(
             file.info.name + (file.info.usage ? ' ' + file.info.usage : ''),
-            file.info.slash,
+            file.info.slash ? "slash" : file.info.nonPrefixed ? "nonPrefixed" : "text",
             file.info.desc,
             file.info.usageDocs
         ));

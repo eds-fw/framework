@@ -2,7 +2,6 @@ import { type eds, runtimeStorage } from "..";
 
 export async function startBot(): Promise<void>
 {
-    const { __createCommand } = await import("../BuiltinCommands/help");
     let runtime = runtimeStorage.getAll<{
         slashCommandsManager: eds.SlashCommandsManager,
         client: eds.Client,
@@ -11,8 +10,7 @@ export async function startBot(): Promise<void>
     
     runtime.client.init();
     runtime.client.once("ready", () => {
-        __createCommand();
-        runtime.slashCommandsManager.save()
+        runtime.slashCommandsManager.save();
     });
     runtime.client.once("ready", (client) => runtime.config.onReady?.(client))
 }
