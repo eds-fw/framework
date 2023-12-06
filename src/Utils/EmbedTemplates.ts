@@ -36,7 +36,10 @@ export async function templateEmbedReply(
         prevRef = previous;
     }
     else {
-        method = ctx.interaction.reply.bind(ctx.interaction);
+        if (ctx.interaction.deferred)
+            method = ctx.interaction.followUp.bind(ctx.interaction);
+        else
+            method = ctx.interaction.reply.bind(ctx.interaction);
         if (!method) return;
         prevRef = previousInteraction;
     }
