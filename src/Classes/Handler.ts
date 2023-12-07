@@ -24,6 +24,7 @@ export class Handler
     public constructor() {
         this.runtime = runtimeStorage.getAll<{
             config: eds.ConfigExemplar,
+            /** @deprecated */
             logger: eds.Logger,
             loader: eds.Loader,
             client: eds.Client,
@@ -61,7 +62,8 @@ export class Handler
                             try {
                                 const file: eds.CommandFile<false> = require(v).default || require(v);
                                 file.run(context);
-                                if (file.pragmaNoLog !== true) {}
+                                if (file.pragmaNoLog !== true)
+                                    this.runtime.config.logTextCommand?.(context);
                             } catch (err) {
                                 return console.error(errors.Handler.runCommandError(err));
                             }
@@ -82,7 +84,8 @@ export class Handler
                     {
                         const file: eds.CommandFile<true> = require(v).default || require(v);
                         file.run(context)?.catch(err => eds.reportError(err, context));
-                        if (file.pragmaNoLog !== true) {}
+                        if (file.pragmaNoLog !== true)
+                            this.runtime.config.logSlashCommand?.(context);
                     }
                 });
             }
@@ -95,7 +98,8 @@ export class Handler
                         {
                             const context = this.runtime.contextFactory.createInteractionContext(interaction);
                             await v.run(context, v.info)?.catch(err => eds.reportError(err, context));
-                            if (v.info.noLog !== true) {}
+                            if (v.info.noLog !== true)
+                                this.runtime.config.logInteraction?.(context);
                         }
                     });
                 }
@@ -112,7 +116,8 @@ export class Handler
                                     if (typeof v.run !== "object") return;
                                     const context = this.runtime.contextFactory.createInteractionContext(interaction);
                                     await v.run[val](context, v.info)?.catch(err => eds.reportError(err, context));
-                                    if (v.info.noLog !== true) {}
+                                    if (v.info.noLog !== true)
+                                        this.runtime.config.logInteraction?.(context);
                                 }
                             });
                             else if (interaction.isUserSelectMenu())
@@ -124,7 +129,8 @@ export class Handler
                                 const context = this.runtime.contextFactory.createInteractionContext(interaction);
                                 if (v.info.userSelect)
                                     await v.run(context, v.info)?.catch(err => eds.reportError(err, context));
-                                if (v.info.noLog !== true) {}
+                                if (v.info.noLog !== true)
+                                    this.runtime.config.logInteraction?.(context);
                             }
                             else if (interaction.isChannelSelectMenu())
                             {
@@ -135,7 +141,8 @@ export class Handler
                                 const context = this.runtime.contextFactory.createInteractionContext(interaction);
                                 if (v.info.channelSelect)
                                     await v.run(context, v.info)?.catch(err => eds.reportError(err, context));
-                                if (v.info.noLog !== true) {}
+                                if (v.info.noLog !== true)
+                                    this.runtime.config.logInteraction?.(context);
                             }
                         }
                     });
@@ -146,8 +153,10 @@ export class Handler
                 this.runtime.componentManager.getModalsMap.forEach(async (v, k) => {
                     if (k == interaction.customId)
                     {
-                        await v.run(this.runtime.contextFactory.createInteractionContext(interaction), interaction.fields, v.info);
-                        if (v.info.noLog !== true) {}
+                        const context = this.runtime.contextFactory.createInteractionContext(interaction);
+                        await v.run(context, interaction.fields, v.info);
+                        if (v.info.noLog !== true)
+                            this.runtime.config.logInteraction?.(context);
                     }
                 });
             }

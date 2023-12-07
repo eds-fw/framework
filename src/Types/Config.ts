@@ -1,4 +1,5 @@
 import type { Client, GatewayIntentsString } from "discord.js";
+import { InteractionContext, SlashCommandContext, TextCommandContext } from "./Command/CommandContext";
 
 export interface ConfigExemplar
 {
@@ -36,6 +37,11 @@ export interface ConfigExemplar
      * @deprecated
      */
     logsPath?: string;
+//==========
+//METHODS
+    logSlashCommand?: (context: SlashCommandContext) => Promise<void> | void;
+    logTextCommand?: (context: TextCommandContext) =>   Promise<void> | void;
+    logInteraction?: (context: InteractionContext) =>   Promise<void> | void;
 //==========
 //RESOURCES
     /**
