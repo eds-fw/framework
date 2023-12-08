@@ -87,8 +87,9 @@ export namespace ComponentManager
 
     interface BaseOptions
     {
-        custom_id: string;
-        noLog?: boolean;
+        custom_id:      string;
+        noLog?:         boolean;
+        allowedRoles?:  string[];
     }
 
     export interface ButtonOptions extends BaseOptions

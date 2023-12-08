@@ -1,10 +1,9 @@
 import {
     ChannelType,
     ChatInputCommandInteraction,
-    InteractionType,
-    Message
+    InteractionType
 } from "discord.js";
-import { eds, runtimeStorage } from "..";
+import { AnyContext, CommandInfo, eds, runtimeStorage } from "..";
 import * as errors from "../errors";
 
 interface _initMaps
@@ -61,7 +60,9 @@ export class Handler
                         {
                             try {
                                 const file: eds.CommandFile<false> = require(v).default || require(v);
-                                file.run(context);
+                                if (!this._checkAccess(context, file.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+
+                                file.run(context)?.catch(console.log);
                                 if (file.pragmaNoLog !== true)
                                     this.runtime.config.logTextCommand?.(context);
                             } catch (err) {
@@ -76,14 +77,15 @@ export class Handler
         this.runtime.client.on("interactionCreate", async interaction => {
             if (interaction.type === InteractionType.ApplicationCommand)
             {
-                if (!(interaction instanceof ChatInputCommandInteraction))
-                    return eds.reportError(errors.Handler.interactionTypeError(), null);
+                if (!(interaction instanceof ChatInputCommandInteraction)) return;
                 const context = this.runtime.contextFactory.createSlashContext(interaction);
                 this.runtime.loader.getSlashCallMap.forEach((v, k) => {
                     if (k === interaction.commandName)
                     {
                         const file: eds.CommandFile<true> = require(v).default || require(v);
-                        file.run(context)?.catch(err => eds.reportError(err, context));
+                        if (!this._checkAccess(context, file.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+
+                        file.run(context)?.catch(console.log);
                         if (file.pragmaNoLog !== true)
                             this.runtime.config.logSlashCommand?.(context);
                     }
@@ -97,7 +99,10 @@ export class Handler
                         if (k == interaction.customId)
                         {
                             const context = this.runtime.contextFactory.createInteractionContext(interaction);
-                            await v.run(context, v.info)?.catch(err => eds.reportError(err, context));
+                            if (!this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+                            
+                            v.run(context, v.info)?.catch(console.log);
+
                             if (v.info.noLog !== true)
                                 this.runtime.config.logInteraction?.(context);
                         }
@@ -115,7 +120,9 @@ export class Handler
                                 {
                                     if (typeof v.run !== "object") return;
                                     const context = this.runtime.contextFactory.createInteractionContext(interaction);
-                                    await v.run[val](context, v.info)?.catch(err => eds.reportError(err, context));
+                                    if (!this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+
+                                    v.run[val](context, v.info)?.catch(console.log);
                                     if (v.info.noLog !== true)
                                         this.runtime.config.logInteraction?.(context);
                                 }
@@ -127,8 +134,10 @@ export class Handler
                                 else v.run = v.run as eds.ComponentManager.MenuUserCode;
 
                                 const context = this.runtime.contextFactory.createInteractionContext(interaction);
+                                if (!this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+
                                 if (v.info.userSelect)
-                                    await v.run(context, v.info)?.catch(err => eds.reportError(err, context));
+                                    v.run(context, v.info)?.catch(console.log);
                                 if (v.info.noLog !== true)
                                     this.runtime.config.logInteraction?.(context);
                             }
@@ -139,8 +148,10 @@ export class Handler
                                 else v.run = v.run as eds.ComponentManager.MenuChannelCode;
 
                                 const context = this.runtime.contextFactory.createInteractionContext(interaction);
+                                if (!this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+
                                 if (v.info.channelSelect)
-                                    await v.run(context, v.info)?.catch(err => eds.reportError(err, context));
+                                    v.run(context, v.info)?.catch(console.log);
                                 if (v.info.noLog !== true)
                                     this.runtime.config.logInteraction?.(context);
                             }
@@ -154,13 +165,34 @@ export class Handler
                     if (k == interaction.customId)
                     {
                         const context = this.runtime.contextFactory.createInteractionContext(interaction);
-                        await v.run(context, interaction.fields, v.info);
+                        if (!this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+
+                        v.run(context, interaction.fields, v.info);
                         if (v.info.noLog !== true)
                             this.runtime.config.logInteraction?.(context);
                     }
                 });
             }
         });
+    }
+
+    private _checkAccess(ctx: AnyContext, roles: string[] | undefined)
+    {
+        if (!roles || roles.length == 0) return true;
+
+        let has;
+        if (ctx.__contextType === "text")
+            has = ctx.message.member?.roles.cache.has.bind(ctx.message.member?.roles.cache);
+        else if (Array.isArray(ctx.interaction.member?.roles))
+            has = ctx.interaction.member?.roles.includes.bind(ctx.interaction.member?.roles);
+        else
+            has = ctx.interaction.member?.roles.cache.has.bind(ctx.interaction.member?.roles.cache);
+        if (!has) throw new Error("checkThisAccess: не удалось забиндить метод has");
+
+        let result = false;
+        for (const role of roles)
+            if (has(role)) result = true;
+        return result;
     }
 }
 
