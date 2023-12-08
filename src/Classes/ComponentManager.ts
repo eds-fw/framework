@@ -87,9 +87,12 @@ export namespace ComponentManager
 
     interface BaseOptions
     {
-        custom_id:      string;
-        noLog?:         boolean;
-        allowedRoles?:  string[];
+        custom_id:          string;
+        noLog?:             boolean;
+        /** Do not add 'everyone' role ID @functional may affect command execution */
+        allowedRoles?:      string[];
+        /** @functional may affect command execution */
+        noCheckAccess?:     boolean;
     }
 
     export interface ButtonOptions extends BaseOptions

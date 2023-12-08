@@ -3,7 +3,7 @@ import {
     ChatInputCommandInteraction,
     InteractionType
 } from "discord.js";
-import { AnyContext, CommandInfo, eds, runtimeStorage } from "..";
+import { AnyContext, eds, runtimeStorage } from "..";
 import * as errors from "../errors";
 
 interface _initMaps
@@ -60,7 +60,7 @@ export class Handler
                         {
                             try {
                                 const file: eds.CommandFile<false> = require(v).default || require(v);
-                                if (!this._checkAccess(context, file.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+                                if (file.info.noCheckAccess !== true && !this._checkAccess(context, file.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
 
                                 file.run(context)?.catch(console.log);
                                 if (file.pragmaNoLog !== true)
@@ -83,7 +83,7 @@ export class Handler
                     if (k === interaction.commandName)
                     {
                         const file: eds.CommandFile<true> = require(v).default || require(v);
-                        if (!this._checkAccess(context, file.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+                        if (file.info.noCheckAccess !== true && !this._checkAccess(context, file.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
 
                         file.run(context)?.catch(console.log);
                         if (file.pragmaNoLog !== true)
@@ -99,7 +99,7 @@ export class Handler
                         if (k == interaction.customId)
                         {
                             const context = this.runtime.contextFactory.createInteractionContext(interaction);
-                            if (!this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+                            if (v.info.noCheckAccess !== true && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
                             
                             v.run(context, v.info)?.catch(console.log);
 
@@ -120,7 +120,7 @@ export class Handler
                                 {
                                     if (typeof v.run !== "object") return;
                                     const context = this.runtime.contextFactory.createInteractionContext(interaction);
-                                    if (!this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+                                    if (v.info.noCheckAccess !== true && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
 
                                     v.run[val](context, v.info)?.catch(console.log);
                                     if (v.info.noLog !== true)
@@ -134,7 +134,7 @@ export class Handler
                                 else v.run = v.run as eds.ComponentManager.MenuUserCode;
 
                                 const context = this.runtime.contextFactory.createInteractionContext(interaction);
-                                if (!this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+                                if (v.info.noCheckAccess !== true && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
 
                                 if (v.info.userSelect)
                                     v.run(context, v.info)?.catch(console.log);
@@ -148,7 +148,7 @@ export class Handler
                                 else v.run = v.run as eds.ComponentManager.MenuChannelCode;
 
                                 const context = this.runtime.contextFactory.createInteractionContext(interaction);
-                                if (!this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+                                if (v.info.noCheckAccess !== true && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
 
                                 if (v.info.channelSelect)
                                     v.run(context, v.info)?.catch(console.log);
@@ -165,7 +165,7 @@ export class Handler
                     if (k == interaction.customId)
                     {
                         const context = this.runtime.contextFactory.createInteractionContext(interaction);
-                        if (!this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+                        if (v.info.noCheckAccess !== true && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
 
                         v.run(context, interaction.fields, v.info);
                         if (v.info.noLog !== true)
