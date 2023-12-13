@@ -45,22 +45,25 @@ export class Loader
         paths.forEach(path => {
             let file: CommandFile<boolean>;
 
+            if (this._checkIgnorePrefix(path))
+            {
+                if (!this.noLog)
+                    console.log(messages.Loader.templateLoadCommandSkipped(path));
+                this._clear(path);
+                return;
+            }
+
             try {
                 file = require(path).default || require(path);
             } catch (err) {
                 throw new Error(messages.Loader.loadFileError(path, err));
             }
 
-            function _clear(): void
-            {
-                delete require.cache[require.resolve(path)];
-            }
-
-            if (file?.pragmaSkip === true || this._checkIgnorePrefix(path))
+            if (file?.pragmaSkip === true)
             {
                 if (!this.noLog)
                     console.log(messages.Loader.templateLoadCommandSkipped(path));
-                _clear();
+                this._clear(path);
                 return;
             }
 
@@ -68,14 +71,14 @@ export class Loader
             {
                 if (!this.noLog)
                     console.log(messages.Loader.templateLoadCommandError(path, "MISSING RUN() EXPORT"));
-                _clear();
+                this._clear(path);
                 return;
             }
             if (file?.info === undefined)
             {
                 if (!this.noLog)
                    console.log(messages.Loader.templateLoadCommandError(path, "MISSING OPTIONS EXPORT"));
-                _clear();
+                this._clear(path);
                 return;
             }
 
@@ -167,6 +170,10 @@ export class Loader
     private _checkIgnorePrefix(path: string): boolean
     {
         return new RegExp(`^${this.ignorePrefixes.join('|^')}`, 'gi').test(path.split(sep).at(-1) ?? '');
+    }
+    private _clear(path: string): void
+    {
+        delete require.cache[require.resolve(path)];
     }
 
     public get getCallMap()
