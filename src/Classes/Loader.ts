@@ -89,9 +89,6 @@ export class Loader
             }
             else if (!this.noLog)
                 console.log(messages.Loader.templateLoadCommandSuccessSlash(file?.info?.name));
-            
-
-            _clear();
         });
 
         if (!this.noLog)
@@ -108,7 +105,6 @@ export class Loader
             const file = require(path);
             this._loadFile(file, path);
             this.commandHelp.reg(file);
-            delete require.cache[require.resolve(path)];
             if (!this.noLog)
                 console.log(messages.Loader.templateLoadBuiultinCommand("help"));
         }
@@ -118,7 +114,6 @@ export class Loader
             const file = require(path);
             this._loadFile(file, path);
             this.commandHelp.reg(file);
-            delete require.cache[require.resolve(path)];
             if (!this.noLog)
                 console.log(messages.Loader.templateLoadBuiultinCommand("devtools"));
         }

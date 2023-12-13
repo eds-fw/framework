@@ -5,9 +5,12 @@ import {
     APIMessageActionRowComponent,
     Embed,
     EmbedData,
+    InteractionReplyOptions,
     InteractionResponse,
+    JSONEncodable,
     Message,
     MessageActionRowComponentData,
+    MessageCreateOptions,
 } from "discord.js";
 import { eds, runtimeStorage } from "..";
 import * as errors from "../errors";
@@ -22,7 +25,7 @@ export async function templateEmbedReply(
     description?: string,
     type: string = "default",
     components?: APIActionRowComponent<APIMessageActionRowComponent>[],
-    full_message?: EmbedData
+    custom_embed?: JSONEncodable<APIEmbed> | APIEmbed
 ): Promise<void> {
     if ((!description || description === "") && (!title || title === "")) return;
     const config = runtimeStorage.getProp<eds.ConfigExemplar>("config");
@@ -44,16 +47,16 @@ export async function templateEmbedReply(
         prevRef = previousInteraction;
     }
 
-    prevRef = await method(Object.assign({}, {
-        embeds: [{
+    prevRef = await method({
+        embeds: [Object.assign({}, {
             author: title ? { name: title } : undefined,
             description: description,
             color: type ? config.colors?.[type] : undefined,
             footer: eds.getRandomFooterEmbed().data_api
-        }],
+        }, custom_embed ?? {})],
         components,
         ephemeral
-    }, full_message ?? {})).catch((err) => console.error(err)) ?? prevRef;
+    }).catch((err) => console.error(err)) ?? prevRef;
 }
 /**
  * Edits previous message
@@ -69,7 +72,7 @@ export async function templateEmbedEditReply(
     description?: string | undefined | null,
     type: string | undefined | null = "default",
     components?: APIActionRowComponent<APIMessageActionRowComponent>[] | undefined | null,
-    full_message?: EmbedData
+    custom_embed?: JSONEncodable<APIEmbed> | APIEmbed
 ): Promise<void> {
 console.log(`Function \`ctx.editReply()\` has been deprecated.`);
     if ((!description || description === "") && (!title || title === "")) return;
@@ -121,10 +124,10 @@ console.log(`Function \`ctx.editReply()\` has been deprecated.`);
             _components = components;
     }
 
-    prevRef = await method(Object.assign({}, {
-        embeds: [embed],
+    prevRef = await method({
+        embeds: [Object.assign({}, embed, custom_embed ?? {})],
         components: _components
-    }, full_message ?? {})).catch((err) => console.error(err)) ?? prevRef;
+    }).catch((err) => console.error(err)) ?? prevRef;
 }
 
 export interface EmbedTemplateMethods
@@ -135,7 +138,7 @@ export interface EmbedTemplateMethods
         description?: string,
         type?: string,
         components?: APIActionRowComponent<APIMessageActionRowComponent>[],
-        full_message?: EmbedData
+        custom_embed?: JSONEncodable<APIEmbed> | APIEmbed
     ): Promise<void>;
 
     editReply(
@@ -144,6 +147,6 @@ export interface EmbedTemplateMethods
         description: string | null | undefined,
         type: string | null | undefined,
         components: APIActionRowComponent<APIMessageActionRowComponent>[] | null | undefined,
-        full_message?: EmbedData
+        custom_embed?: JSONEncodable<APIEmbed> | APIEmbed
     ): Promise<void>;
 }
