@@ -9,7 +9,6 @@ import { deprecatedWarning } from "../Utils/DeprecatedWarning";
  * A simple JSON database. Built on a `Map`-object
  * @deprecated
  */
-@deprecated()
 export class Database<V extends eds.JSONSupportedValueTypes = eds.JSONSupportedValueTypes>
 {
     /**
