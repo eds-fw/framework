@@ -1,12 +1,15 @@
-import { accessSync, constants, mkdirSync, openSync, readFileSync, writeFileSync } from "fs";
+import { accessSync, constants, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { eds } from "..";
 import { eds_errors } from "../errors";
 import deprecated from "deprecated-decorator";
 import { writeFile } from "fs/promises";
+import { deprecatedWarning } from "../Utils/DeprecatedWarning";
 
 /**
  * A simple JSON database. Built on a `Map`-object
+ * @deprecated
  */
+@deprecated()
 export class Database<V extends eds.JSONSupportedValueTypes = eds.JSONSupportedValueTypes>
 {
     /**
@@ -16,6 +19,7 @@ export class Database<V extends eds.JSONSupportedValueTypes = eds.JSONSupportedV
 
     public constructor(private path: string, autosave?: boolean | number, private dump_path?: string)
     {
+deprecatedWarning("Datebase", "Class");
         try {
             accessSync(path);
         } catch (err) {
@@ -39,6 +43,8 @@ export class Database<V extends eds.JSONSupportedValueTypes = eds.JSONSupportedV
         }
     }
 
+    /** @deprecated */
+    @deprecated()
     public save(): Promise<void>
     {
         return new Promise<void>(async () => {
@@ -48,6 +54,8 @@ export class Database<V extends eds.JSONSupportedValueTypes = eds.JSONSupportedV
         });
     }
 
+    /** @deprecated */
+    @deprecated()
     public set(key: string, value: V, tags?: Database.TagsValues, save?: boolean): void
     {
         this.Map.set(key, [value, tags]);
@@ -82,6 +90,8 @@ export class Database<V extends eds.JSONSupportedValueTypes = eds.JSONSupportedV
         if (save) this.save();
     }
 
+    /** @deprecated */
+    @deprecated()
     public get(key: string): V | undefined
     {
         const data = this.Map.get(key);
@@ -91,6 +101,8 @@ export class Database<V extends eds.JSONSupportedValueTypes = eds.JSONSupportedV
             return data?.[0];
         //
     }
+    /** @deprecated */
+    @deprecated()
     public getKey(value: V, single: boolean = false): string[]
     {
         const result: string[] = [];
@@ -103,6 +115,8 @@ export class Database<V extends eds.JSONSupportedValueTypes = eds.JSONSupportedV
         //
         return result;
     }
+    /** @deprecated */
+    @deprecated()
     public getFull(key: string): Database.Value<V> | undefined
     {
         const data = this.Map.get(key);
@@ -112,12 +126,15 @@ export class Database<V extends eds.JSONSupportedValueTypes = eds.JSONSupportedV
             return data;
         //
     }
-
+    /** @deprecated */
+    @deprecated()
     public has(key: string): boolean
     {
         return this.Map.has(key);
     }
 
+    /** @deprecated */
+    @deprecated()
     public hasValue(value: V): boolean
     {
         for (const val of this.Map.values())
@@ -127,6 +144,8 @@ export class Database<V extends eds.JSONSupportedValueTypes = eds.JSONSupportedV
         return false;
     }
 
+    /** @deprecated */
+    @deprecated()
     public del(key: string): void
     {
         this.Map.delete(key);
@@ -150,7 +169,9 @@ export class Database<V extends eds.JSONSupportedValueTypes = eds.JSONSupportedV
     /**
      * Deletes all elements with `$weak$` tag
      * @returns number of deleted elements
+     * @deprecated
      */
+    @deprecated()
     public clearWeakData(): Promise<number>
     {
         return new Promise<number>((resolve) => {
@@ -169,6 +190,7 @@ export class Database<V extends eds.JSONSupportedValueTypes = eds.JSONSupportedV
     }
 }
 
+/** @deprecated */
 namespace Database
 {
     export type Tags = '$weak$' | '$const$' | '$ref$';
