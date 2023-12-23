@@ -9,103 +9,12 @@
 </b>
 <hr>
 
-# API
-- *module* `@easy-ds-bot/utils`
-- *module* `@easy-ds-bot/timeparser`
-- `createBot(config: ConfigExemplar): KnownRuntimeProperties` *(lazyConstructor)*
-- `createButton(options: ButtonOptions, code: ButtonCode): void` *(lazyConstructor)*
-    >- runtime: `componentManager`
-- `createMenu(options: MenuOptions, code: MenuUserCode | MenuStringCode): void` *(lazyConstructor)*
-    >- runtime: `componentManager`
-- `createModal(options: ModalOptions, code: ModalCode): void` *(lazyConstructor)*
-    >- runtime: `componentManager`
-- `createDB(name: string, path: string, autosave?: boolean | number, dump_path?: string): void` *(lazyConstructor)*
-- `createSlashCommand(options: SpplicationCommandData): void` *(lazyConstructor)*
-    >- runtime: `slashCommandsManager`
-- *async* `startBot(): Promise<void>`
-    >- runtime: `slashCommandsManager, client, config`
-- *anonimous class* `runtimeStorage` *(runtime)*
-    >- `[key: string]: any`
-    >- `getAll<T>(..keys: (keyof T)): T`
-    >- `getProp<V>(key: string): V`
-    >- `setAll<T>(values: T): T`
-    >- `setProp<K, V>(key: K, value: V): { [X in K]: V }`
-- *class* `Client` *extends djs.Client*
-    >- *constructor* `new (options: Options)`
-    >- *async* `init(): Promise<void>`
-- *class* `ComponentsManager`
-    >- *constructor* `new (){}`
-    >- `clearMaps(): void`
-    >- `createButton(options: ButtonOptions, code: ButtonCode): void`
-    >- `createMenu(options: MenuOptions, code: MenuUserCode | MenuStringCode): void`
-    >- `createModal(options: ModalOptions, code: ModalCode): void`
-    >- *iternal* *get* `getButtonsMap: Map<string, MapVal<...>>`
-    >- *iternal* *get* `getMenusMap: Map<string, MapVal<...>>`
-    >- *iternal* *get* `getModalsMap: Map<string, MapVal<...>>`
-- *class* `Database<V>`
-    >- *field* `Map: Map<string, Value<...>>`
-    >- *constructor* `new (path: string, autosave?: boolean | number, dump_path?: string)`
-    >- `save(): Promise<void>`
-    >- `set(key: string, value: V, tags?: TagsValues, save?: boolean): void`
-    >- `get(key: string): V | undefined`
-    >- `getKey(value: V, single?: boolean): string[]`
-    >- `getFull(key: string): Value<V> | undefined`
-    >- `has(key: string): boolean`
-    >- `hasValue(value: V): boolean`
-    >- `del(key: string): void`
-    >- *iternal* *get* `MapJSON: string`
-    >- *iternal* *async* `clearWeakData(): Promise<number>`
-- *class* `Handler`
-    >- runtime: `config, loader, client, contextFactory`
-    >- *constructor* `new ()`
-- *class* `Loader`
-    >- *field* `commandHelp: AutoCommandHelp`
-    >- *constructor* `new (path: string, noLog?: boolean, ignorePrefixes?: string[], builtinCommands?: ConfigExemplar.includeBuiltinCommands)`
-    >- `clearMaps(): void`
-    >- *async* `load(): Promise<void>`
-    >- *iternal* *async* `loadBuiltin(): Promise<void>`
-    >- *iternal* *get* `getCallMap: Map<string[], string>`
-    >- *iternal* *get* `getSlashCallMap: Map<string, string>`
-    >- *iternal* *get* `getAlwaysCallMap: string[]`
-    >- *iternal* *get* `getHelpInfoMap: Map<string[], CommandHelpInfo>`
-- *class* `SlashCommandsManager`
-    >- runtime: `client`
-    >- `create(options: djs.ApplicationCommandData): void`
-    >- `save(): void`
-- *type* `SupportedInteractions`
-- *type* `CommandContext<boolean>`
-- *type* `AnyContext`
-- *type* `InteractionContext<SupportedInteractions>`
-- *type* `SlashCommandContext`
-- *type* `TextCommandContext`
-- *type* `CommandFile<boolean>`
-- *type* `CommandHelpInfo`
-- *type* `CommandInfo`
-- *type* `ConfigExemplar`
-- *type* `KnownRuntimeProperties`
-- *iternal* *async* `expandDirs(path: string): Promise<string[]>`
-- *iternal* *async* `templateEmbedReply(...params): Promise<void>`
-- *iternal* *async* `templateEmbedEditReply(...params): Promise<void>`
-- *iternal* *class* `AutoCommandHelp`
-    >- runtime: `config`
-    >- *field* `pages: Map<string, string>`
-    >- *field* `commandTypes: Map<string, "slash" | "text" | "nonPrefixed">`
-    >- *field* `descriptions: Map<string, string>`
-    >- *field* `templates: {...}`
-    >- *field* `_fullCommandList: string`
-    >- *constructor* `new ()`
-    >- `getCommandList(roles: string[]): string`
-    >- `getCommandNames(roles: string[]): string[]`
-    >- `getBakedCommandNames(roles: string[]): string[]`
-    >- `clear(): void`
-    >- *iternal* `reg(file: CommandFile<boolean> as const): void`
-    >- *iternal* *field* `_publicCommands: string`
-    >- *iternal* *field* `_fullCommandList: string`
-- *iternal* *class* `ContextFactory`
-    >- runtime: `config`
-    >- *constructor* `new ()`
-    >- `createTextContext(message: djs.Message): CommandContext<false>`
-    >- `createSlashContext(interaction: djs.ChatInputCommandInteraction): CommandContext<true>`
+# Features
+- Intuitive and does not complicate the development process
+- Contains type declarations (.d.ts)
+- Fully configurable
+- Built-in `/help` and `/devtools` commands
+- Lazy constructors (`createSlashCommand()`, `createComponent()` and more)
 
 # Requirements
 - [NodeJS](https://nodejs.org/en) `v18` or newer
@@ -146,7 +55,6 @@ const config: eds.ConfigExemplar = {
     intents: "all",
     developers: ["YOUR ID IS HERE"],
     commandsPath: "./commands/",
-    logsPath: "./logs/", //optional. You can disable logs
     slashOnly: true, //default value
     includeBuiltinCommands: true, //default value
     colors: {
@@ -237,6 +145,104 @@ read -p "" #keeps window open after bot crash
 ```
 
 6. Execute (open) `start.bat` file. Voila! It's alive!
+
+# API
+- *module* `@easy-ds-bot/utils`
+- *module* `@easy-ds-bot/timeparser`
+- `createBot(config: ConfigExemplar): KnownRuntimeProperties` *(lazyConstructor)*
+- `createButton(options: ButtonOptions, code: ButtonCode): void` *(lazyConstructor)*
+    >- runtime: `componentManager`
+- `createMenu(options: MenuOptions, code: MenuUserCode | MenuStringCode): void` *(lazyConstructor)*
+    >- runtime: `componentManager`
+- `createModal(options: ModalOptions, code: ModalCode): void` *(lazyConstructor)*
+    >- runtime: `componentManager`
+- `createDB(name: string, path: string, autosave?: boolean | number, dump_path?: string): void` *(lazyConstructor)*
+- `createSlashCommand(options: SpplicationCommandData): void` *(lazyConstructor)*
+    >- runtime: `slashCommandsManager`
+- *async* `startBot(): Promise<void>`
+    >- runtime: `slashCommandsManager, client, config`
+- *anonimous class* `runtimeStorage` *(runtime)*
+    >- `[key: string]: any`
+    >- `getAll<T>(..keys: (keyof T)): T`
+    >- `getProp<V>(key: string): V`
+    >- `setAll<T>(values: T): T`
+    >- `setProp<K, V>(key: K, value: V): { [X in K]: V }`
+- *class* `Client` *extends djs.Client*
+    >- *constructor* `new (options: Options)`
+    >- *async* `init(): Promise<void>`
+- *class* `ComponentsManager`
+    >- *constructor* `new (){}`
+    >- `clearMaps(): void`
+    >- `createButton(options: ButtonOptions, code: ButtonCode): void`
+    >- `createMenu(options: MenuOptions, code: MenuUserCode | MenuStringCode): void`
+    >- `createModal(options: ModalOptions, code: ModalCode): void`
+    >- *iternal* *get* `getButtonsMap: Map<string, MapVal<...>>`
+    >- *iternal* *get* `getMenusMap: Map<string, MapVal<...>>`
+    >- *iternal* *get* `getModalsMap: Map<string, MapVal<...>>`
+- *class* `Database<V>` (DEPRECATED)
+    >- *field* `Map: Map<string, Value<...>>`
+    >- *constructor* `new (path: string, autosave?: boolean | number, dump_path?: string)`
+    >- `save(): Promise<void>`
+    >- `set(key: string, value: V, tags?: TagsValues, save?: boolean): void`
+    >- `get(key: string): V | undefined`
+    >- `getKey(value: V, single?: boolean): string[]`
+    >- `getFull(key: string): Value<V> | undefined`
+    >- `has(key: string): boolean`
+    >- `hasValue(value: V): boolean`
+    >- `del(key: string): void`
+    >- *iternal* *get* `MapJSON: string`
+    >- *iternal* *async* `clearWeakData(): Promise<number>`
+- *class* `Handler`
+    >- runtime: `config, loader, client, contextFactory`
+    >- *constructor* `new ()`
+- *class* `Loader`
+    >- *field* `commandHelp: AutoCommandHelp`
+    >- *constructor* `new (path: string, noLog?: boolean, ignorePrefixes?: string[], builtinCommands?: ConfigExemplar.includeBuiltinCommands)`
+    >- `clearMaps(): void`
+    >- *async* `load(): Promise<void>`
+    >- *iternal* *async* `loadBuiltin(): Promise<void>`
+    >- *iternal* *get* `getCallMap: Map<string[], string>`
+    >- *iternal* *get* `getSlashCallMap: Map<string, string>`
+    >- *iternal* *get* `getAlwaysCallMap: string[]`
+    >- *iternal* *get* `getHelpInfoMap: Map<string[], CommandHelpInfo>`
+- *class* `SlashCommandsManager`
+    >- runtime: `client`
+    >- `create(options: djs.ApplicationCommandData): void`
+    >- `save(): void`
+- *type* `SupportedInteractions`
+- *type* `CommandContext<boolean>`
+- *type* `AnyContext`
+- *type* `InteractionContext<SupportedInteractions>`
+- *type* `SlashCommandContext`
+- *type* `TextCommandContext`
+- *type* `CommandFile<boolean>`
+- *type* `CommandHelpInfo`
+- *type* `CommandInfo`
+- *type* `ConfigExemplar`
+- *type* `KnownRuntimeProperties`
+- *iternal* *async* `expandDirs(path: string): Promise<string[]>`
+- *iternal* *async* `templateEmbedReply(...params): Promise<void>`
+- *iternal* *async* `templateEmbedEditReply(...params): Promise<void>`
+- *iternal* *class* `AutoCommandHelp`
+    >- runtime: `config`
+    >- *field* `pages: Map<string, string>`
+    >- *field* `commandTypes: Map<string, "slash" | "text" | "nonPrefixed">`
+    >- *field* `descriptions: Map<string, string>`
+    >- *field* `templates: {...}`
+    >- *field* `_fullCommandList: string`
+    >- *constructor* `new ()`
+    >- `getCommandList(roles: string[]): string`
+    >- `getCommandNames(roles: string[]): string[]`
+    >- `getBakedCommandNames(roles: string[]): string[]`
+    >- `clear(): void`
+    >- *iternal* `reg(file: CommandFile<boolean> as const): void`
+    >- *iternal* *field* `_publicCommands: string`
+    >- *iternal* *field* `_fullCommandList: string`
+- *iternal* *class* `ContextFactory`
+    >- runtime: `config`
+    >- *constructor* `new ()`
+    >- `createTextContext(message: djs.Message): CommandContext<false>`
+    >- `createSlashContext(interaction: djs.ChatInputCommandInteraction): CommandContext<true>`
 
 # [Source (git)](https://github.com/easy-ds-bot/framework)
 # [Issues (git)](https://github.com/easy-ds-bot/framework/issues)
