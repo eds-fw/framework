@@ -11,8 +11,8 @@ export * from "./Classes/ContextFactory";
 export * from "./Classes/Database";
 export * from "./Classes/Handler";
 export * from "./Classes/Loader";
-export * from "./Classes/Logger";
 export * from "./Classes/SlashCommandsManager";
+export * from "./Classes/Store";
 
 export * from "./LazyConstructors/createBot";
 export * from "./LazyConstructors/createComponent";
@@ -29,7 +29,6 @@ export * from "./Types/SupportedInteractions";
 
 export * from "./Utils/Dirlib";
 export * from "./Utils/EmbedTemplates";
-export * from "./Utils/ErrorLogger";
 export * from "./Utils/RandomEmbedFooter";
 
 //other eds packages

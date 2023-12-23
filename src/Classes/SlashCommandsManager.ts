@@ -14,7 +14,7 @@ export class SlashCommandsManager
 
     public constructor() {
         this.runtime = {
-            client: runtimeStorage.getProp<eds.Client>("client")
+            client: runtimeStorage.client
         };
     };
 

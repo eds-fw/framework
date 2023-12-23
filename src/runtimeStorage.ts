@@ -1,6 +1,7 @@
 import deprecated from "deprecated-decorator";
 import { assertions } from "./errors";
 import { includesAll } from "@easy-ds-bot/utils";
+import { eds } from ".";
 
 class _RuntimeStorage
 {
@@ -44,4 +45,14 @@ class _RuntimeStorage
         return this as Pick<this, "get" | "getProp" | "set" | "setProp"> & { [X in K]: V };
     }
 }
-export const runtimeStorage = new _RuntimeStorage();
+export const runtimeStorage: _RuntimeStorage & KnownRuntimeProperties = new _RuntimeStorage() as _RuntimeStorage & KnownRuntimeProperties;
+
+export type KnownRuntimeProperties = {
+    config:                 eds.ConfigExemplar,
+    client:                 eds.Client,
+    componentManager:       eds.ComponentManager,
+    loader:                 eds.Loader,
+    contextFactory:         eds.ContextFactory,
+    handler:                eds.Handler,
+    slashCommandsManager:   eds.SlashCommandsManager
+};

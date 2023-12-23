@@ -23,13 +23,11 @@ export class Handler
     public constructor() {
         this.runtime = runtimeStorage.getAll<{
             config: eds.ConfigExemplar,
-            /** @deprecated */
-            logger: eds.Logger,
             loader: eds.Loader,
             client: eds.Client,
             contextFactory: eds.ContextFactory,
             componentManager: eds.ComponentManager
-        }>("config", "logger", "loader", "client", "contextFactory");
+        }>("config", "loader", "client", "contextFactory");
         this.runtime.loader.loadBuiltin();
         this.runtime.loader.load().then(() => {
             this._init({

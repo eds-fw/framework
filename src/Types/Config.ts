@@ -176,15 +176,6 @@ export interface ConfigExemplar
          */
         devtoolsCommandDescription?: string;
     };
-//LOGGER OPTIONS
-    /**
-     * Time offset relative to GMT in hours
-     * 
-     * Example: `9` = `GMT+9`, `-1` = `GMT-1`
-     * @default 0
-     * @deprecated
-     */
-    timeOffset?: number;
 }
 
 export default ConfigExemplar;

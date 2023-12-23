@@ -1,9 +1,9 @@
 import { ApplicationCommandType, ButtonStyle, ComponentType, TextInputStyle } from "discord.js";
 import { createSlashCommand, eds, runtimeStorage } from "..";
 
-const config = runtimeStorage.getProp<eds.ConfigExemplar>("config");
-const loader = runtimeStorage.getProp<eds.Loader>("loader");
-const componentManager = runtimeStorage.getProp<eds.ComponentManager>("componentManager");
+const config = runtimeStorage.config;
+const loader = runtimeStorage.loader;
+const componentManager = runtimeStorage.componentManager;
 
 createSlashCommand({
     name: config.builtinCommandsSettings?.devtoolsCommandName ?? "devtools",

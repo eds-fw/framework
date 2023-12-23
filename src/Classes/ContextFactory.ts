@@ -10,10 +10,8 @@ export class ContextFactory
 
     public constructor() {
         this.runtime = runtimeStorage.getAll<{
-            /** @deprecated */
-            logger: eds.Logger,
             config: eds.ConfigExemplar
-        }>("logger", "config");
+        }>("config");
     };
 
     public createTextContext(message: Message): eds.CommandContext<false>
@@ -22,12 +20,10 @@ export class ContextFactory
         const ctx = {
             message,
             args,
-            /** @deprecated */
-            logger: this.runtime.logger,
+            universal: message,
+            runtime: eds.runtimeStorage,
             __contextType: "text",
             reply: (...params: Parameters<eds.EmbedTemplateMethods["reply"]>) => eds.templateEmbedReply(ctx, ...params),
-            /** @deprecated */
-            editReply: (...params: Parameters<eds.EmbedTemplateMethods["editReply"]>) => eds.templateEmbedEditReply(ctx, ...params),
         } as eds.CommandContext<false>;
 
         return ctx;
@@ -37,12 +33,10 @@ export class ContextFactory
     {
         const ctx = {
             interaction,
-            /** @deprecated */
-            logger: this.runtime.logger,
+            universal: interaction,
+            runtime: eds.runtimeStorage,
             __contextType: "slash",
             reply: (...params: Parameters<eds.EmbedTemplateMethods["reply"]>) => eds.templateEmbedReply(ctx, ...params),
-            /** @deprecated */
-            editReply: (...params: Parameters<eds.EmbedTemplateMethods["editReply"]>) => eds.templateEmbedEditReply(ctx, ...params),
         } as eds.CommandContext<true>;
 
         return ctx;
@@ -52,12 +46,10 @@ export class ContextFactory
     {
         const ctx = {
             interaction,
-            /** @deprecated */
-            logger: this.runtime.logger,
+            universal: interaction,
+            runtime: eds.runtimeStorage,
             __contextType: "interaction",
             reply: (...params: Parameters<eds.EmbedTemplateMethods["reply"]>) => eds.templateEmbedReply(ctx, ...params),
-            /** @deprecated */
-            editReply: (...params: Parameters<eds.EmbedTemplateMethods["editReply"]>) => eds.templateEmbedEditReply(ctx, ...params),
         } as eds.InteractionContext<T>;
 
         return ctx;

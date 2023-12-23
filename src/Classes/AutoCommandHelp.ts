@@ -29,7 +29,7 @@ export class AutoCommandHelp
 
     public constructor() {
         this.runtime = {
-            config: runtimeStorage.getProp<eds.ConfigExemplar>("config")
+            config: runtimeStorage.config
         }
     };
 

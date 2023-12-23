@@ -18,7 +18,7 @@ export function getRandomFooterEmbed()
 
 function _getRandomFooterEmbed(type: "api" | "djs")
 {
-    const config = runtimeStorage.getProp<eds.ConfigExemplar>("config");
+    const config = runtimeStorage.config;
     return {
         text: Array.isArray(config.footerText)
             ? eds.arrRandom(config.footerText)

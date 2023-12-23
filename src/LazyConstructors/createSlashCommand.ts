@@ -3,6 +3,6 @@ import { type eds, runtimeStorage } from "..";
 
 export function createSlashCommand(options: ApplicationCommandData): void
 {
-    let slashCommandsManager = runtimeStorage.getProp<eds.SlashCommandsManager>("slashCommandsManager");
+    let slashCommandsManager = runtimeStorage.slashCommandsManager;
     slashCommandsManager.create(options);
 }

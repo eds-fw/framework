@@ -24,10 +24,6 @@
     >- runtime: `slashCommandsManager`
 - *async* `startBot(): Promise<void>`
     >- runtime: `slashCommandsManager, client, config`
-- *async* `reportError(error: string, ctx: anyContext | null)`
-    >- runtime: `logger`
-- `getRandomEmbedFooter(): { get data_api(): APIEmbedFooter; get data_djs(): EmbedFooterData }`
-    >- runtime: `config`
 - *anonimous class* `runtimeStorage` *(runtime)*
     >- `[key: string]: any`
     >- `getAll<T>(..keys: (keyof T)): T`
@@ -60,7 +56,7 @@
     >- *iternal* *get* `MapJSON: string`
     >- *iternal* *async* `clearWeakData(): Promise<number>`
 - *class* `Handler`
-    >- runtime: `config, logger, loader, client, contextFactory`
+    >- runtime: `config, loader, client, contextFactory`
     >- *constructor* `new ()`
 - *class* `Loader`
     >- *field* `commandHelp: AutoCommandHelp`
@@ -86,6 +82,7 @@
 - *type* `CommandHelpInfo`
 - *type* `CommandInfo`
 - *type* `ConfigExemplar`
+- *type* `KnownRuntimeProperties`
 - *iternal* *async* `expandDirs(path: string): Promise<string[]>`
 - *iternal* *async* `templateEmbedReply(...params): Promise<void>`
 - *iternal* *async* `templateEmbedEditReply(...params): Promise<void>`
@@ -105,7 +102,7 @@
     >- *iternal* *field* `_publicCommands: string`
     >- *iternal* *field* `_fullCommandList: string`
 - *iternal* *class* `ContextFactory`
-    >- runtime: `config, logger`
+    >- runtime: `config`
     >- *constructor* `new ()`
     >- `createTextContext(message: djs.Message): CommandContext<false>`
     >- `createSlashContext(interaction: djs.ChatInputCommandInteraction): CommandContext<true>`
