@@ -81,7 +81,7 @@ function getPage(page: string)
 
 function getMenu(roles: string[])
 {
-    return [{
+    const components = [{
         type: ComponentType.ActionRow,
         components: [{
             type: ComponentType.StringSelect,
@@ -95,6 +95,7 @@ function getMenu(roles: string[])
             }))
         }]
     }] satisfies ActionRowData<MessageActionRowComponentData>[];
+    return components.filter((item, index) => components.indexOf(item) === index).slice(0, 25);
 }
 
 function getRoles(ctx: eds.InteractionContext | eds.SlashCommandContext)
