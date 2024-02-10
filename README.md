@@ -156,7 +156,6 @@ read -p "" #keeps window open after bot crash
     >- runtime: `componentManager`
 - `createModal(options: ModalOptions, code: ModalCode): void` *(lazyConstructor)*
     >- runtime: `componentManager`
-- `createDB(name: string, path: string, autosave?: boolean | number, dump_path?: string): void` *(lazyConstructor)*
 - `createSlashCommand(options: SpplicationCommandData): void` *(lazyConstructor)*
     >- runtime: `slashCommandsManager`
 - *async* `startBot(): Promise<void>`

@@ -2,9 +2,11 @@ import {
     AnySelectMenuInteraction,
     ButtonInteraction,
     ChannelSelectMenuInteraction,
+    MentionableSelectMenuInteraction,
     ModalMessageModalSubmitInteraction,
     ModalSubmitFields,
     ModalSubmitInteraction,
+    RoleSelectMenuInteraction,
     StringSelectMenuInteraction,
     UserSelectMenuInteraction
 } from "discord.js";
@@ -22,10 +24,8 @@ type MapVal<R, I> = {
 export class ComponentManager
 {
     private readonly _ButtonsMap = new Map<string, MapVal<ComponentManager.ButtonCode, ComponentManager.ButtonOptions>>();
-    private readonly _MenusMap = new Map<string, MapVal<ComponentManager.MenuStringCode | ComponentManager.MenuUserCode | ComponentManager.MenuChannelCode, ComponentManager.MenuOptions>>();
+    private readonly _MenusMap = new Map<string, MapVal<ComponentManager.AnyMenuCode, ComponentManager.MenuOptions>>();
     private readonly _ModalsMap = new Map<string, MapVal<ComponentManager.ModalCode, ComponentManager.ModalOptions>>();
-
-    public constructor() {}
 
     public get getButtonsMap()
     {
@@ -59,7 +59,11 @@ export class ComponentManager
                 ? ComponentManager.MenuUserCode
                 : T["channelSelect"] extends true
                     ? ComponentManager.MenuChannelCode
-                    : ComponentManager.MenuStringCode
+                    : T["mentionableSelect"] extends true
+                        ? ComponentManager.MenuMentionableCode
+                        : T["roleSelect"] extends true
+                            ? ComponentManager.MenuRoleCode
+                            : ComponentManager.MenuStringCode,
     ): void {
         this._MenusMap.set(options.custom_id, {
             run: code,
@@ -82,6 +86,9 @@ export namespace ComponentManager
     export type MenuStringCode = Record<string, (ctx: eds.InteractionContext<StringSelectMenuInteraction>, options: MenuOptions) => Promise<void> | void>;
     export type MenuUserCode = (ctx: eds.InteractionContext<UserSelectMenuInteraction>, options: MenuOptions) => Promise<void> | void;
     export type MenuChannelCode = (ctx: eds.InteractionContext<ChannelSelectMenuInteraction>, options: MenuOptions) => Promise<void> | void;
+    export type MenuMentionableCode = (ctx: eds.InteractionContext<MentionableSelectMenuInteraction>, options: MenuOptions) => Promise<void> | void;
+    export type MenuRoleCode = (ctx: eds.InteractionContext<RoleSelectMenuInteraction>, options: MenuOptions) => Promise<void> | void;
+    export type AnyMenuCode = MenuStringCode | MenuUserCode | MenuChannelCode | MenuMentionableCode | MenuRoleCode;
 
     export type ModalCode = (ctx: eds.InteractionContext<ModalSubmitInteraction | ModalMessageModalSubmitInteraction>, fields: ModalSubmitFields, options: ModalOptions) => Promise<void> | void;
 
@@ -103,6 +110,8 @@ export namespace ComponentManager
     {
         userSelect?: boolean;
         channelSelect?: boolean;
+        mentionableSelect?: boolean;
+        roleSelect?: boolean;
         onSelect?: (ctx: eds.InteractionContext<AnySelectMenuInteraction>, options: MenuOptions) => Promise<void> | void;
     }
 

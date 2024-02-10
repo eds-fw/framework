@@ -5,8 +5,8 @@
     "typescript": "^5.3.0-dev.20230817"
   },
   "scripts": {
-    "TS_watch": "npx tsc --watch",
-    "TS_build": "npx tsc"
+    "TS_watch": "rm -r ./dist; npx tsc --watch",
+    "TS_build": "rm -r ./dist; npx tsc"
   },
   "dependencies": {
     "@easy-ds-bot/timeparser": "^2.0.0",

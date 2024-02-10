@@ -1,7 +1,13 @@
 import {
+    AnySelectMenuInteraction,
+    ButtonInteraction,
     ChannelType,
     ChatInputCommandInteraction,
-    InteractionType
+    Interaction,
+    InteractionType,
+    Message,
+    ModalSubmitInteraction,
+    StringSelectMenuInteraction
 } from "discord.js";
 import { AnyContext, eds, runtimeStorage } from "..";
 import * as errors from "../errors";
@@ -42,134 +48,30 @@ export class Handler
     {
         if (this.runtime.config.slashOnly !== true)
         this.runtime.client.on("messageCreate", async message => {
-
             if (message.channel.type === ChannelType.DM && this.runtime.config.guildOnly) return;
             if (message.author.bot && this.runtime.config.ignoreBots) return;
-            const context = this.runtime.contextFactory.createTextContext(message);
-            maps.AlwaysCallMap.forEach(path => require(path).default?.run(context) || require(path).run(context));
-            if (this.runtime.config.prefix)
-            {
-                if (message.content.toLowerCase().startsWith(this.runtime.config.prefix))
-                maps.CallMap.forEach(async (v, k) => {
-                    if (this.runtime.config.prefix)
-                    {
-                        if (message.content.toLowerCase().startsWith(this.runtime.config.prefix))
-                        if (k.includes(context.args[0]))
-                        {
-                            try {
-                                const file: eds.CommandFile<false> = require(v).default || require(v);
-                                if (file.info.noCheckAccess !== true && !this._checkAccess(context, file.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
-
-                                file.run(context)?.catch(console.log);
-                                if (file.pragmaNoLog !== true)
-                                    this.runtime.config.logTextCommand?.(context);
-                            } catch (err) {
-                                return console.error(errors.Handler.runCommandError(err));
-                            }
-                        }
-                    }
-                });
-            }
+            this._handleMessage(message, maps);
         });
 
         this.runtime.client.on("interactionCreate", async interaction => {
             if (interaction.type === InteractionType.ApplicationCommand)
             {
-                if (!(interaction instanceof ChatInputCommandInteraction)) return;
-                const context = this.runtime.contextFactory.createSlashContext(interaction);
-                this.runtime.loader.getSlashCallMap.forEach((v, k) => {
-                    if (k === interaction.commandName)
-                    {
-                        const file: eds.CommandFile<true> = require(v).default || require(v);
-                        if (file.info.noCheckAccess !== true && !this._checkAccess(context, file.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
-
-                        file.run(context)?.catch(console.log);
-                        if (file.pragmaNoLog !== true)
-                            this.runtime.config.logSlashCommand?.(context);
-                    }
-                });
+                this._handleInteractionCommand(interaction);
             }
             else if (interaction.type === InteractionType.MessageComponent)
             {
                 if (interaction.isButton())
                 {
-                    this.runtime.componentManager.getButtonsMap.forEach(async (v, k) => {
-                        if (k == interaction.customId)
-                        {
-                            const context = this.runtime.contextFactory.createInteractionContext(interaction);
-                            if (v.info.noCheckAccess !== true && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
-                            
-                            v.run(context, v.info)?.catch(console.log);
-
-                            if (v.info.noLog !== true)
-                                this.runtime.config.logInteraction?.(context);
-                        }
-                    });
+                    this._handleInteractionButton(interaction);
                 }
                 else if (interaction.isAnySelectMenu())
                 {
-                    this.runtime.componentManager.getMenusMap.forEach(async (v, k) => {
-                        if (k == interaction.customId)
-                        {
-                            v.info.onSelect?.(this.runtime.contextFactory.createInteractionContext(interaction), v.info);
-                            if (interaction.isStringSelectMenu())
-                            Object.keys(v.run).forEach(async val => {
-                                if (interaction.values.includes(val))
-                                {
-                                    if (typeof v.run !== "object") return;
-                                    const context = this.runtime.contextFactory.createInteractionContext(interaction);
-                                    if (v.info.noCheckAccess !== true && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
-
-                                    v.run[val](context, v.info)?.catch(console.log);
-                                    if (v.info.noLog !== true)
-                                        this.runtime.config.logInteraction?.(context);
-                                }
-                            });
-                            else if (interaction.isUserSelectMenu())
-                            {
-                                if (typeof v.run !== "function") return;
-                                if (!v.info.userSelect) return;
-                                else v.run = v.run as eds.ComponentManager.MenuUserCode;
-
-                                const context = this.runtime.contextFactory.createInteractionContext(interaction);
-                                if (v.info.noCheckAccess !== true && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
-
-                                if (v.info.userSelect)
-                                    v.run(context, v.info)?.catch(console.log);
-                                if (v.info.noLog !== true)
-                                    this.runtime.config.logInteraction?.(context);
-                            }
-                            else if (interaction.isChannelSelectMenu())
-                            {
-                                if (typeof v.run !== "function") return;
-                                if (!v.info.channelSelect) return;
-                                else v.run = v.run as eds.ComponentManager.MenuChannelCode;
-
-                                const context = this.runtime.contextFactory.createInteractionContext(interaction);
-                                if (v.info.noCheckAccess !== true && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
-
-                                if (v.info.channelSelect)
-                                    v.run(context, v.info)?.catch(console.log);
-                                if (v.info.noLog !== true)
-                                    this.runtime.config.logInteraction?.(context);
-                            }
-                        }
-                    });
+                    this._handleInteractionMenu(interaction);
                 }
             }
             else if (interaction.type === InteractionType.ModalSubmit)
             {
-                this.runtime.componentManager.getModalsMap.forEach(async (v, k) => {
-                    if (k == interaction.customId)
-                    {
-                        const context = this.runtime.contextFactory.createInteractionContext(interaction);
-                        if (v.info.noCheckAccess !== true && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
-
-                        v.run(context, interaction.fields, v.info);
-                        if (v.info.noLog !== true)
-                            this.runtime.config.logInteraction?.(context);
-                    }
-                });
+                this._handleInteractionModal(interaction);
             }
         });
     }
@@ -191,6 +93,115 @@ export class Handler
         for (const role of roles)
             if (has(role)) result = true;
         return result;
+    }
+
+    private _handleMessage(message: Message, maps: _initMaps)
+    {
+        const context = this.runtime.contextFactory.createTextContext(message);
+        maps.AlwaysCallMap.forEach(path => require(path).default?.run(context) || require(path).run(context));
+        if (this.runtime.config.prefix)
+        {
+            if (message.content.toLowerCase().startsWith(this.runtime.config.prefix))
+            maps.CallMap.forEach(async (v, k) => {
+                if (this.runtime.config.prefix)
+                {
+                    if (message.content.toLowerCase().startsWith(this.runtime.config.prefix))
+                    if (k.includes(context.args[0]))
+                    {
+                        try {
+                            const file: eds.CommandFile<false> = require(v).default || require(v);
+                            if (file.info.noCheckAccess !== true && !this._checkAccess(context, file.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+
+                            file.run(context)?.catch(console.log);
+                            if (file.pragmaNoLog !== true)
+                                this.runtime.config.logTextCommand?.(context);
+                        } catch (err) {
+                            return console.error(errors.Handler.runCommandError(err));
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    private _handleInteractionCommand(interaction: Interaction)
+    {
+        if (!(interaction instanceof ChatInputCommandInteraction)) return;
+        const context = this.runtime.contextFactory.createSlashContext(interaction);
+        this.runtime.loader.getSlashCallMap.forEach((v, k) => {
+            if (k === interaction.commandName)
+            {
+                const file: eds.CommandFile<true> = require(v).default || require(v);
+                if (file.info.noCheckAccess !== true && !this._checkAccess(context, file.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+
+                file.run(context)?.catch(console.log);
+                if (file.pragmaNoLog !== true)
+                    this.runtime.config.logSlashCommand?.(context);
+            }
+        });
+    }
+
+    private _handleInteractionButton(interaction: ButtonInteraction)
+    {
+        this.runtime.componentManager.getButtonsMap.forEach(async (v, k) => {
+            if (k == interaction.customId)
+            {
+                const context = this.runtime.contextFactory.createInteractionContext(interaction);
+                if (v.info.noCheckAccess !== true && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+                
+                v.run(context, v.info)?.catch(console.log);
+
+                if (v.info.noLog !== true)
+                    this.runtime.config.logInteraction?.(context);
+            }
+        });
+    }
+
+    private _handleInteractionMenu(interaction: AnySelectMenuInteraction)
+    {
+        this.runtime.componentManager.getMenusMap.forEach(async (v, k) => {
+            if (k !== interaction.customId) return;
+            const context = this.runtime.contextFactory.createInteractionContext(interaction);
+            v.info.onSelect?.(context, v.info);
+
+            if (interaction.isStringSelectMenu())
+                return void Object.keys(v.run).forEach(async val => {
+                    if (interaction.values.includes(val))
+                    {
+                        if (typeof v.run !== "object") return;
+                        if (v.info.noCheckAccess !== true && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+                        v.run[val](context as eds.InteractionContext<StringSelectMenuInteraction>, v.info)?.catch(console.log);
+                        if (v.info.noLog !== true)
+                            this.runtime.config.logInteraction?.(context);
+                    }
+                });
+            if (interaction.isUserSelectMenu() && !v.info.userSelect) return;
+            if (interaction.isChannelSelectMenu() && !v.info.channelSelect) return;
+            if (interaction.isMentionableSelectMenu() && !v.info.mentionableSelect) return;
+            if (interaction.isRoleSelectMenu() && !v.info.roleSelect) return;
+            
+            if (typeof v.run !== "function") return;
+            if (v.info.noCheckAccess !== true && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+
+            v.run(context as any, v.info)?.catch(console.log);
+            if (v.info.noLog !== true)
+                this.runtime.config.logInteraction?.(context);
+        });
+    }
+
+    private _handleInteractionModal(interaction: ModalSubmitInteraction)
+    {
+        this.runtime.componentManager.getModalsMap.forEach(async (v, k) => {
+            if (k == interaction.customId)
+            {
+                const context = this.runtime.contextFactory.createInteractionContext(interaction);
+                if (v.info.noCheckAccess !== true && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+
+                v.run(context, interaction.fields, v.info);
+                if (v.info.noLog !== true)
+                    this.runtime.config.logInteraction?.(context);
+            }
+        });
     }
 }
 

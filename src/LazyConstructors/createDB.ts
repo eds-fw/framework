@@ -1,5 +1,6 @@
 import { eds, runtimeStorage } from "..";
 
+/** @deprecated */
 export function createDB<T extends eds.JSONSupportedValueTypes = eds.JSONSupportedValueTypes>(name: string, path: string, autosave?: boolean | number, dump_path?: string): void
 {
     let databases = runtimeStorage.databases as Record<string, eds.Database>;

@@ -12,7 +12,6 @@ export * from "./Classes/Database";
 export * from "./Classes/Handler";
 export * from "./Classes/Loader";
 export * from "./Classes/SlashCommandsManager";
-export * from "./Classes/Store";
 
 export * from "./LazyConstructors/createBot";
 export * from "./LazyConstructors/createComponent";
