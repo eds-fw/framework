@@ -81,18 +81,21 @@ function getPage(page: string)
 
 function getMenu(roles: string[])
 {
+    let options = loader.commandHelp.getCommandNames(roles).map(command => ({
+        label: (loader.commandHelp.commandTypes.get(command) == "slash" ? '/' : loader.commandHelp.commandTypes.get(command) == "nonPrefixed" ? '' : config.prefix) + command,
+        description: loader.commandHelp.descriptions.get(command)?.slice(0, 100),
+        value: command,
+        emoji: config.builtinCommandsSettings?.helpPageMenuEmoji,
+        default: false as boolean
+    }));
+    if (options.length > 25)
+        options = options.slice(0, 26);
     const components = [{
         type: ComponentType.ActionRow,
         components: [{
             type: ComponentType.StringSelect,
             customId: "help $$ commandSelect",
-            options: loader.commandHelp.getCommandNames(roles).map(command => ({
-                label: (loader.commandHelp.commandTypes.get(command) == "slash" ? '/' : loader.commandHelp.commandTypes.get(command) == "nonPrefixed" ? '' : config.prefix) + command,
-                description: loader.commandHelp.descriptions.get(command)?.slice(0, 100),
-                value: command,
-                emoji: config.builtinCommandsSettings?.helpPageMenuEmoji,
-                default: false as boolean
-            }))
+            options
         }]
     }] satisfies ActionRowData<MessageActionRowComponentData>[];
     return components.filter((item, index) => components.indexOf(item) === index).slice(0, 25);
