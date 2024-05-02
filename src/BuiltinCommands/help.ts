@@ -88,8 +88,8 @@ function getMenu(roles: string[])
         emoji: config.builtinCommandsSettings?.helpPageMenuEmoji,
         default: false as boolean
     }));
-    if (options.length > 25)
-        options = options.slice(0, 26);
+    if (options.length >= 25)
+        options = options.slice(0, 25);
     const components = [{
         type: ComponentType.ActionRow,
         components: [{
