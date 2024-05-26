@@ -18,7 +18,7 @@
     "tslib": "^2.6.1"
   },
   "name": "@easy-ds-bot/framework",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Simply TypeScript framework for your discord.js bot",
   "main": "dist/index.js",
   "repository": {
