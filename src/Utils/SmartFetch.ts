@@ -1,4 +1,4 @@
-import { wait } from "@easy-ds-bot/utils/*";
+import { wait } from "@easy-ds-bot/utils";
 import type { APIGuildMember, APIInteractionGuildMember, CachedManager, Guild, GuildBasedChannel, GuildChannelManager, GuildManager, GuildMember, GuildMemberManager, Message, MessageManager, Role, RoleManager, Snowflake, User, UserManager } from "discord.js";
 import { AnyContext } from "../Types/Command";
 const LIMIT_FETCHES = 5;
