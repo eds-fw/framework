@@ -47,7 +47,7 @@ export class Handler
 
     private _init(maps: _initMaps): void
     {
-        if (this.runtime.config.slashOnly)
+        if (!this.runtime.config.slashOnly)
         this.runtime.client.on("messageCreate", async message => {
             if (message.channel.type == ChannelType.DM && this.runtime.config.guildOnly) return;
             if (message.author.bot && this.runtime.config.ignoreBots) return;
