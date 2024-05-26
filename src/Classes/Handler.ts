@@ -6,6 +6,7 @@ import {
     Interaction,
     InteractionType,
     Message,
+    MessageContextMenuCommandInteraction,
     ModalSubmitInteraction,
     StringSelectMenuInteraction
 } from "discord.js";
@@ -46,33 +47,25 @@ export class Handler
 
     private _init(maps: _initMaps): void
     {
-        if (this.runtime.config.slashOnly !== true)
+        if (this.runtime.config.slashOnly)
         this.runtime.client.on("messageCreate", async message => {
-            if (message.channel.type === ChannelType.DM && this.runtime.config.guildOnly) return;
+            if (message.channel.type == ChannelType.DM && this.runtime.config.guildOnly) return;
             if (message.author.bot && this.runtime.config.ignoreBots) return;
             this._handleMessage(message, maps);
         });
 
         this.runtime.client.on("interactionCreate", async interaction => {
-            if (interaction.type === InteractionType.ApplicationCommand)
-            {
+            if (interaction.type == InteractionType.ApplicationCommand)
                 this._handleInteractionCommand(interaction);
-            }
-            else if (interaction.type === InteractionType.MessageComponent)
+            else if (interaction.type == InteractionType.MessageComponent)
             {
                 if (interaction.isButton())
-                {
                     this._handleInteractionButton(interaction);
-                }
                 else if (interaction.isAnySelectMenu())
-                {
                     this._handleInteractionMenu(interaction);
-                }
             }
-            else if (interaction.type === InteractionType.ModalSubmit)
-            {
+            else if (interaction.type == InteractionType.ModalSubmit)
                 this._handleInteractionModal(interaction);
-            }
         });
     }
 
@@ -81,7 +74,7 @@ export class Handler
         if (!roles || roles.length == 0) return true;
 
         let has;
-        if (ctx.__contextType === "text")
+        if (ctx.__contextType == "text")
             has = ctx.message.member?.roles.cache.has.bind(ctx.message.member?.roles.cache);
         else if (Array.isArray(ctx.interaction.member?.roles))
             has = ctx.interaction.member?.roles.includes.bind(ctx.interaction.member?.roles);
@@ -109,11 +102,11 @@ export class Handler
                     if (k.includes(context.args[0]))
                     {
                         try {
-                            const file: eds.CommandFile<false> = require(v).default || require(v);
-                            if (file.info.noCheckAccess !== true && !this._checkAccess(context, file.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+                            const file: eds.CommandFile<"text"> = require(v).default || require(v);
+                            if (file.info.noCheckAccess && !this._checkAccess(context, file.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
 
                             file.run(context)?.catch(console.log);
-                            if (file.pragmaNoLog !== true)
+                            if (file.pragmaNoLog)
                                 this.runtime.config.logTextCommand?.(context);
                         } catch (err) {
                             return console.error(errors.Handler.runCommandError(err));
@@ -129,13 +122,13 @@ export class Handler
         if (!(interaction instanceof ChatInputCommandInteraction)) return;
         const context = this.runtime.contextFactory.createSlashContext(interaction);
         this.runtime.loader.getSlashCallMap.forEach((v, k) => {
-            if (k === interaction.commandName)
+            if (k == interaction.commandName)
             {
-                const file: eds.CommandFile<true> = require(v).default || require(v);
-                if (file.info.noCheckAccess !== true && !this._checkAccess(context, file.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+                const file: eds.CommandFile<"slash"> = require(v).default || require(v);
+                if (file.info.noCheckAccess && !this._checkAccess(context, file.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
 
                 file.run(context)?.catch(console.log);
-                if (file.pragmaNoLog !== true)
+                if (file.pragmaNoLog)
                     this.runtime.config.logSlashCommand?.(context);
             }
         });
@@ -147,11 +140,11 @@ export class Handler
             if (k == interaction.customId)
             {
                 const context = this.runtime.contextFactory.createInteractionContext(interaction);
-                if (v.info.noCheckAccess !== true && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+                if (v.info.noCheckAccess && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
                 
                 v.run(context, v.info)?.catch(console.log);
 
-                if (v.info.noLog !== true)
+                if (v.info.noLog)
                     this.runtime.config.logInteraction?.(context);
             }
         });
@@ -160,7 +153,7 @@ export class Handler
     private _handleInteractionMenu(interaction: AnySelectMenuInteraction)
     {
         this.runtime.componentManager.getMenusMap.forEach(async (v, k) => {
-            if (k !== interaction.customId) return;
+            if (k != interaction.customId) return;
             const context = this.runtime.contextFactory.createInteractionContext(interaction);
             v.info.onSelect?.(context, v.info);
 
@@ -168,23 +161,23 @@ export class Handler
                 return void Object.keys(v.run).forEach(async val => {
                     if (interaction.values.includes(val))
                     {
-                        if (typeof v.run !== "object") return;
-                        if (v.info.noCheckAccess !== true && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+                        if (typeof v.run != "object") return;
+                        if (v.info.noCheckAccess && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
                         v.run[val](context as eds.InteractionContext<StringSelectMenuInteraction>, v.info)?.catch(console.log);
-                        if (v.info.noLog !== true)
+                        if (v.info.noLog)
                             this.runtime.config.logInteraction?.(context);
                     }
                 });
-            if (interaction.isUserSelectMenu() && !v.info.userSelect) return;
-            if (interaction.isChannelSelectMenu() && !v.info.channelSelect) return;
-            if (interaction.isMentionableSelectMenu() && !v.info.mentionableSelect) return;
-            if (interaction.isRoleSelectMenu() && !v.info.roleSelect) return;
+            if (interaction.isUserSelectMenu() && v.info.type != "user") return;
+            if (interaction.isChannelSelectMenu() && v.info.type != "channel") return;
+            if (interaction.isMentionableSelectMenu() && v.info.type != "mentionable") return;
+            if (interaction.isRoleSelectMenu() && v.info.type != "role") return;
             
-            if (typeof v.run !== "function") return;
-            if (v.info.noCheckAccess !== true && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+            if (typeof v.run != "function") return;
+            if (v.info.noCheckAccess && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
 
             v.run(context as any, v.info)?.catch(console.log);
-            if (v.info.noLog !== true)
+            if (v.info.noLog)
                 this.runtime.config.logInteraction?.(context);
         });
     }
@@ -195,13 +188,18 @@ export class Handler
             if (k == interaction.customId)
             {
                 const context = this.runtime.contextFactory.createInteractionContext(interaction);
-                if (v.info.noCheckAccess !== true && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+                if (v.info.noCheckAccess && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
 
                 v.run(context, interaction.fields, v.info);
-                if (v.info.noLog !== true)
+                if (v.info.noLog)
                     this.runtime.config.logInteraction?.(context);
             }
         });
+    }
+
+    private _handleMessageContextMenu(interaction: MessageContextMenuCommandInteraction)
+    {
+        this.runtime.componentManager
     }
 }
 

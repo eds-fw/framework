@@ -55,15 +55,15 @@ export class ComponentManager
         });
     }
     public createMenu<T extends ComponentManager.MenuOptions>(options: T,
-        code: T["userSelect"] extends true
-                ? ComponentManager.MenuUserCode
-                : T["channelSelect"] extends true
-                    ? ComponentManager.MenuChannelCode
-                    : T["mentionableSelect"] extends true
-                        ? ComponentManager.MenuMentionableCode
-                        : T["roleSelect"] extends true
-                            ? ComponentManager.MenuRoleCode
-                            : ComponentManager.MenuStringCode,
+        code: T["type"] extends "user"
+            ? ComponentManager.MenuUserCode
+            : T["type"] extends "channel"
+            ? ComponentManager.MenuChannelCode
+            : T["type"] extends "mentionable"
+            ? ComponentManager.MenuMentionableCode
+            : T["type"] extends "role"
+            ? ComponentManager.MenuRoleCode
+            : ComponentManager.MenuStringCode,
     ): void {
         this._MenusMap.set(options.custom_id, {
             run: code,
@@ -81,16 +81,17 @@ export class ComponentManager
 
 export namespace ComponentManager
 {
-    export type ButtonCode = (ctx: eds.InteractionContext<ButtonInteraction>, options: ButtonOptions) => Promise<void> | void;
+    export type MenuType = "string" | "user" | "role" | "channel" | "mentionable";
+    export type ButtonCode = (ctx: eds.InteractionContext<ButtonInteraction>, options: ButtonOptions) => any;
 
-    export type MenuStringCode = Record<string, (ctx: eds.InteractionContext<StringSelectMenuInteraction>, options: MenuOptions) => Promise<void> | void>;
-    export type MenuUserCode = (ctx: eds.InteractionContext<UserSelectMenuInteraction>, options: MenuOptions) => Promise<void> | void;
-    export type MenuChannelCode = (ctx: eds.InteractionContext<ChannelSelectMenuInteraction>, options: MenuOptions) => Promise<void> | void;
-    export type MenuMentionableCode = (ctx: eds.InteractionContext<MentionableSelectMenuInteraction>, options: MenuOptions) => Promise<void> | void;
-    export type MenuRoleCode = (ctx: eds.InteractionContext<RoleSelectMenuInteraction>, options: MenuOptions) => Promise<void> | void;
+    export type MenuStringCode = Record<string, (ctx: eds.InteractionContext<StringSelectMenuInteraction>, options: MenuOptions) => any>;
+    export type MenuUserCode = (ctx: eds.InteractionContext<UserSelectMenuInteraction>, options: MenuOptions) => any;
+    export type MenuChannelCode = (ctx: eds.InteractionContext<ChannelSelectMenuInteraction>, options: MenuOptions) => any;
+    export type MenuMentionableCode = (ctx: eds.InteractionContext<MentionableSelectMenuInteraction>, options: MenuOptions) => any;
+    export type MenuRoleCode = (ctx: eds.InteractionContext<RoleSelectMenuInteraction>, options: MenuOptions) => any;
     export type AnyMenuCode = MenuStringCode | MenuUserCode | MenuChannelCode | MenuMentionableCode | MenuRoleCode;
 
-    export type ModalCode = (ctx: eds.InteractionContext<ModalSubmitInteraction | ModalMessageModalSubmitInteraction>, fields: ModalSubmitFields, options: ModalOptions) => Promise<void> | void;
+    export type ModalCode = (ctx: eds.InteractionContext<ModalSubmitInteraction | ModalMessageModalSubmitInteraction>, fields: ModalSubmitFields, options: ModalOptions) => any;
 
     interface BaseOptions
     {
@@ -108,11 +109,8 @@ export namespace ComponentManager
 
     export interface MenuOptions extends BaseOptions
     {
-        userSelect?: boolean;
-        channelSelect?: boolean;
-        mentionableSelect?: boolean;
-        roleSelect?: boolean;
-        onSelect?: (ctx: eds.InteractionContext<AnySelectMenuInteraction>, options: MenuOptions) => Promise<void> | void;
+        type?: MenuType;
+        onSelect?: (ctx: eds.InteractionContext<AnySelectMenuInteraction>, options: MenuOptions) => any;
     }
 
     export interface ModalOptions extends BaseOptions

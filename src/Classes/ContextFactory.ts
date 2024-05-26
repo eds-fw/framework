@@ -14,43 +14,44 @@ export class ContextFactory
         }>("config");
     };
 
-    public createTextContext(message: Message): eds.CommandContext<false>
+    public createTextContext(message: Message): eds.CommandContext<"text">
     {
         let args = message.content.slice(this.runtime.config.prefix?.length ?? 0).trim().split(/\s+/g);
-        const ctx = {
+        const ctx: eds.CommandContext<"text"> = {
             message,
             args,
             universal: message,
-            runtime: eds.runtimeStorage,
+            runtime: runtimeStorage,
             __contextType: "text",
             reply: (...params: Parameters<eds.EmbedTemplateMethods["reply"]>) => eds.templateEmbedReply(ctx, ...params),
-        } as eds.CommandContext<false>;
+        };
 
         return ctx;
     };
 
-    public createSlashContext(interaction: ChatInputCommandInteraction): eds.CommandContext<true>
+    public createSlashContext(interaction: ChatInputCommandInteraction): eds.CommandContext<"slash">
     {
-        const ctx = {
+        const ctx: eds.CommandContext<"slash"> = {
             interaction,
             universal: interaction,
-            runtime: eds.runtimeStorage,
+            runtime: runtimeStorage,
             __contextType: "slash",
             reply: (...params: Parameters<eds.EmbedTemplateMethods["reply"]>) => eds.templateEmbedReply(ctx, ...params),
-        } as eds.CommandContext<true>;
+        };
 
         return ctx;
     };
 
-    public createInteractionContext<T extends eds.SupportedInteractions = eds.SupportedInteractions>(interaction: T): eds.InteractionContext<T>
+    public createInteractionContext<T extends eds.SupportedInteractions = eds.SupportedInteractions>
+        (interaction: T): eds.InteractionContext<T>
     {
-        const ctx = {
+        const ctx: eds.InteractionContext<T> = {
             interaction,
             universal: interaction,
-            runtime: eds.runtimeStorage,
+            runtime: runtimeStorage,
             __contextType: "interaction",
             reply: (...params: Parameters<eds.EmbedTemplateMethods["reply"]>) => eds.templateEmbedReply(ctx, ...params),
-        } as eds.InteractionContext<T>;
+        };
 
         return ctx;
     };

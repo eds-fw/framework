@@ -1,5 +1,5 @@
 import { sep } from "path";
-import { CommandFile, CommandHelpInfo, ConfigExemplar, expandDirs } from "..";
+import { CommandFile, CommandHelpInfo, ConfigExemplar, eds, expandDirs } from "..";
 import * as messages from "../errors";
 import { AutoCommandHelp } from "./AutoCommandHelp";
 
@@ -43,7 +43,7 @@ export class Loader
     {
         const paths: string[] = (await expandDirs(this._path)).filter($ => $.endsWith('.js'));
         paths.forEach(path => {
-            let file: CommandFile<boolean>;
+            let file: CommandFile<"text" | "slash">;
 
             if (this._checkIgnorePrefix(path))
             {
@@ -111,24 +111,15 @@ export class Loader
             if (!this.noLog)
                 console.log(messages.Loader.templateLoadBuiultinCommand("help"));
         }
-        if (this.builtinCommands?.devtools !== false)
-        {
-            const path = "@easy-ds-bot/framework/dist/BuiltinCommands/devtools";
-            const file = require(path);
-            this._loadFile(file, path);
-            this.commandHelp.reg(file);
-            if (!this.noLog)
-                console.log(messages.Loader.templateLoadBuiultinCommand("devtools"));
-        }
     }
 
-    private _loadFile(data: CommandFile<boolean>, path: string): boolean
+    private _loadFile(data: CommandFile<eds.CommandType>, path: string): boolean
     {
-        if (data.info.slash === true)
+        if (data.info.type == "slash")
         {
             this._HelpInfoMap.set([data.info.name], {
                 name:           data.info?.name,
-                slash:          true,
+                type:           data.info.type,
                 usage:          data.info?.usage             ?? "NO_USAGE",
                 usageDocs:      data.info?.usageDocs,
                 desc:           data.info?.desc,
@@ -152,7 +143,7 @@ export class Loader
     
                 this._HelpInfoMap.set(aliases, {
                     name:           data.info?.name,
-                    slash:          false,
+                    type:           data.info.type,
                     usage:          data.info?.usage         ?? "NO_USAGE",
                     usageDocs:      data.info?.usageDocs,
                     desc:           data.info?.desc,

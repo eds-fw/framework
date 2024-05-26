@@ -33,20 +33,20 @@ export class AutoCommandHelp
         }
     };
 
-    public reg(file: Readonly<eds.CommandFile<boolean>>): void
+    public reg(file: Readonly<eds.CommandFile<eds.CommandType>>): void
     {
         if (file.info.hidden === true) return;
 
         this.pages.set(file.info.name, this.templates.page(
             file.info.name + (file.info.usage ? ' ' + file.info.usage : ''),
-            file.info.slash ? "slash" : file.info.nonPrefixed ? "nonPrefixed" : "text",
+            file.info.type == "slash" ? "slash" : file.info.nonPrefixed ? "nonPrefixed" : "text",
             file.info.desc,
             file.info.usageDocs
         ));
         if (file.info.desc) this.descriptions.set(file.info.name, file.info.desc);
 
         let buf = '';
-        if (file.info.slash)
+        if (file.info.type == "slash")
         {
             buf = this.templates.commandSlash(file.info.name + (file.info.usage ? ' ' + file.info.usage : ''), file.info.desc);
             this.commandTypes.set(file.info.name, "slash");
