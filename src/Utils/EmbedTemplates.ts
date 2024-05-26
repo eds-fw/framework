@@ -1,34 +1,31 @@
 import {
     APIActionRowComponent,
     APIEmbed,
-    APIMessageActionRowComponent, InteractionResponse,
+    APIMessageActionRowComponent, BaseMessageOptions, InteractionResponse,
     JSONEncodable,
     Message
 } from "discord.js";
 import { eds, runtimeStorage } from "..";
 
-let previous: Message | undefined;
-let previousInteraction: InteractionResponse | Message;
-
 export async function templateEmbedReply(
-    ctx: eds.CommandContext<boolean> | eds.InteractionContext,
+    ctx: eds.AnyContext,
     ephemeral: boolean,
     title?: string,
     description?: string,
     type: string = "default",
-    components?: APIActionRowComponent<APIMessageActionRowComponent>[],
+    components?: BaseMessageOptions["components"],
     custom_embed?: JSONEncodable<APIEmbed> | APIEmbed
-): Promise<void> {
+): Promise<Message | InteractionResponse | undefined>
+{
     if ((!description || description === "") && (!title || title === "")) return;
     const config = runtimeStorage.config;
 
-    let prevRef, method;
+    let method;
 
     if (ctx.__contextType === "text")
     {
         method = ctx.message.reply.bind(ctx.message);
         if (!method) return;
-        prevRef = previous;
     }
     else {
         if (ctx.interaction.deferred)
@@ -36,19 +33,21 @@ export async function templateEmbedReply(
         else
             method = ctx.interaction.reply.bind(ctx.interaction);
         if (!method) return;
-        prevRef = previousInteraction;
     }
 
-    prevRef = await method({
-        embeds: [Object.assign({}, {
+    const result = await method({
+        embeds: [{
             author: title ? { name: title } : undefined,
             description: description,
             color: type ? config.colors?.[type] : undefined,
-            footer: eds.getRandomFooterEmbed().data_api
-        }, custom_embed ?? {})],
+            footer: eds.getRandomFooterEmbed().data_api,
+            ...custom_embed ?? {}
+        }],
         components,
-        ephemeral
-    }).catch((err) => console.error(err)) ?? prevRef;
+        ephemeral,
+    }).catch(console.error);
+    if (!result) return;
+    return result;
 }
 
 export interface EmbedTemplateMethods
@@ -60,5 +59,5 @@ export interface EmbedTemplateMethods
         type?: string,
         components?: APIActionRowComponent<APIMessageActionRowComponent>[],
         custom_embed?: JSONEncodable<APIEmbed> | APIEmbed
-    ): Promise<void>;
+    ): Promise<Message | InteractionResponse | undefined>;
 }

@@ -1,5 +1,5 @@
 import type { Client, GatewayIntentsString } from "discord.js";
-import { AnyContext, InteractionContext, SlashCommandContext, TextCommandContext } from "./Command/CommandContext";
+import { AnyContext, InteractionContext, SlashCommandContext, TextCommandContext } from "./Command";
 
 export interface ConfigExemplar
 {
@@ -19,7 +19,7 @@ export interface ConfigExemplar
      * @default () => console.log("I am ready")
      * @deprecated
      */
-    onReady?: (client: Client) => Promise<void> | void;
+    onReady?: (client: Client) => any;
 //==========
 //PATHS
     /**
@@ -28,27 +28,14 @@ export interface ConfigExemplar
      * **Warning! The path is counted from the folder where the `package.json` and `start.bat`/`start.sh` files are located**
      */
     commandsPath: string;
-    /**
-     * Path to logs folder.
-     * To disable logs remove this field
-     * 
-     * **Warning! The path is counted from the folder where the `package.json` and `start.bat`/`start.sh` files are located**
-     * @default undefined
-     * @deprecated
-     */
-    logsPath?: string;
 //==========
 //METHODS
-    logSlashCommand?:   (context: SlashCommandContext)      => Promise<void> | void;
-    logTextCommand?:    (context: TextCommandContext)       => Promise<void> | void;
-    logInteraction?:    (context: InteractionContext)       => Promise<void> | void;
-    noAccess?:          (context: AnyContext)               => Promise<void> | void;
+    logSlashCommand?:   (context: SlashCommandContext)      => any;
+    logTextCommand?:    (context: TextCommandContext)       => any;
+    logInteraction?:    (context: InteractionContext)       => any;
+    noAccess?:          (context: AnyContext)               => any;
 //==========
 //RESOURCES
-    /**
-     * Array of bot developers IDs
-     */
-    developers: string[];
     /**
      * Bot embeds colors
      * 
@@ -112,7 +99,6 @@ export interface ConfigExemplar
      */
     includeBuiltinCommands?: {
         help: boolean;
-        devtools: boolean;
     };
     /**
      * Some built-in commands settings
@@ -166,15 +152,6 @@ export interface ConfigExemplar
          * @default undefined
          */
         helpListAdditionalText?: string;
-
-        /**
-         * @default "devtools"
-         */
-        devtoolsCommandName?: string;
-        /**
-         * @default "Open eds devtools"
-         */
-        devtoolsCommandDescription?: string;
     };
 }
 

@@ -1,6 +1,6 @@
 import { ApplicationCommandData } from "discord.js";
 import equal from "fast-deep-equal";
-import { type eds, runtimeStorage } from "..";
+import { runtimeStorage } from "..";
 import { eds_errors } from "../errors";
 
 /**
