@@ -1,10 +1,10 @@
 import { ActionRowData, ApplicationCommandType, ComponentType, EmbedData, MessageActionRowComponentData } from "discord.js";
-import { createSlashCommand, eds, runtimeStorage } from "..";
+import { eds, runtimeStorage } from "..";
 
 const config = runtimeStorage.config;
 const loader = runtimeStorage.loader;
 
-createSlashCommand({
+eds.createSlashCommand({
     name: config.builtinCommandsSettings?.helpCommandName ?? "help",
     description: config.builtinCommandsSettings?.helpCommandDescription ?? "Show a list of all bot commands",
     nsfw: false,
@@ -58,11 +58,11 @@ export = {
     },
     info: {
         name: config.builtinCommandsSettings?.helpCommandName ?? "help",
-        slash: true,
+        type: "slash",
         desc: config.builtinCommandsSettings?.helpCommandDescription ?? "Show a list of all bot commands",
         category: runtimeStorage.config.builtinCommandsSettings?.helpCommandCategory ?? "General",
     }
-} satisfies eds.CommandFile<true>;
+} satisfies eds.CommandFile<"slash">;
 
 
 

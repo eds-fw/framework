@@ -13,8 +13,9 @@
 - Intuitive and does not complicate the development process
 - Contains type declarations (.d.ts)
 - Fully configurable
-- Built-in `/help` and `/devtools` commands
+- Built-in `/help` command
 - Lazy constructors (`createSlashCommand()`, `createComponent()` and more)
+- Smart Fetches: get from cache or fetch in compliance with the rate limit (`sfMember(context, context.interaction.user.id)` and more)
 
 # Requirements
 - [NodeJS](https://nodejs.org/en) `v18` or newer
@@ -86,7 +87,7 @@ import { eds } from "@easy-ds-bot/framework";
 //eds components are resistant to bot restarts
 eds.createButton({
     custom_id: "get cake"
-}, async (context, options) => { //"get cake" button code
+}, async context => { //"get cake" button code
     await context.reply(
         true, //epemeral?
         undefined, //title
@@ -125,7 +126,7 @@ export = {
         usage: '',
         hidden: true,
     }
-} satisfies eds.CommandFile<true>;
+} satisfies eds.CommandFile;
 ```
 
 5. A) Create `start.bat` file (WINDOWS ONLY) for easily compile & launch your bot:
@@ -144,84 +145,89 @@ node dist/index.js
 read -p "" #keeps window open after bot crash
 ```
 
-6. Execute (open) `start.bat` file. Voila! It's alive!
+6. Execute (open) `start.bat` or `start.sh` file. Voila! It's alive!
 
 # API
 - *module* `@easy-ds-bot/utils`
 - *module* `@easy-ds-bot/timeparser`
-- `createBot(config: ConfigExemplar): KnownRuntimeProperties` *(lazyConstructor)*
-- `createButton(options: ButtonOptions, code: ButtonCode): void` *(lazyConstructor)*
+- `createBot (config: ConfigExemplar): KnownRuntimeProperties` *(lazyConstructor)*
+- `createButton (options: ButtonOptions, code: ButtonCode): void` *(lazyConstructor)*
     >- runtime: `componentManager`
-- `createMenu(options: MenuOptions, code: MenuUserCode | MenuStringCode): void` *(lazyConstructor)*
+- `createMenu (options: MenuOptions, code: MenuUserCode | MenuStringCode): void` *(lazyConstructor)*
     >- runtime: `componentManager`
-- `createModal(options: ModalOptions, code: ModalCode): void` *(lazyConstructor)*
+- `createModal (options: ModalOptions, code: ModalCode): void` *(lazyConstructor)*
     >- runtime: `componentManager`
-- `createSlashCommand(options: SpplicationCommandData): void` *(lazyConstructor)*
+- `createSlashCommand (options: SpplicationCommandData): void` *(lazyConstructor)*
     >- runtime: `slashCommandsManager`
-- *async* `startBot(): Promise<void>`
+- *async* `sfUser (mng_or_ctx: AnyContext | UserManager | undefined, id: Snowflake | undefined): Promise<User | undefined>`
+- *async* `sfMember (mng_or_ctx: AnyContext | GuildMemberManager | undefined, id: Snowflake | undefined): Promise<GuildMember | undefined>`
+- *async* `sfChannel (mng_or_ctx: AnyContext | GuildChannelManager | undefined, id: Snowflake | undefined): Promise<GuildBasedChannel | undefined>`
+- *async* `sfGuild (mng_or_ctx: AnyContext | GuildManager | undefined, id: Snowflake | undefined): Promise<Guild | undefined>`
+- *async* `sfRole (mng_or_ctx: AnyContext | RoleManager | undefined, id: Snowflake | undefined): Promise<Role | undefined>`
+- *async* `sfMessage (mng_or_ctx: AnyContext | MessageManager | undefined, id: Snowflake | undefined): Promise<Message | undefined>`
+- *async* `startBot (): Promise<void>`
     >- runtime: `slashCommandsManager, client, config`
 - *anonimous class* `runtimeStorage` *(runtime)*
     >- `[key: string]: any`
-    >- `getAll<T>(..keys: (keyof T)): T`
-    >- `getProp<V>(key: string): V`
-    >- `setAll<T>(values: T): T`
-    >- `setProp<K, V>(key: K, value: V): { [X in K]: V }`
+    >- `getAll <T>(...keys: (keyof T)): T`
+    >- `get <V>(key: string): V`
+    >- `setAll <T>(values: T): T`
+    >- `set <K, V>(key: K, value: V): { [X in K]: V }`
 - *class* `Client` *extends djs.Client*
     >- *constructor* `new (options: Options)`
-    >- *async* `init(): Promise<void>`
+    >- *async* `init (): Promise<void>`
 - *class* `ComponentsManager`
     >- *constructor* `new (){}`
-    >- `clearMaps(): void`
-    >- `createButton(options: ButtonOptions, code: ButtonCode): void`
-    >- `createMenu(options: MenuOptions, code: MenuUserCode | MenuStringCode): void`
-    >- `createModal(options: ModalOptions, code: ModalCode): void`
+    >- `clearMaps (): void`
+    >- `createButton (options: ButtonOptions, code: ButtonCode): void`
+    >- `createMenu (options: MenuOptions, code: MenuUserCode | MenuStringCode): void`
+    >- `createModal (options: ModalOptions, code: ModalCode): void`
     >- *iternal* *get* `getButtonsMap: Map<string, MapVal<...>>`
     >- *iternal* *get* `getMenusMap: Map<string, MapVal<...>>`
     >- *iternal* *get* `getModalsMap: Map<string, MapVal<...>>`
-- *class* `Database<V>` (DEPRECATED)
+- *class* `Database <V>`
     >- *field* `Map: Map<string, Value<...>>`
     >- *constructor* `new (path: string, autosave?: boolean | number, dump_path?: string)`
-    >- `save(): Promise<void>`
-    >- `set(key: string, value: V, tags?: TagsValues, save?: boolean): void`
-    >- `get(key: string): V | undefined`
-    >- `getKey(value: V, single?: boolean): string[]`
-    >- `getFull(key: string): Value<V> | undefined`
-    >- `has(key: string): boolean`
-    >- `hasValue(value: V): boolean`
-    >- `del(key: string): void`
+    >- `save (): Promise<void>`
+    >- `set (key: string, value: V, tags?: TagsValues, save?: boolean): void`
+    >- `get (key: string): V | undefined`
+    >- `getKey (value: V, single?: boolean): string[]`
+    >- `getFull (key: string): Value<V> | undefined`
+    >- `has (key: string): boolean`
+    >- `hasValue (value: V): boolean`
+    >- `del (key: string): void`
     >- *iternal* *get* `MapJSON: string`
-    >- *iternal* *async* `clearWeakData(): Promise<number>`
 - *class* `Handler`
     >- runtime: `config, loader, client, contextFactory`
     >- *constructor* `new ()`
 - *class* `Loader`
     >- *field* `commandHelp: AutoCommandHelp`
     >- *constructor* `new (path: string, noLog?: boolean, ignorePrefixes?: string[], builtinCommands?: ConfigExemplar.includeBuiltinCommands)`
-    >- `clearMaps(): void`
-    >- *async* `load(): Promise<void>`
-    >- *iternal* *async* `loadBuiltin(): Promise<void>`
+    >- `clearMaps (): void`
+    >- *async* `load (): Promise<void>`
+    >- *iternal* *async* `loadBuiltin (): Promise<void>`
     >- *iternal* *get* `getCallMap: Map<string[], string>`
     >- *iternal* *get* `getSlashCallMap: Map<string, string>`
     >- *iternal* *get* `getAlwaysCallMap: string[]`
     >- *iternal* *get* `getHelpInfoMap: Map<string[], CommandHelpInfo>`
 - *class* `SlashCommandsManager`
     >- runtime: `client`
-    >- `create(options: djs.ApplicationCommandData): void`
-    >- `save(): void`
+    >- `create (options: djs.ApplicationCommandData): void`
+    >- `save (): void`
 - *type* `SupportedInteractions`
-- *type* `CommandContext<boolean>`
+- *type* `CommandContext <type>`
 - *type* `AnyContext`
-- *type* `InteractionContext<SupportedInteractions>`
+- *type* `InteractionContext <SupportedInteractions>`
 - *type* `SlashCommandContext`
 - *type* `TextCommandContext`
-- *type* `CommandFile<boolean>`
+- *type* `CommandFile`
 - *type* `CommandHelpInfo`
 - *type* `CommandInfo`
 - *type* `ConfigExemplar`
 - *type* `KnownRuntimeProperties`
-- *iternal* *async* `expandDirs(path: string): Promise<string[]>`
-- *iternal* *async* `templateEmbedReply(...params): Promise<void>`
-- *iternal* *async* `templateEmbedEditReply(...params): Promise<void>`
+- *iternal* *async* `expandDirs (path: string): Promise<string[]>`
+- *iternal* *async* `templateEmbedReply (...params): Promise<void>`
+- *iternal* *async* `templateEmbedEditReply (...params): Promise<void>`
 - *iternal* *class* `AutoCommandHelp`
     >- runtime: `config`
     >- *field* `pages: Map<string, string>`
@@ -230,18 +236,18 @@ read -p "" #keeps window open after bot crash
     >- *field* `templates: {...}`
     >- *field* `_fullCommandList: string`
     >- *constructor* `new ()`
-    >- `getCommandList(roles: string[]): string`
-    >- `getCommandNames(roles: string[]): string[]`
-    >- `getBakedCommandNames(roles: string[]): string[]`
-    >- `clear(): void`
-    >- *iternal* `reg(file: CommandFile<boolean> as const): void`
+    >- `getCommandList (roles: string[]): string`
+    >- `getCommandNames (roles: string[]): string[]`
+    >- `getBakedCommandNames (roles: string[]): string[]`
+    >- `clear (): void`
+    >- *iternal* `reg (file: CommandFile<boolean> as const): void`
     >- *iternal* *field* `_publicCommands: string`
     >- *iternal* *field* `_fullCommandList: string`
 - *iternal* *class* `ContextFactory`
     >- runtime: `config`
     >- *constructor* `new ()`
-    >- `createTextContext(message: djs.Message): CommandContext<false>`
-    >- `createSlashContext(interaction: djs.ChatInputCommandInteraction): CommandContext<true>`
+    >- `createTextContext (message: djs.Message): CommandContext<false>`
+    >- `createSlashContext (interaction: djs.ChatInputCommandInteraction): CommandContext<true>`
 
 # [Source (git)](https://github.com/easy-ds-bot/framework)
 # [Issues (git)](https://github.com/easy-ds-bot/framework/issues)
