@@ -48,16 +48,16 @@ npm i @easy-ds-bot/framework
 ```ts
 // src/index.ts
 //'runtime' is a 'global' object equivalent
-import { ApplicationCommandType } from "discord.js";
-import { eds } from "@easy-ds-bot/framework";
+import { eds, djs } from "@easy-ds-bot/framework";
 const { token } = require("../vault.json");
 const config: eds.ConfigExemplar = {
     token,
     intents: "all",
-    developers: ["YOUR ID IS HERE"],
     commandsPath: "./commands/",
     slashOnly: true, //default value
-    includeBuiltinCommands: true, //default value
+    includeBuiltinCommands: {
+        help: true, //default value
+    },
     colors: {
         default: 0xffffff, //'0x' + HEX color without '#'
         info: 0x00FFEA,
@@ -69,7 +69,7 @@ eds.createSlashCommand({
     name: "cake",
     description: "Give me a cake!",
     nsfw: false,
-    type: ApplicationCommandType.ChatInput,
+    type: djs.ApplicationCommandType.ChatInput,
     defaultMemberPermissions: null,
     dmPermission: false,
 });
@@ -81,8 +81,7 @@ export default bot;
 4. Create your first `/cake` command:
 ```ts
 // src/commands/cake.ts
-import { ComponentType, ButtonStyle } from "discord.js";
-import { eds } from "@easy-ds-bot/framework";
+import { eds, djs } from "@easy-ds-bot/framework";
 
 //eds components are resistant to bot restarts
 eds.createButton({
@@ -104,10 +103,10 @@ export = {
             `<@${context.interaction.user.id}>, do you want a cake?`, //embed desc (optional if has title)
             "info", //?embed color name (set in config)
             [{ //?djs components
-                type: ComponentType.ActionRow,
+                type: djs.ComponentType.ActionRow,
                 components: [{
-                    type: ComponentType.Button,
-                    style: ButtonStyle.Secondary, //gray
+                    type: djs.ComponentType.Button,
+                    style: djs.ButtonStyle.Secondary, //gray
                     custom_id: "get cake",
                     label: "Get cake"
                 }]
@@ -118,7 +117,7 @@ export = {
     //command options
     info: {
         name: "cake",
-        slash: true,
+        type: "slash",
         
         //for auto-help:
         desc: "Give me a cake!",
@@ -126,7 +125,7 @@ export = {
         usage: '',
         hidden: true,
     }
-} satisfies eds.CommandFile;
+} satisfies eds.CommandFile<"slash">;
 ```
 
 5. A) Create `start.bat` file (WINDOWS ONLY) for easily compile & launch your bot:
