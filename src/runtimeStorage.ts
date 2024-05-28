@@ -5,6 +5,7 @@ import { assertions } from "./errors";
 class _RuntimeStorage
 {
     [key: string]: any;
+    __loadedStorages = {};
     
     public getAll<T extends Record<string, any>>(...keys: (keyof T)[]): T
     {
@@ -32,11 +33,12 @@ class _RuntimeStorage
 export const runtimeStorage: _RuntimeStorage & KnownRuntimeProperties = new _RuntimeStorage() as _RuntimeStorage & KnownRuntimeProperties;
 
 export type KnownRuntimeProperties = {
-    config:                 eds.ConfigExemplar,
-    client:                 eds.Client,
-    componentManager:       eds.ComponentManager,
-    loader:                 eds.Loader,
-    contextFactory:         eds.ContextFactory,
-    handler:                eds.Handler,
-    slashCommandsManager:   eds.SlashCommandsManager
+    config:                 eds.ConfigExemplar;
+    client:                 eds.Client;
+    componentManager:       eds.ComponentManager;
+    loader:                 eds.Loader;
+    contextFactory:         eds.ContextFactory;
+    handler:                eds.Handler;
+    slashCommandsManager:   eds.SlashCommandsManager;
+    __loadedStorages:       Record<string, eds.Storage>; //[path]: Instance
 };

@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, Message } from "discord.js";
-import { eds, runtimeStorage } from "..";
+import { type eds, runtimeStorage, templateEmbedReply } from "..";
 
 /**
  * Creates a context from message/interaction
@@ -23,7 +23,7 @@ export class ContextFactory
             universal: message,
             runtime: runtimeStorage,
             __contextType: "text",
-            reply: (...params: Parameters<eds.EmbedTemplateMethods["reply"]>) => eds.templateEmbedReply(ctx, ...params),
+            reply: (...params: Parameters<eds.EmbedTemplateMethods["reply"]>) => templateEmbedReply(ctx, ...params),
         };
 
         return ctx;
@@ -36,7 +36,7 @@ export class ContextFactory
             universal: interaction,
             runtime: runtimeStorage,
             __contextType: "slash",
-            reply: (...params: Parameters<eds.EmbedTemplateMethods["reply"]>) => eds.templateEmbedReply(ctx, ...params),
+            reply: (...params: Parameters<eds.EmbedTemplateMethods["reply"]>) => templateEmbedReply(ctx, ...params),
         };
 
         return ctx;
@@ -50,7 +50,7 @@ export class ContextFactory
             universal: interaction,
             runtime: runtimeStorage,
             __contextType: "interaction",
-            reply: (...params: Parameters<eds.EmbedTemplateMethods["reply"]>) => eds.templateEmbedReply(ctx, ...params),
+            reply: (...params: Parameters<eds.EmbedTemplateMethods["reply"]>) => templateEmbedReply(ctx, ...params),
         };
 
         return ctx;

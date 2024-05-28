@@ -10,7 +10,7 @@ import {
     ModalSubmitInteraction,
     StringSelectMenuInteraction
 } from "discord.js";
-import { AnyContext, eds, runtimeStorage } from "..";
+import { AnyContext, type eds, runtimeStorage } from "..";
 import * as errors from "../errors";
 
 interface _initMaps

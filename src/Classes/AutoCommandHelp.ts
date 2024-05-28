@@ -1,4 +1,4 @@
-import { eds, runtimeStorage } from "..";
+import { type eds, runtimeStorage } from "..";
 
 type CommandType = "slash" | "text" | "nonPrefixed";
 

@@ -1,5 +1,5 @@
 import { sep } from "path";
-import { CommandFile, CommandHelpInfo, ConfigExemplar, eds, expandDirs } from "..";
+import { CommandFile, CommandHelpInfo, ConfigExemplar, type eds, expandDirs } from "..";
 import * as messages from "../errors";
 import { AutoCommandHelp } from "./AutoCommandHelp";
 

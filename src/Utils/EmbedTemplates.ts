@@ -5,7 +5,7 @@ import {
     JSONEncodable,
     Message
 } from "discord.js";
-import { eds, runtimeStorage } from "..";
+import { type eds, runtimeStorage, getRandomFooterEmbed } from "..";
 
 export async function templateEmbedReply(
     ctx: eds.AnyContext,
@@ -40,7 +40,7 @@ export async function templateEmbedReply(
             author: title ? { name: title } : undefined,
             description: description,
             color: type ? config.colors?.[type] : undefined,
-            footer: eds.getRandomFooterEmbed().data_api,
+            footer: getRandomFooterEmbed().data_api,
             ...custom_embed ?? {}
         }],
         components,

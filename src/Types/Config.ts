@@ -1,5 +1,5 @@
 import type { Client, GatewayIntentsString } from "discord.js";
-import { AnyContext, InteractionContext, SlashCommandContext, TextCommandContext } from "./Command";
+import type { AnyContext, InteractionContext, SlashCommandContext, TextCommandContext } from "./Command";
 
 export interface ConfigExemplar
 {
