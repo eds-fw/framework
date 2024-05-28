@@ -1,21 +1,20 @@
-import { accessSync, constants, mkdirSync, readFileSync, writeFileSync } from "fs";
-import { eds } from "..";
-import { eds_errors } from "../errors";
-import { writeFile } from "fs/promises";
+import { accessSync, readFileSync, writeFileSync } from "fs";
+import { type eds, Storage } from "..";
 import { deprecatedWarning } from "../Utils/DeprecatedWarning";
+import { eds_errors } from "../errors";
 
 /**
  * A simple JSON database. Built on a `Map`-object
- * @deprecated
+ * @deprecated use `Storage`
  */
-export class Database<V extends eds.JSONSupportedValueTypes = eds.JSONSupportedValueTypes>
+export class Database<V extends eds.JSONSupportedValueTypes = eds.JSONSupportedValueTypes> extends Storage<V>
 {
     /**
      * Raw map-object
      */
-    public Map: Map<string, Database.Value<V>>;
+    public readonly Map: Map<string, V>;
 
-    public constructor(private path: string, autosave?: boolean | number, private dump_path?: string)
+    public constructor(path: string, autosave?: boolean | number)
     {
 deprecatedWarning("Datebase", "Class");
         try {
@@ -24,97 +23,44 @@ deprecatedWarning("Datebase", "Class");
             throw new Error(eds_errors.Database.invalidPath(path, err));
         }
 
-        const entries: [string, Database.Value<V>][] = Object.entries(JSON.parse(readFileSync(path).toString() || "{}"));
-        this.Map = new Map(entries);
+        const entries: [string, V][] = Object.entries(JSON.parse(readFileSync(path).toString() || "{}"));
+        let map = new Map(entries);
 
-        if (autosave)
-        setInterval(() => this.save(), typeof autosave === "number" ? autosave : 60_000);
+        if (!_isMigrated(map))
+            map = _migrate<V>(map as Map<string, [V, LegacyDBTag]>);
 
-        if (dump_path)
-        try {
-            accessSync(dump_path, constants.R_OK | constants.W_OK);
-        } catch (err)
-        {
-            const splitted = dump_path.replaceAll('\\', '/').split('/');
-            mkdirSync(splitted.slice(0, -1).join('/'), { recursive: true });
-            writeFileSync(splitted.join('/'), '{}');
-        }
-    }
-
-    public async save(): Promise<void>
-    {
-        
-        await writeFile(this.path, this.MapJSON);
-        if (this.dump_path)
-        writeFile(this.dump_path, this.MapJSON);
-    }
-
-    public set(key: string, value: V, tags?: never, save?: boolean): void
-    {
-        this.Map.set(key, [value, null]);
-        if (save) this.save();
-    }
-
-    public get(key: string): V | undefined
-    {
-        const data = this.Map.get(key);
-        return data?.[0];
-    }
-    public getKey(value: V, single: boolean = false): string[]
-    {
-        const result: string[] = [];
-        for (const ent of this.Map.entries())
-            if (eds.equal(value, ent[0][1]))
-            {
-                result.push(ent[0]);
-                if (single) break;
-            }
-        return result;
-    }
-    public getFull(key: string): Database.Value<V> | undefined
-    {
-        const data = this.Map.get(key);
-        return data;
-    }
-    public has(key: string): boolean
-    {
-        return this.Map.has(key);
-    }
-
-    public hasValue(value: V): boolean
-    {
-        for (const val of this.Map.values())
-            if (eds.equal(value, val[0]))
-            return true;
-        return false;
+        writeFileSync(path, Storage.asJSON(map));
+        super(path, autosave);
+        this.Map = this;
     }
 
     public del(key: string): void
     {
+deprecatedWarning("Datebase#del", "Method");
         this.Map.delete(key);
-    }
-
-    /**
-     * Raw map-object in JSON format
-     */
-    public get MapJSON(): string
-    {
-        if (this.Map.size == 0) return "{}";
-        let entries = "";
-
-        this.Map.forEach((v, k) => {
-            entries += ',\n\t' + `"${k}": ${JSON.stringify(v)}`
-        });
-
-        return '{' + entries.slice(1) + '\n}';
     }
 }
 
-/** @deprecated */
-namespace Database
+type LegacyDBTag = null | undefined | { $ref$?: string; $weak$?: boolean; $const$?: boolean; };
+const _allowedDBTagObjKeys = ["$ref$", "$weak$", "$const$"];
+const _isDBTag = (maybe_tag: LegacyDBTag) =>
+    maybe_tag === null
+    || maybe_tag === undefined
+    || (typeof maybe_tag == "object" && (
+        Object.getOwnPropertyNames(maybe_tag).length == 0
+        || Object.getOwnPropertyNames(maybe_tag).every(key => _allowedDBTagObjKeys.includes(key))
+    ));
+function _isMigrated<V>(map: Readonly<Map<string, V>>): map is Map<string, V>
 {
-    /** @deprecated */
-    export type Value<V> = [V, null];
+    const legacy_elements: boolean[] = [];
+    map.forEach(value => legacy_elements.push(Array.isArray(value) && _isDBTag(value[1])));
+    return legacy_elements.includes(false);
+}
+function _migrate<V>(map: Map<string, [V, LegacyDBTag]>): Map<string, V>
+{
+    const new_map = new Map();
+    map.forEach((v, k) => new_map.set(k, v[0]));
+    return new_map;
 }
 
 export default Database;

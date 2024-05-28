@@ -9,6 +9,7 @@ export * from "./Classes/AutoCommandHelp";
 export * from "./Classes/Client";
 export * from "./Classes/ComponentManager";
 export * from "./Classes/ContextFactory";
+export * from "./Classes/Storage";
 export * from "./Classes/OLD_Database";
 export * from "./Classes/Handler";
 export * from "./Classes/Loader";
