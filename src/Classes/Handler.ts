@@ -105,8 +105,8 @@ export class Handler
                             const file: eds.CommandFile<"text"> = require(v).default || require(v);
                             if (file.info.noCheckAccess && !this._checkAccess(context, file.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
 
-                            file.run(context)?.catch(console.log);
-                            if (file.pragmaNoLog)
+                            file.run(context)?.catch(console.error);
+                            if (!file.pragmaNoLog)
                                 this.runtime.config.logTextCommand?.(context);
                         } catch (err) {
                             return console.error(errors.Handler.runCommandError(err));
@@ -127,8 +127,8 @@ export class Handler
                 const file: eds.CommandFile<"slash"> = require(v).default || require(v);
                 if (file.info.noCheckAccess && !this._checkAccess(context, file.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
 
-                file.run(context)?.catch(console.log);
-                if (file.pragmaNoLog)
+                file.run(context)?.catch(console.error);
+                if (!file.pragmaNoLog)
                     this.runtime.config.logSlashCommand?.(context);
             }
         });
@@ -142,9 +142,9 @@ export class Handler
                 const context = this.runtime.contextFactory.createInteractionContext(interaction);
                 if (v.info.noCheckAccess && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
                 
-                v.run(context, v.info)?.catch(console.log);
+                v.run(context, v.info)?.catch(console.error);
 
-                if (v.info.noLog)
+                if (!v.info.noLog)
                     this.runtime.config.logInteraction?.(context);
             }
         });
@@ -163,8 +163,8 @@ export class Handler
                     {
                         if (typeof v.run != "object") return;
                         if (v.info.noCheckAccess && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
-                        v.run[val](context as eds.InteractionContext<StringSelectMenuInteraction>, v.info)?.catch(console.log);
-                        if (v.info.noLog)
+                        v.run[val](context as eds.InteractionContext<StringSelectMenuInteraction>, v.info)?.catch(console.error);
+                        if (!v.info.noLog)
                             this.runtime.config.logInteraction?.(context);
                     }
                 });
@@ -176,8 +176,8 @@ export class Handler
             if (typeof v.run != "function") return;
             if (v.info.noCheckAccess && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
 
-            v.run(context as any, v.info)?.catch(console.log);
-            if (v.info.noLog)
+            v.run(context as any, v.info)?.catch(console.error);
+            if (!v.info.noLog)
                 this.runtime.config.logInteraction?.(context);
         });
     }
@@ -191,7 +191,7 @@ export class Handler
                 if (v.info.noCheckAccess && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
 
                 v.run(context, interaction.fields, v.info);
-                if (v.info.noLog)
+                if (!v.info.noLog)
                     this.runtime.config.logInteraction?.(context);
             }
         });
