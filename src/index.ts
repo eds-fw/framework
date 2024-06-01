@@ -9,8 +9,6 @@ export * from "./Classes/AutoCommandHelp";
 export * from "./Classes/Client";
 export * from "./Classes/ComponentManager";
 export * from "./Classes/ContextFactory";
-export * from "./Classes/Storage";
-export * from "./Classes/OLD_Database";
 export * from "./Classes/Handler";
 export * from "./Classes/Loader";
 export * from "./Classes/SlashCommandsManager";
@@ -31,7 +29,8 @@ export * from "./Utils/RandomEmbedFooter";
 export * from "./Utils/SmartFetch";
 
 //other eds packages
-export * from "@easy-ds-bot/utils";
-export * from "@easy-ds-bot/timeparser";
+export * from "@eds-fw/utils";
+export * from "@eds-fw/timeparser";
+export * from "@eds-fw/storage";
 
 export default __this;
