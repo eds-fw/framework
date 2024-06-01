@@ -107,7 +107,7 @@ function getRoles(ctx: eds.InteractionContext | eds.SlashCommandContext)
         ? Array.isArray(ctx.interaction.member?.roles)
             ? ctx.interaction.member?.roles
             : ctx.interaction.member?.roles.cache.values()
-                ? eds.arrayFromIterator(ctx.interaction.member?.roles.cache.values()).map(role => role.id)
+                ? Array.from(ctx.interaction.member?.roles.cache.values()).map(role => role.id)
                 : []
                 : [];
 }

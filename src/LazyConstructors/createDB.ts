@@ -3,7 +3,7 @@ import { runtimeStorage, type eds, Storage } from "..";
 /**
  * @deprecated
  */
-export function createDB<T extends eds.JSONSupportedValueTypes = eds.JSONSupportedValueTypes>(name: string, path: string, autosave?: boolean | number): void
+export function createDB<T extends eds.JSONSupported = eds.JSONSupported>(name: string, path: string, autosave?: boolean | number): void
 {
     let databases = runtimeStorage.databases as Record<string, eds.Storage>;
     if (databases === undefined)

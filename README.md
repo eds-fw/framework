@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://avatars.githubusercontent.com/u/142582396?s=400&u=081f3176405a243f5090002723556c3e723089e3&v=4" width="200"/>
+    <img src="https://avatars.githubusercontent.com/u/142582396?s=400&u=efba7a6a242149915b23e51923a6c3afb7fa8fcb&v=4" width="200"/>
 </p>
 
 <b align="center">
@@ -14,22 +14,23 @@
 - Contains type declarations (.d.ts)
 - Fully configurable
 - Built-in `/help` command
-- Lazy constructors (`createSlashCommand()`, `createComponent()` and more)
-- Smart Fetches: get from cache or fetch in compliance with the rate limit (`sfMember(context, context.interaction.user.id)` and more)
+- Lazy constructors (`createSlashCommand()`, `createButton()` and more)
+- Smart Fetches: get from cache or fetch (`sfMember(context, context.interaction.user.id)` and more)
+- Simply 'Map'-based storage: `get()`, `set()`, `save()` and more
 
 # Requirements
 - [NodeJS](https://nodejs.org/en) `v18` or newer
 
 # Setup
-1. Install `easy-ds-bot` via npm:
+1. Install EDS via npm:
 ```bat
-npm i @easy-ds-bot/framework
+npm i @eds-fw/framework
 ```
 
 2. Create `tsconfig.json` file:
 ```json
 {
-    "extends": "./node_modules/@easy-ds-bot/framework/tsconfig.base.json",
+    "extends": "./node_modules/@eds-fw/framework/tsconfig.base.json",
     "exclude": [
         "node_modules/",
         "logs/",
@@ -44,11 +45,11 @@ npm i @easy-ds-bot/framework
 }
 ```
 
-3. Create your first bot using `easy-ds-bot`:
+3. Create your first bot using EDS:
 ```ts
 // src/index.ts
 //'runtime' is a 'global' object equivalent
-import { eds, djs } from "@easy-ds-bot/framework";
+import { eds, djs } from "@eds-fw/framework";
 const { token } = require("../vault.json");
 const config: eds.ConfigExemplar = {
     token,
@@ -81,7 +82,7 @@ export default bot;
 4. Create your first `/cake` command:
 ```ts
 // src/commands/cake.ts
-import { eds, djs } from "@easy-ds-bot/framework";
+import { eds, djs } from "@eds-fw/framework";
 
 //eds components are resistant to bot restarts
 eds.createButton({
@@ -147,8 +148,10 @@ read -p "" #keeps window open after bot crash
 6. Execute (open) `start.bat` or `start.sh` file. Voila! It's alive!
 
 # API
-- *module* `@easy-ds-bot/utils`
-- *module* `@easy-ds-bot/timeparser`
+- *module* `@eds-fw/utils`
+- *module* `@eds-fw/timeparser`
+- *module* `@eds-fw/storage`
+- *module* `@eds-fw/fetch`
 - `createBot (config: ConfigExemplar): KnownRuntimeProperties` *(lazyConstructor)*
 - `createButton (options: ButtonOptions, code: ButtonCode): void` *(lazyConstructor)*
     >- runtime: `componentManager`
@@ -173,29 +176,8 @@ read -p "" #keeps window open after bot crash
     >- `setAll <T>(values: T): T`
     >- `set <K, V>(key: K, value: V): { [X in K]: V }`
 - *class* `Client` *extends djs.Client*
-    >- *constructor* `new (options: Options)`
+    >- *constructor* `(options: Options)`
     >- *async* `init (): Promise<void>`
-- *class* `ComponentsManager`
-    >- *constructor* `new (){}`
-    >- `clearMaps (): void`
-    >- `createButton (options: ButtonOptions, code: ButtonCode): void`
-    >- `createMenu (options: MenuOptions, code: MenuUserCode | MenuStringCode): void`
-    >- `createModal (options: ModalOptions, code: ModalCode): void`
-    >- *iternal* *get* `getButtonsMap: Map<string, MapVal<...>>`
-    >- *iternal* *get* `getMenusMap: Map<string, MapVal<...>>`
-    >- *iternal* *get* `getModalsMap: Map<string, MapVal<...>>`
-- *class* `Database <V>`
-    >- *field* `Map: Map<string, Value<...>>`
-    >- *constructor* `new (path: string, autosave?: boolean | number, dump_path?: string)`
-    >- `save (): Promise<void>`
-    >- `set (key: string, value: V, tags?: TagsValues, save?: boolean): void`
-    >- `get (key: string): V | undefined`
-    >- `getKey (value: V, single?: boolean): string[]`
-    >- `getFull (key: string): Value<V> | undefined`
-    >- `has (key: string): boolean`
-    >- `hasValue (value: V): boolean`
-    >- `del (key: string): void`
-    >- *iternal* *get* `MapJSON: string`
 - *class* `Handler`
     >- runtime: `config, loader, client, contextFactory`
     >- *constructor* `new ()`
@@ -247,6 +229,15 @@ read -p "" #keeps window open after bot crash
     >- *constructor* `new ()`
     >- `createTextContext (message: djs.Message): CommandContext<false>`
     >- `createSlashContext (interaction: djs.ChatInputCommandInteraction): CommandContext<true>`
+- *iternal* *class* `ComponentsManager`
+    >- *constructor* `()` *empty*
+    >- `clearMaps (): void`
+    >- `createButton (options: ButtonOptions, code: ButtonCode): void`
+    >- `createMenu (options: MenuOptions, code: MenuUserCode | MenuStringCode): void`
+    >- `createModal (options: ModalOptions, code: ModalCode): void`
+    >- *iternal* *get* `getButtonsMap: Map<string, MapVal<...>>`
+    >- *iternal* *get* `getMenusMap: Map<string, MapVal<...>>`
+    >- *iternal* *get* `getModalsMap: Map<string, MapVal<...>>`
 
-# [Source (git)](https://github.com/easy-ds-bot/framework)
-# [Issues (git)](https://github.com/easy-ds-bot/framework/issues)
+# [Source (git)](https://github.com/eds-fw/framework)
+# [Issues (git)](https://github.com/eds-fw/framework/issues)

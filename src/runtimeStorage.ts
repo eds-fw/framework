@@ -1,11 +1,10 @@
-import { includesAll } from "@easy-ds-bot/utils";
+import { includesAll } from "@eds-fw/utils";
 import { eds } from ".";
 import { assertions } from "./errors";
 
 class _RuntimeStorage
 {
     [key: string]: any;
-    __loadedStorages = {};
     
     public getAll<T extends Record<string, any>>(...keys: (keyof T)[]): T
     {
@@ -40,5 +39,4 @@ export type KnownRuntimeProperties = {
     contextFactory:         eds.ContextFactory;
     handler:                eds.Handler;
     slashCommandsManager:   eds.SlashCommandsManager;
-    __loadedStorages:       Record<string, eds.Storage>; //[path]: Instance
 };
