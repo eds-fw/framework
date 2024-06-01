@@ -9,9 +9,9 @@
     "TS_build": "rm -r ./dist; npx tsc"
   },
   "dependencies": {
-    "@eds-fw/storage": "^1.0.3",
+    "@eds-fw/storage": "^1.0.4",
     "@eds-fw/timeparser": "^2.1.1",
-    "@eds-fw/utils": "^2.0.0",
+    "@eds-fw/utils": "^2.0.1",
     "array-equal": "^1.0.0",
     "deprecated-decorator": "^0.1.6",
     "discord.js": "^14.12.1",
