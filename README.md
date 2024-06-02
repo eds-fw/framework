@@ -6,6 +6,7 @@
     
     Simply TypeScript framework for your discord.js bots
     
+[![CodeFactor](https://www.codefactor.io/repository/github/eds-fw/framework/badge/main)](https://www.codefactor.io/repository/github/eds-fw/framework/overview/main)
 </b>
 <hr>
 

@@ -27,7 +27,8 @@ export class AutoCommandHelp
             `\`\`\`\n${type == "slash" ? '/' : type == "text" ? this.runtime.config.prefix : ''}${usage} ― ${desc ?? this.templates.noDesc}\`\`\`\n${usageDocs ? '>>> ' + usageDocs : ''}`,
     };
 
-    public constructor() {
+    public constructor()
+    {
         this.runtime = {
             config: runtimeStorage.config
         }
