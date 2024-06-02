@@ -12,11 +12,11 @@ export class ContextFactory
         this.runtime = runtimeStorage.getAll<{
             config: eds.ConfigExemplar
         }>("config");
-    };
+    }
 
     public createTextContext(message: Message): eds.CommandContext<"text">
     {
-        let args = message.content.slice(this.runtime.config.prefix?.length ?? 0).trim().split(/\s+/g);
+        const args = message.content.slice(this.runtime.config.prefix?.length ?? 0).trim().split(/\s+/g);
         const ctx: eds.CommandContext<"text"> = {
             message,
             args,
@@ -27,7 +27,7 @@ export class ContextFactory
         };
 
         return ctx;
-    };
+    }
 
     public createSlashContext(interaction: ChatInputCommandInteraction): eds.CommandContext<"slash">
     {
@@ -40,7 +40,7 @@ export class ContextFactory
         };
 
         return ctx;
-    };
+    }
 
     public createInteractionContext<T extends eds.SupportedInteractions = eds.SupportedInteractions>
         (interaction: T): eds.InteractionContext<T>
@@ -54,5 +54,5 @@ export class ContextFactory
         };
 
         return ctx;
-    };
+    }
 }
