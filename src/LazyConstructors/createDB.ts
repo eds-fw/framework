@@ -5,7 +5,7 @@ import { runtimeStorage, type eds, Storage } from "..";
  */
 export function createDB<T extends eds.JSONSupported = eds.JSONSupported>(name: string, path: string, autosave?: boolean | number): void
 {
-    let databases = runtimeStorage.databases as Record<string, eds.Storage>;
+    const databases = runtimeStorage.databases as Record<string, eds.Storage>;
     if (databases === undefined)
     {
         runtimeStorage.setProp("databases", {});

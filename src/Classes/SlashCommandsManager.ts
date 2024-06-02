@@ -16,7 +16,7 @@ export class SlashCommandsManager
         this.runtime = {
             client: runtimeStorage.client
         };
-    };
+    }
 
     /**
      * Creates a slash command.

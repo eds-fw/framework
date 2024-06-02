@@ -31,7 +31,7 @@ export class AutoCommandHelp
         this.runtime = {
             config: runtimeStorage.config
         }
-    };
+    }
 
     public reg(file: Readonly<eds.CommandFile<eds.CommandType>>): void
     {
@@ -89,7 +89,7 @@ export class AutoCommandHelp
     }
     public getCommandNames(roles: string[]): string[]
     {
-        let baked = Object.assign([], this._publicCommandsNames);
+        const baked = Object.assign([], this._publicCommandsNames);
         if (roles.length == 0) return baked;
         this._limitedCommandsNames.forEach((command, command_roles) => {
             for (const role of command_roles)
@@ -104,14 +104,14 @@ export class AutoCommandHelp
     /** Returns command names with prefix or slash */
     public getBakedCommandNames(roles: string[]): string[]
     {
-        let baked = Object.assign([], this._publicCommandsNames);
+        const baked = Object.assign([], this._publicCommandsNames);
         if (roles.length == 0) return baked;
         this._limitedCommandsNames.forEach((command, command_roles) => {
             for (const role of command_roles)
                 if (roles.includes(role))
                 {
-                    let type = this.commandTypes.get(command);
-                    let prefix =
+                    const type = this.commandTypes.get(command);
+                    const prefix =
                         type == "text" ? this.runtime.config.prefix
                         : type == "slash" ? '/'
                         : type == "nonPrefixed" ? ''
