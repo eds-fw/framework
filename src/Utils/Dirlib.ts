@@ -43,7 +43,7 @@ async function _expand(tar: string, i: number, buffer: string[], result: boolean
 
 export async function expandDirs(path: string): Promise<string[]>
 {
-    let buffer: string[]    = [];
+    const buffer: string[]    = [];
     let result: boolean[]   = [];
     await _expand(path, 0, buffer, result);
 
@@ -56,7 +56,7 @@ export async function expandDirs(path: string): Promise<string[]>
             result = await _expand(tar, i, buffer, result);
             i++;
         }
-    };
+    }
 
     return buffer;
 }
