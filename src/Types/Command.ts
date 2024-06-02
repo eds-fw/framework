@@ -46,10 +46,10 @@ export interface CommandFile<T extends CommandType>
 
 
 
-export interface CommandHelpInfo
+export interface CommandHelpInfo<T extends CommandType = CommandType>
 {
     name:               string;
-    type:               CommandType;
+    type:               T;
 
     usage?:             string;
     usageDocs?:         string;
@@ -63,7 +63,7 @@ export interface CommandHelpInfo
     noCheckAccess?:     boolean;
 }
 
-export interface CommandInfo<T extends CommandType> extends CommandHelpInfo
+export interface CommandInfo<T extends CommandType> extends CommandHelpInfo<T>
 {
     aliases?:       T extends "text" ? string[] : never;
     nonPrefixed?:   T extends "text" ? boolean  : never;
