@@ -82,13 +82,13 @@ export class ComponentManager
 export namespace ComponentManager
 {
     export type MenuType = "string" | "user" | "role" | "channel" | "mentionable";
-    export type ButtonCode = (ctx: eds.InteractionContext<ButtonInteraction>, options: ButtonOptions) => unknown;
+    export type ButtonCode = (ctx: eds.InteractionContext<ButtonInteraction>, options: ButtonOptions) => Promise<unknown>;
 
-    export type MenuStringCode = Record<string, (ctx: eds.InteractionContext<StringSelectMenuInteraction>, options: MenuOptions) => unknown>;
-    export type MenuUserCode = (ctx: eds.InteractionContext<UserSelectMenuInteraction>, options: MenuOptions) => unknown;
-    export type MenuChannelCode = (ctx: eds.InteractionContext<ChannelSelectMenuInteraction>, options: MenuOptions) => unknown;
-    export type MenuMentionableCode = (ctx: eds.InteractionContext<MentionableSelectMenuInteraction>, options: MenuOptions) => unknown;
-    export type MenuRoleCode = (ctx: eds.InteractionContext<RoleSelectMenuInteraction>, options: MenuOptions) => unknown;
+    export type MenuStringCode = Record<string, (ctx: eds.InteractionContext<StringSelectMenuInteraction>, options: MenuOptions) => Promise<unknown>>;
+    export type MenuUserCode = (ctx: eds.InteractionContext<UserSelectMenuInteraction>, options: MenuOptions) => Promise<unknown>;
+    export type MenuChannelCode = (ctx: eds.InteractionContext<ChannelSelectMenuInteraction>, options: MenuOptions) => Promise<unknown>;
+    export type MenuMentionableCode = (ctx: eds.InteractionContext<MentionableSelectMenuInteraction>, options: MenuOptions) => Promise<unknown>;
+    export type MenuRoleCode = (ctx: eds.InteractionContext<RoleSelectMenuInteraction>, options: MenuOptions) => Promise<unknown>;
     export type AnyMenuCode = MenuStringCode | MenuUserCode | MenuChannelCode | MenuMentionableCode | MenuRoleCode;
 
     export type ModalCode = (ctx: eds.InteractionContext<ModalSubmitInteraction | ModalMessageModalSubmitInteraction>, fields: ModalSubmitFields, options: ModalOptions) => unknown;
