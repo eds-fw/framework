@@ -1,6 +1,4 @@
-export * as djs from "discord.js";
 export * as eds from ".";
-
 import { eds as __this } from ".";
 
 export * from "./runtimeStorage";
