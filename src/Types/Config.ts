@@ -1,4 +1,4 @@
-import type { Client, GatewayIntentsString } from "discord.js";
+import type { ClientOptions, GatewayIntentsString } from "discord.js";
 import type { AnyContext, InteractionContext, SlashCommandContext, TextCommandContext } from "./Command";
 
 export interface ConfigExemplar
@@ -15,10 +15,9 @@ export interface ConfigExemplar
      */
     intents: GatewayIntentsString[] | "all";
     /**
-     * Code that will be run when the bot is ready
-     * @default () => console.log("I am ready")
-     * @deprecated
+     * For advanced djs `Client` configuration (e.g. custom cache limits)
      */
+    clientOptions?: Omit<ClientOptions, "intents">;
 //==========
 //PATHS
     /**

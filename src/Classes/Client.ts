@@ -1,4 +1,4 @@
-import { Client as DClient, GatewayIntentsString } from "discord.js";
+import { ClientOptions, Client as DClient, GatewayIntentsString } from "discord.js";
 
 export class Client extends DClient
 {
@@ -7,6 +7,7 @@ export class Client extends DClient
     public constructor(options: Client.Options)
     {
         super({
+            ...options,
             intents: options.intents == "all"
             ? [
                 "Guilds",
@@ -46,7 +47,7 @@ export class Client extends DClient
 
 export namespace Client
 {
-    export interface Options
+    export interface Options extends Omit<ClientOptions, "intents">
     {
         intents: GatewayIntentsString[] | "all";
         token: string;
