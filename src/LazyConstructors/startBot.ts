@@ -12,5 +12,4 @@ export async function startBot(): Promise<void>
     runtime.client.once("ready", () => {
         runtime.slashCommandsManager.save();
     });
-    runtime.client.once("ready", (client) => runtime.config.onReady?.(client))
 }

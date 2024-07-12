@@ -19,7 +19,6 @@ export interface ConfigExemplar
      * @default () => console.log("I am ready")
      * @deprecated
      */
-    onReady?: (client: Client) => any;
 //==========
 //PATHS
     /**
