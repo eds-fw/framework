@@ -10,7 +10,7 @@ import {
     ModalSubmitInteraction,
     StringSelectMenuInteraction
 } from "discord.js";
-import { AnyContext, type eds, runtimeStorage } from "..";
+import { AnyContext, type eds, runtimeStorage, hasRole } from "..";
 import * as errors from "../errors";
 
 interface _initMaps
@@ -72,19 +72,12 @@ export class Handler
     private _checkAccess(ctx: AnyContext, roles: string[] | undefined)
     {
         if (!roles || roles.length == 0) return true;
-
-        let has;
-        if (ctx.__contextType == "text")
-            has = ctx.message.member?.roles.cache.has.bind(ctx.message.member?.roles.cache);
-        else if (Array.isArray(ctx.interaction.member?.roles))
-            has = ctx.interaction.member?.roles.includes.bind(ctx.interaction.member?.roles);
-        else
-            has = ctx.interaction.member?.roles.cache.has.bind(ctx.interaction.member?.roles.cache);
-        if (!has) throw new Error("checkThisAccess: не удалось забиндить метод has");
+        if (!ctx.member) return false;
 
         let result = false;
         for (const role of roles)
-            if (has(role)) result = true;
+            if (hasRole(ctx.member)(role))
+                result = true;
         return result;
     }
 

@@ -23,11 +23,11 @@ eds.createMenu({
             .components[0]
             .options
             .map(option => option.value)
-            .indexOf(ctx.interaction.values[0])
+            .indexOf(ctx.values[0])
         ].default = true;
-        ctx.interaction.update({
+        ctx.update({
             components: local_components,
-            embeds: [getPage(ctx.interaction.values[0])]
+            embeds: [getPage(ctx.values[0])]
         });
     }
 }, {});
@@ -35,7 +35,7 @@ eds.createMenu({
 export = {
     async run(ctx) {
         const roles = getRoles(ctx);
-        await ctx.interaction.reply({
+        await ctx.reply({
             embeds: [{
                 title: config.builtinCommandsSettings?.helpListAdditionalText
                     ? undefined
@@ -101,13 +101,13 @@ function getMenu(roles: string[])
     return components.filter((item, index) => components.indexOf(item) === index).slice(0, 25);
 }
 
-function getRoles(ctx: eds.InteractionContext | eds.SlashCommandContext)
+function getRoles(ctx: eds.InteractionContext | eds.SlashContext)
 {
-    return ctx.interaction.member?.roles
-        ? Array.isArray(ctx.interaction.member?.roles)
-            ? ctx.interaction.member?.roles
-            : ctx.interaction.member?.roles.cache.values()
-                ? Array.from(ctx.interaction.member?.roles.cache.values()).map(role => role.id)
+    return ctx.member?.roles
+        ? Array.isArray(ctx.member?.roles)
+            ? ctx.member?.roles
+            : ctx.member?.roles.cache.values()
+                ? Array.from(ctx.member?.roles.cache.values()).map(role => role.id)
                 : []
                 : [];
 }

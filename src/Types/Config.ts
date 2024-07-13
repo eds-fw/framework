@@ -1,5 +1,5 @@
 import type { ClientOptions, GatewayIntentsString } from "discord.js";
-import type { AnyContext, InteractionContext, SlashCommandContext, TextCommandContext } from "./Command";
+import { InteractionContext, AnyContext, SlashContext, TextContext } from "./Context";
 
 export interface ConfigExemplar
 {
@@ -28,8 +28,8 @@ export interface ConfigExemplar
     commandsPath: string;
 //==========
 //METHODS
-    logSlashCommand?:   (context: SlashCommandContext)      => any;
-    logTextCommand?:    (context: TextCommandContext)       => any;
+    logSlashCommand?:   (context: SlashContext)             => any;
+    logTextCommand?:    (context: TextContext)              => any;
     logInteraction?:    (context: InteractionContext)       => any;
     noAccess?:          (context: AnyContext)               => any;
 //==========

@@ -19,6 +19,7 @@ export * from "./LazyConstructors/startBot";
 
 export * from "./Types/Command";
 export * from "./Types/Config";
+export * from "./Types/Context";
 export * from "./Types/SupportedInteractions";
 
 export * from "./Utils/Dirlib";

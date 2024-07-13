@@ -1,34 +1,7 @@
-import type { ChatInputCommandInteraction, Message, MessageContextMenuCommandInteraction, UserContextMenuCommandInteraction } from "discord.js";
-import type { eds, runtimeStorage } from "..";
-import type { SupportedInteractions } from "./SupportedInteractions"
+import { MessageContextMenuCommandInteraction, UserContextMenuCommandInteraction } from "discord.js";
+import { ContextType, InteractionContext, SlashContext, TextContext } from "./Context";
 
-export type ContextType = "text" | "slash" | "interaction"// | "message-context-menu" | "user-context-menu";
 export type CommandType = Exclude<ContextType, "interaction">;
-
-export interface InteractionContext
-    <InteractionType extends SupportedInteractions = SupportedInteractions, CtxType extends ContextType = "interaction"> extends _BaseContext
-{
-    interaction: InteractionType;
-    __contextType: CtxType;
-}
-export interface TextCommandContext extends _BaseContext
-{
-    message: Message;
-    args: string[];
-    __contextType: "text";
-}
-export type CommandContext<T extends CommandType> =
-    T extends "text"                    ? TextCommandContext
-    : T extends "slash"                 ? SlashCommandContext
-    : T extends "message-context-menu"  ? InteractionContext<MessageContextMenuCommandInteraction>
-    : T extends "user-context-menu"     ? InteractionContext<UserContextMenuCommandInteraction>
-    : never;
-export type SlashCommandContext = InteractionContext<ChatInputCommandInteraction, "slash">;
-export type AnyContext = InteractionContext | SlashCommandContext | TextCommandContext;
-
-
-
-
 
 export interface CommandFile<T extends CommandType>
 {
@@ -41,10 +14,6 @@ export interface CommandFile<T extends CommandType>
     /** Command info */
     info: CommandInfo<T>;
 }
-
-
-
-
 
 export interface CommandHelpInfo<T extends CommandType = CommandType>
 {
@@ -69,11 +38,9 @@ export interface CommandInfo<T extends CommandType> extends CommandHelpInfo<T>
     nonPrefixed?:   T extends "text" ? boolean  : never;
 }
 
-
-
-
-interface _BaseContext extends eds.EmbedTemplateMethods
-{
-    universal: SupportedInteractions | Message;
-    runtime: typeof runtimeStorage;
-}
+export type CommandContext<T extends CommandType> =
+    T extends "text"                    ? TextContext
+    : T extends "slash"                 ? SlashContext
+    : T extends "message-context-menu"  ? InteractionContext<MessageContextMenuCommandInteraction>
+    : T extends "user-context-menu"     ? InteractionContext<UserContextMenuCommandInteraction>
+    : never;

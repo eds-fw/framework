@@ -1,6 +1,6 @@
 import { wait } from "@eds-fw/utils";
 import type { APIGuildMember, APIInteractionGuildMember, CachedManager, Guild, GuildBasedChannel, GuildChannelManager, GuildManager, GuildMember, GuildMemberManager, Message, MessageManager, Role, RoleManager, Snowflake, User, UserManager } from "discord.js";
-import { AnyContext } from "../Types/Command";
+import { AnyContext } from "../Types/Context";
 const LIMIT_FETCHES = 5;
 const LIMIT_COOLDOWN = 250; //ms
 
@@ -27,42 +27,42 @@ export async function CoreSmartFetch<O extends {}, T extends SmartFetchObj<O>>
 export function sfUser(mng_or_ctx: AnyContext | UserManager | undefined, id: Snowflake | undefined): Promise<User | undefined>
 {
     if (_isCtx(mng_or_ctx))
-        return CoreSmartFetch(mng_or_ctx.universal.client.users, id, USER_FETCH_COOLDOWNS_MAP);
+        return CoreSmartFetch(mng_or_ctx.client.users, id, USER_FETCH_COOLDOWNS_MAP);
     else return CoreSmartFetch(mng_or_ctx, id);
 }
 
 export function sfMember(mng_or_ctx: AnyContext | GuildMemberManager | undefined, id: Snowflake | undefined): Promise<GuildMember | undefined>
 {
     if (_isCtx(mng_or_ctx))
-        return CoreSmartFetch(mng_or_ctx.universal.guild?.members, id, MEMBER_FETCH_COOLDOWNS_MAP);
+        return CoreSmartFetch(mng_or_ctx.guild?.members, id, MEMBER_FETCH_COOLDOWNS_MAP);
     else return CoreSmartFetch(mng_or_ctx, id);
 }
 
 export function sfChannel(mng_or_ctx: AnyContext | GuildChannelManager | undefined, id: Snowflake | undefined): Promise<GuildBasedChannel | undefined>
 {
     if (_isCtx(mng_or_ctx))
-        return CoreSmartFetch(mng_or_ctx.universal.guild?.channels, id, CHANNEL_FETCH_COOLDOWNS_MAP);
+        return CoreSmartFetch(mng_or_ctx.guild?.channels, id, CHANNEL_FETCH_COOLDOWNS_MAP);
     else return CoreSmartFetch(mng_or_ctx, id);
 }
 
 export function sfGuild(mng_or_ctx: AnyContext | GuildManager | undefined, id: Snowflake | undefined): Promise<Guild | undefined>
 {
     if (_isCtx(mng_or_ctx))
-        return CoreSmartFetch(mng_or_ctx.universal.client.guilds, id, GUILD_FETCH_COOLDOWNS_MAP);
+        return CoreSmartFetch(mng_or_ctx.client.guilds, id, GUILD_FETCH_COOLDOWNS_MAP);
     else return CoreSmartFetch(mng_or_ctx, id);
 }
 
 export function sfRole(mng_or_ctx: AnyContext | RoleManager | undefined, id: Snowflake | undefined): Promise<Role | undefined>
 {
     if (_isCtx(mng_or_ctx))
-        return CoreSmartFetch(mng_or_ctx.universal.guild?.roles, id, ROLE_FETCH_COOLDOWNS_MAP);
+        return CoreSmartFetch(mng_or_ctx.guild?.roles, id, ROLE_FETCH_COOLDOWNS_MAP);
     else return CoreSmartFetch(mng_or_ctx, id);
 }
 
 export function sfMessage(mng_or_ctx: AnyContext | MessageManager | undefined, id: Snowflake | undefined): Promise<Message | undefined>
 {
     if (_isCtx(mng_or_ctx))
-        return CoreSmartFetch(mng_or_ctx.universal.channel?.messages, id, MESSAGE_FETCH_COOLDOWNS_MAP);
+        return CoreSmartFetch(mng_or_ctx.channel?.messages, id, MESSAGE_FETCH_COOLDOWNS_MAP);
     else return CoreSmartFetch(mng_or_ctx, id);
 }
 
