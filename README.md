@@ -16,8 +16,10 @@
 - Fully configurable
 - Built-in `/help` command
 - Lazy constructors (`createSlashCommand()`, `createButton()` and more)
-- Smart Fetches: get from cache or fetch (`sfMember(context, context.interaction.user.id)` and more)
+- Smart Fetches: get from cache or fetch (`sfMember(context, userId)` and more)
 - Simply 'Map'-based storage: `get()`, `set()`, `save()` and more
+- Quick message panels for advanced for data input (`InteractivePanel`)
+- Utils: `getAvatar()`, `quickEmbed()`, `optionsWithDefaultValue()` and `expandDirs()`
 
 # Requirements
 - [NodeJS](https://nodejs.org/en) `v18` or newer
@@ -50,7 +52,8 @@ npm i @eds-fw/framework
 ```ts
 // src/index.ts
 //'runtime' is a 'global' object equivalent
-import { eds, djs } from "@eds-fw/framework";
+import { eds } from "@eds-fw/framework";
+import { ApplicationCommandType } from "discord.js";
 const { token } = require("../vault.json");
 const config: eds.ConfigExemplar = {
     token,
@@ -71,7 +74,7 @@ eds.createSlashCommand({
     name: "cake",
     description: "Give me a cake!",
     nsfw: false,
-    type: djs.ApplicationCommandType.ChatInput,
+    type: ApplicationCommandType.ChatInput,
     defaultMemberPermissions: null,
     dmPermission: false,
 });
@@ -83,13 +86,14 @@ export default bot;
 4. Create your first `/cake` command:
 ```ts
 // src/commands/cake.ts
-import { eds, djs } from "@eds-fw/framework";
+import { eds } from "@eds-fw/framework";
+import { ComponentType, ButtonStyle } from "discord.js";
 
 //eds components are resistant to bot restarts
 eds.createButton({
     custom_id: "get cake"
 }, async context => { //"get cake" button code
-    await context.reply(
+    await context.quickReply(
         true, //epemeral?
         undefined, //title
         "# :cake:" //description
@@ -102,13 +106,13 @@ export = {
         await context.reply(
             true, //ephemeral?
             "aloha hawaii", //embed title (optional if has desc)
-            `<@${context.interaction.user.id}>, do you want a cake?`, //embed desc (optional if has title)
+            `<@${context.user.id}>, do you want a cake?`, //embed desc (optional if has title)
             "info", //?embed color name (set in config)
             [{ //?djs components
-                type: djs.ComponentType.ActionRow,
+                type: ComponentType.ActionRow,
                 components: [{
-                    type: djs.ComponentType.Button,
-                    style: djs.ButtonStyle.Secondary, //gray
+                    type: ComponentType.Button,
+                    style: ButtonStyle.Secondary, //gray
                     custom_id: "get cake",
                     label: "Get cake"
                 }]
@@ -168,6 +172,9 @@ read -p "" #keeps window open after bot crash
 - *async* `sfGuild (mng_or_ctx: AnyContext | GuildManager | undefined, id: Snowflake | undefined): Promise<Guild | undefined>`
 - *async* `sfRole (mng_or_ctx: AnyContext | RoleManager | undefined, id: Snowflake | undefined): Promise<Role | undefined>`
 - *async* `sfMessage (mng_or_ctx: AnyContext | MessageManager | undefined, id: Snowflake | undefined): Promise<Message | undefined>`
+- `getAvatar (user: <any user> | <any member> | undefined | null): string`
+- `quickEmbed (title?: string, description?: string, type: string = "default", components?: BaseMessageOptions["components"], customEmbed?: JSONEncodable<APIEmbed> | APIEmbed): BaseMessageOptions`
+- `optionsWithDefaultValue (options: SelectMenuComponentOptionData[], defaultVal: string | null): SelectMenuComponentOptionData[]`
 - *async* `startBot (): Promise<void>`
     >- runtime: `slashCommandsManager, client, config`
 - *anonimous class* `runtimeStorage` *(runtime)*
@@ -182,6 +189,14 @@ read -p "" #keeps window open after bot crash
 - *class* `Handler`
     >- runtime: `config, loader, client, contextFactory`
     >- *constructor* `new ()`
+- *class* `InteractivePanel <T>`
+    >- *static* `register <T extends object>(messageConstructor: InteractivePanel.ConstructMessageFn<T>, msgId: string): void`
+    >- *static* `getMenu<T extends object>(msgId: string): InteractivePanel<T> | undefined`
+    >- *static* `renderValues(keysAndValues: [string, string | undefined, string?][]): string`
+    >- `data: Partial<T>`
+    >- `render (): MessageCreateOptions & InteractionUpdateOptions & InteractionReplyOptions  `
+    >- `deleteInstance (): void`
+    >- *private* *constructor* `()`
 - *class* `Loader`
     >- *field* `commandHelp: AutoCommandHelp`
     >- *constructor* `new (path: string, noLog?: boolean, ignorePrefixes?: string[], builtinCommands?: ConfigExemplar.includeBuiltinCommands)`
@@ -197,7 +212,7 @@ read -p "" #keeps window open after bot crash
     >- `create (options: djs.ApplicationCommandData): void`
     >- `save (): void`
 - *type* `SupportedInteractions`
-- *type* `CommandContext <type>`
+- *type* `CommandContext <CmdType>`
 - *type* `AnyContext`
 - *type* `InteractionContext <SupportedInteractions>`
 - *type* `SlashCommandContext`
@@ -208,8 +223,6 @@ read -p "" #keeps window open after bot crash
 - *type* `ConfigExemplar`
 - *type* `KnownRuntimeProperties`
 - *iternal* *async* `expandDirs (path: string): Promise<string[]>`
-- *iternal* *async* `templateEmbedReply (...params): Promise<void>`
-- *iternal* *async* `templateEmbedEditReply (...params): Promise<void>`
 - *iternal* *class* `AutoCommandHelp`
     >- runtime: `config`
     >- *field* `pages: Map<string, string>`
