@@ -25,6 +25,7 @@ export * from "./Types/SupportedInteractions";
 export * from "./Utils/Dirlib";
 export * from "./Utils/EmbedTemplates";
 export * from "./Utils/RandomEmbedFooter";
+export * from "./Utils/SelectMenuDefaults";
 export * from "./Utils/SmartFetch";
 
 //other eds packages
