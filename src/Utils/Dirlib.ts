@@ -60,5 +60,3 @@ export async function expandDirs(path: string): Promise<string[]>
 
     return buffer;
 }
-
-export default expandDirs;
