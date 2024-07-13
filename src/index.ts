@@ -8,6 +8,7 @@ export * from "./Classes/Client";
 export * from "./Classes/ComponentManager";
 export * from "./Classes/ContextFactory";
 export * from "./Classes/Handler";
+export * from "./Classes/InteractivePanel";
 export * from "./Classes/Loader";
 export * from "./Classes/SlashCommandsManager";
 
