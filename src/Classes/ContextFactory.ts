@@ -17,9 +17,10 @@ export class ContextFactory
 
     public createTextContext(message: Message): eds.TextContext
     {
-        const args = message.content.slice(this.runtime.config.prefix?.length ?? 0).trim().split(/\s+/g).slice(1); 
+        const args = message.content.slice(this.runtime.config.prefix?.length ?? 0).trim().split(/\s+/g);
         const ctx: eds.TextContext = Object.assign(message, {
-            args,
+            args: args.slice(1),
+            commandName: args[0],
             contextType: "text" as const,
             user: message.author,
             universalReply: (...data: Parameters<eds.AnyContext["universalReply"]>) => _universalReplyImpl(message, ...data),

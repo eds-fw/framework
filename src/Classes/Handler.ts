@@ -92,7 +92,7 @@ export class Handler
                 if (this.runtime.config.prefix)
                 {
                     if (message.content.toLowerCase().startsWith(this.runtime.config.prefix))
-                    if (k.includes(context.args[0]))
+                    if (k.includes(context.commandName))
                     {
                         try {
                             const file: eds.CommandFile<"text"> = require(v).default || require(v);

@@ -3,7 +3,7 @@ import { SupportedInteractions } from "./SupportedInteractions";
 import { quickEmbed } from "../Utils/QuickEmbed";
 
 export type ContextType = "text" | "slash" | "interaction"// | "message-context-menu" | "user-context-menu";
-export type TextContext = Message<boolean> & ContextOverrides & { args: string[]; contextType: "text" };
+export type TextContext = Message<boolean> & ContextOverrides & { args: string[]; commandName: string; contextType: "text" };
 export type InteractionContext<Interaction extends SupportedInteractions = SupportedInteractions> = Interaction & ContextOverrides & { contextType: "interaction" };
 export type SlashContext = Omit<InteractionContext<ChatInputCommandInteraction>, "contextType"> & { contextType: "slash" };
 export type AnyContext = TextContext | InteractionContext | SlashContext;
