@@ -23,6 +23,7 @@ export * from "./Types/Context";
 export * from "./Types/SupportedInteractions";
 
 export * from "./Utils/Dirlib";
+export * from "./Utils/GetAvatar";
 export * from "./Utils/QuickEmbed";
 export * from "./Utils/RandomEmbedFooter";
 export * from "./Utils/SelectMenuDefaults";
