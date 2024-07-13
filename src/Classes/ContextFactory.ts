@@ -17,7 +17,7 @@ export class ContextFactory
 
     public createTextContext(message: Message): eds.TextContext
     {
-        const args = message.content.slice(this.runtime.config.prefix?.length ?? 0).trim().split(/\s+/g).slice(1);
+        const args = message.content.slice(this.runtime.config.prefix?.length ?? 0).trim().split(/\s+/g).slice(1); 
         const ctx: eds.TextContext = Object.assign(message, {
             args,
             contextType: "text" as const,
