@@ -113,5 +113,5 @@ function _clearOriginal(arr: unknown[])
 
 function _isCtx(sth: unknown): sth is AnyContext
 {
-    return (sth != null && typeof sth == "object" && "__contextType" in sth && "universal" in sth);
+    return (sth != null && typeof sth == "object" && "contextType" in sth && "universal" in sth);
 }
