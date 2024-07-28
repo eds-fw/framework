@@ -11,6 +11,6 @@ export type AnyContext = TextContext | InteractionContext | SlashContext;
 interface ContextOverrides
 {
     get user(): User;
-    universalReply(message: string | (BaseMessageOptions & { maybeEphemeral?: boolean })): Promise<Message>;
-    quickReply(maybeEphemeral: boolean, ...message: Parameters<typeof quickEmbed>): Promise<Message>;
+    universalReply(message: string | (BaseMessageOptions & { maybeEphemeral?: boolean })): Promise<Message | undefined>;
+    quickReply(maybeEphemeral: boolean, ...message: Parameters<typeof quickEmbed>): Promise<Message | undefined>;
 }

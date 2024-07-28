@@ -56,11 +56,11 @@ export class ContextFactory
 function _universalReplyImpl(
     target: Message | SupportedInteractions,
     message: string | (BaseMessageOptions & { maybeEphemeral?: boolean })
-): Promise<Message> {
+): Promise<Message | undefined> {
     const bakedMessage = (typeof message == "string") ? { content: message } : message;
     if ("token" in target)
-        return target.reply({ ...bakedMessage, ephemeral: bakedMessage.maybeEphemeral, fetchReply: true });
-    else return target.reply({ ...bakedMessage });
+        return target.reply({ ...bakedMessage, ephemeral: bakedMessage.maybeEphemeral, fetchReply: true }).catch(err => void console.error(err));
+    else return target.reply({ ...bakedMessage }).catch(err => void console.error(err));
 }
 
 function _quickReplyImpl(
