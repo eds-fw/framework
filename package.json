@@ -9,7 +9,7 @@
     "TS_build": "rm -r ./dist; npx tsc"
   },
   "dependencies": {
-    "@eds-fw/storage": "^1.1.0",
+    "@eds-fw/storage": "^2.0.0",
     "@eds-fw/timeparser": "^2.1.1",
     "@eds-fw/utils": "^2.0.2",
     "array-equal": "^1.0.0",
