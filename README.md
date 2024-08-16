@@ -54,7 +54,7 @@ npm i @eds-fw/framework
 //'runtime' is a 'global' object equivalent
 import { eds } from "@eds-fw/framework";
 import { ApplicationCommandType } from "discord.js";
-const { token } = require("../vault.json");
+import { token } from "../vault.json" with { "type": "json" };
 const config: eds.ConfigExemplar = {
     token,
     intents: "all",
@@ -100,7 +100,7 @@ eds.createButton({
     );
 })
 
-export = {
+export default {
     async run(context)
     {
         await context.reply(
