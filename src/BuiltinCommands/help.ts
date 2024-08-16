@@ -32,7 +32,7 @@ eds.createMenu({
     }
 }, {});
 
-export = {
+export default {
     async run(ctx) {
         const roles = getRoles(ctx);
         await ctx.reply({

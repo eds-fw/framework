@@ -32,7 +32,6 @@ export * from "./Utils/SmartFetch";
 
 //other eds packages
 export * from "@eds-fw/utils";
-export * from "@eds-fw/timeparser";
 export * from "@eds-fw/storage";
 
 export default __this;

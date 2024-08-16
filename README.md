@@ -154,7 +154,6 @@ read -p "" #keeps window open after bot crash
 
 # API
 - *module* `@eds-fw/utils`
-- *module* `@eds-fw/timeparser`
 - *module* `@eds-fw/storage`
 - *module* `@eds-fw/fetch`
 - `createBot (config: ConfigExemplar): KnownRuntimeProperties` *(lazyConstructor)*
