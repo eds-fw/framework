@@ -1,7 +1,7 @@
 import { sep } from "path";
-import { CommandFile, CommandHelpInfo, ConfigExemplar, type eds, expandDirs } from "..";
-import * as messages from "../errors";
-import { AutoCommandHelp } from "./AutoCommandHelp";
+import { CommandFile, CommandHelpInfo, ConfigExemplar, type eds, expandDirs } from "../index.js";
+import * as messages from "../errors.js";
+import { AutoCommandHelp } from "./AutoCommandHelp.js";
 
 /**
  * Text and slash command loader.

@@ -1,6 +1,6 @@
 import { includesAll } from "@eds-fw/utils";
-import { eds } from ".";
-import { assertions } from "./errors";
+import { eds } from "./index.js";
+import { assertions } from "./errors.js";
 
 class _RuntimeStorage
 {

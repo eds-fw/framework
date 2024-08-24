@@ -1,7 +1,7 @@
 import { ApplicationCommandData } from "discord.js";
 import equal from "fast-deep-equal";
-import { runtimeStorage } from "..";
-import { eds_errors } from "../errors";
+import { runtimeStorage } from "../index.js";
+import { eds_errors } from "../errors.js";
 
 /**
  * Creates a slash command when starting the bot.

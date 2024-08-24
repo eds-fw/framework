@@ -1,4 +1,4 @@
-import { type eds, runtimeStorage, Client, ComponentManager, ContextFactory, Handler, Loader, SlashCommandsManager } from "..";
+import { type eds, runtimeStorage, Client, ComponentManager, ContextFactory, Handler, Loader, SlashCommandsManager } from "../index.js";
 
 export function createBot(config: eds.ConfigExemplar): eds.KnownRuntimeProperties
 {

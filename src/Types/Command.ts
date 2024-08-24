@@ -1,5 +1,5 @@
-import { MessageContextMenuCommandInteraction, UserContextMenuCommandInteraction } from "discord.js";
-import { ContextType, InteractionContext, SlashContext, TextContext } from "./Context";
+import type { MessageContextMenuCommandInteraction, UserContextMenuCommandInteraction } from "discord.js";
+import type { ContextType, InteractionContext, SlashContext, TextContext } from "./Context.d.ts";
 
 export type CommandType = Exclude<ContextType, "interaction">;
 

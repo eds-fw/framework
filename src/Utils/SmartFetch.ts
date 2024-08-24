@@ -1,6 +1,6 @@
 import { wait } from "@eds-fw/utils";
 import type { APIGuildMember, APIInteractionGuildMember, CachedManager, Guild, GuildBasedChannel, GuildChannelManager, GuildManager, GuildMember, GuildMemberManager, Message, MessageManager, Role, RoleManager, Snowflake, User, UserManager } from "discord.js";
-import { AnyContext } from "../Types/Context";
+import { AnyContext } from "../Types/Context.js";
 const LIMIT_FETCHES = 5;
 const LIMIT_COOLDOWN = 250; //ms
 

@@ -1,5 +1,5 @@
 import type { ApplicationCommandData } from "discord.js";
-import { runtimeStorage } from "..";
+import { runtimeStorage } from "../index.js";
 
 export function createSlashCommand(options: ApplicationCommandData): void
 {

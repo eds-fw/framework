@@ -1,5 +1,5 @@
 import type { ClientOptions, GatewayIntentsString } from "discord.js";
-import { InteractionContext, AnyContext, SlashContext, TextContext } from "./Context";
+import type { InteractionContext, AnyContext, SlashContext, TextContext } from "./Context.d.ts";
 
 export interface ConfigExemplar
 {

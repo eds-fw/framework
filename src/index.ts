@@ -1,34 +1,34 @@
-export * as eds from ".";
-import { eds as __this } from ".";
+export * as eds from "./index.js";
+import { eds as __this } from "./index.js";
 
-export * from "./runtimeStorage";
+export * from "./runtimeStorage.js";
 
-export * from "./Classes/AutoCommandHelp";
-export * from "./Classes/Client";
-export * from "./Classes/ComponentManager";
-export * from "./Classes/ContextFactory";
-export * from "./Classes/Handler";
-export * from "./Classes/InteractivePanel";
-export * from "./Classes/Loader";
-export * from "./Classes/SlashCommandsManager";
+export * from "./Classes/AutoCommandHelp.js";
+export * from "./Classes/Client.js";
+export * from "./Classes/ComponentManager.js";
+export * from "./Classes/ContextFactory.js";
+export * from "./Classes/Handler.js";
+export * from "./Classes/InteractivePanel.js";
+export * from "./Classes/Loader.js";
+export * from "./Classes/SlashCommandsManager.js";
 
-export * from "./LazyConstructors/createBot";
-export * from "./LazyConstructors/createComponent";
-export * from "./LazyConstructors/createDB";
-export * from "./LazyConstructors/createSlashCommand";
-export * from "./LazyConstructors/startBot";
+export * from "./LazyConstructors/createBot.js";
+export * from "./LazyConstructors/createComponent.js";
+export * from "./LazyConstructors/createDB.js";
+export * from "./LazyConstructors/createSlashCommand.js";
+export * from "./LazyConstructors/startBot.js";
 
-export * from "./Types/Command";
-export * from "./Types/Config";
-export * from "./Types/Context";
-export * from "./Types/SupportedInteractions";
+export * from "./Types/Command.js";
+export * from "./Types/Config.js";
+export * from "./Types/Context.js";
+export * from "./Types/SupportedInteractions.js";
 
-export * from "./Utils/Dirlib";
-export * from "./Utils/GetAvatar";
-export * from "./Utils/QuickEmbed";
-export * from "./Utils/RandomEmbedFooter";
-export * from "./Utils/SelectMenuDefaults";
-export * from "./Utils/SmartFetch";
+export * from "./Utils/Dirlib.js";
+export * from "./Utils/GetAvatar.js";
+export * from "./Utils/QuickEmbed.js";
+export * from "./Utils/RandomEmbedFooter.js";
+export * from "./Utils/SelectMenuDefaults.js";
+export * from "./Utils/SmartFetch.js";
 
 //other eds packages
 export * from "@eds-fw/utils";

@@ -1,6 +1,6 @@
-import { BaseMessageOptions, ChatInputCommandInteraction, Message, User } from "discord.js";
-import { SupportedInteractions } from "./SupportedInteractions";
-import { quickEmbed } from "../Utils/QuickEmbed";
+import type { BaseMessageOptions, ChatInputCommandInteraction, Message, User } from "discord.js";
+import type { SupportedInteractions } from "./SupportedInteractions.d.ts";
+import type { quickEmbed } from "../Utils/QuickEmbed.d.ts";
 
 export type ContextType = "text" | "slash" | "interaction"// | "message-context-menu" | "user-context-menu";
 export type TextContext = Message<boolean> & ContextOverrides & { args: string[]; commandName: string; contextType: "text" };

@@ -1,4 +1,4 @@
-import * as __this from "./errors";
+import * as __this from "./errors.js";
 
 export const Handler = {
     runCommandError:

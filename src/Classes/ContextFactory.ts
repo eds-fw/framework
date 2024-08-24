@@ -1,6 +1,6 @@
 import { BaseMessageOptions, ChatInputCommandInteraction, Message } from "discord.js";
-import { SupportedInteractions, eds, quickEmbed } from "..";
-import { runtimeStorage } from "../runtimeStorage";
+import { SupportedInteractions, eds, quickEmbed } from "../index.js";
+import { runtimeStorage } from "../runtimeStorage.js";
 
 /**
  * Creates a context from message/interaction

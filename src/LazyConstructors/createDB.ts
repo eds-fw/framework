@@ -1,4 +1,4 @@
-import { runtimeStorage, type eds, Storage } from "..";
+import { runtimeStorage, type eds, Storage } from "../index.js";
 
 /**
  * @deprecated

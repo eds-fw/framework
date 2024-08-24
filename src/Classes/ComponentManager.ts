@@ -11,7 +11,7 @@ import {
     UserSelectMenuInteraction
 } from "discord.js";
 
-import { type eds } from "..";
+import { type eds } from "../index.js";
 
 type MapVal<R, I> = {
     run: R;

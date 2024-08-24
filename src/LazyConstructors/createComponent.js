@@ -1,10 +1,10 @@
-const { runtimeStorage, ComponentManager } = require("..");
+import { runtimeStorage, ComponentManager } from "../index.js";
 
 /** @type {ComponentManager["createButton"]} */
-exports.createButton = (...params) => runtimeStorage.componentManager.createButton(...params);
+export const createButton = (...params) => runtimeStorage.componentManager.createButton(...params);
 
 /** @type {ComponentManager["createMenu"]} */
-exports.createMenu = (...params) => runtimeStorage.componentManager.createMenu(...params);
+export const createMenu = (...params) => runtimeStorage.componentManager.createMenu(...params);
 
 /** @type {ComponentManager["createModal"]} */
-exports.createModal = (...params) => runtimeStorage.componentManager.createModal(...params);
+export const createModal = (...params) => runtimeStorage.componentManager.createModal(...params);

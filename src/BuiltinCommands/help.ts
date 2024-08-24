@@ -1,5 +1,5 @@
 import { ActionRowData, ApplicationCommandType, ComponentType, EmbedData, MessageActionRowComponentData } from "discord.js";
-import { eds, runtimeStorage } from "..";
+import { eds, runtimeStorage } from "../index.js";
 
 const config = runtimeStorage.config;
 const loader = runtimeStorage.loader;

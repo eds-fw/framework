@@ -3,7 +3,7 @@ import {
     BaseMessageOptions,
     JSONEncodable
 } from "discord.js";
-import { getRandomFooterEmbed, runtimeStorage } from "..";
+import { getRandomFooterEmbed, runtimeStorage } from "../index.js";
 
 export function quickEmbed(
     title?: string,

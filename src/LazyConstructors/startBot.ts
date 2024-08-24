@@ -1,4 +1,4 @@
-import { type eds, runtimeStorage } from "..";
+import { type eds, runtimeStorage } from "../index.js";
 
 export async function startBot(): Promise<void>
 {

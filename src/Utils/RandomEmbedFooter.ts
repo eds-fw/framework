@@ -1,6 +1,6 @@
 import { APIEmbedFooter, EmbedFooterData } from "discord.js";
-import { arrRandom } from "..";
-import { runtimeStorage } from "../runtimeStorage";
+import { arrRandom } from "../index.js";
+import { runtimeStorage } from "../runtimeStorage.js";
 
 export function getRandomFooterEmbed()
 {

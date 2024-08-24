@@ -1,4 +1,4 @@
-import { type eds, runtimeStorage } from "..";
+import { type eds, runtimeStorage } from "../index.js";
 
 type CommandType = "slash" | "text" | "nonPrefixed";
 
