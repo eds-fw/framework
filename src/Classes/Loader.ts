@@ -42,7 +42,7 @@ export class Loader
     public async load(): Promise<void>
     {
         const paths: string[] = (await expandDirs(this._path)).filter($ => $.endsWith('.js'));
-        paths.forEach(path => {
+        paths.forEach(async path => {
             let file: CommandFile<"text" | "slash">;
 
             if (this._checkIgnorePrefix(path))
@@ -54,7 +54,7 @@ export class Loader
             }
 
             try {
-                file = require(path).default || require(path);
+                file = (await import(path)).default || await import(path);
             } catch (err) {
                 throw new Error(messages.Loader.loadFileError(path, err));
             }
