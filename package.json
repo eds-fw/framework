@@ -19,7 +19,7 @@
     "tslib": "^2.6.1"
   },
   "name": "@eds-fw/framework",
-  "version": "5.0.1",
+  "version": "5.1.0",
   "description": "Simply TypeScript framework for your discord.js bot",
   "main": "dist/index.js",
   "repository": {
