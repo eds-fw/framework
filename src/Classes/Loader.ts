@@ -17,12 +17,16 @@ export class Loader
     public commandHelp: AutoCommandHelp;
 
     public constructor(
-    /** Path to the command folder.
-     * 
-     * **WARNING!** The path is based on your main file that you are running
-     */
-    path: string, private noLog: boolean = false, private ignorePrefixes: string[] = ['#'], private builtinCommands: ConfigExemplar["includeBuiltinCommands"])
-    {
+        /** Path to the command folder.
+         * 
+         * **WARNING!** The path is based on your main file that you are running
+         */
+        path: string,
+        private noLog: boolean = false,
+        private ignorePrefixes: string[] = [],
+        private loadPrefixes: string[] = [],
+        private builtinCommands: ConfigExemplar["includeBuiltinCommands"]
+    ) {
         if (path.startsWith('/') || path.startsWith('\\'))
             this._path = process.cwd() + path.replace(/(\/|\\)/g, sep);
         else 
@@ -45,7 +49,7 @@ export class Loader
         paths.forEach(async path => {
             let file: CommandFile<"text" | "slash">;
 
-            if (this._checkIgnorePrefix(path))
+            if (this._checkIgnorePrefix(path) || !this._checkLoadPrefix(path))
             {
                 if (!this.noLog)
                     console.log(messages.Loader.templateLoadCommandSkipped(path));
@@ -160,7 +164,17 @@ export class Loader
 
     private _checkIgnorePrefix(path: string): boolean
     {
-        return new RegExp(`^${this.ignorePrefixes.join('|^')}`, 'gi').test(path.split(sep).at(-1) ?? '');
+        const filepath = path.split(sep).at(-1) ?? '';
+        return this.ignorePrefixes.length > 0
+            ? this.ignorePrefixes.map($ => filepath.startsWith($)).includes(true)
+            : false;
+    }
+    private _checkLoadPrefix(path: string): boolean
+    {
+        const filepath = path.split(sep).at(-1) ?? '';
+        return this.loadPrefixes.length > 0
+            ? this.loadPrefixes.map($ => filepath.startsWith($)).includes(true)
+            : true;
     }
     private _clear(path: string): void
     {

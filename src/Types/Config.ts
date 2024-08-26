@@ -84,13 +84,18 @@ export interface ConfigExemplar
      * Prefix (for text commands)
      */
     prefix?: string;
-//==========
-//LOADER OPTIONS
+//=========
     /**
-     * Do not load files start with ...
-     * @default ["#"]
+     * Do not load files starting with ...
+     * @default []
+     */ 
+    doNotLoadFilesStartingWith?: string[];
+    /**
+     * Load ONLY files starting with ...
+     * Ignores `doNotLoadFilesStartingWith`
+     * @default []
      */
-    doNotLoadFilesStartsWith?: string[];
+    onlyLoadFilesStartingWith?: string[]
     /**
      * Add built-in bot commands: `help`, `devtools`
      * @default { help: true, devtools: true }
