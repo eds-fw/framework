@@ -10,10 +10,10 @@ import { AutoCommandHelp } from "./AutoCommandHelp.js";
 export class Loader
 {
     private _path: string;
-    private readonly _CallMap = new Map<string[], eds.CommandExecutor>();
+    private readonly _CallMap = new Map<string, eds.CommandExecutor>();
     private readonly _SlashCallMap = new Map<string, eds.CommandExecutor>();
     private _AlwaysCallMap: eds.CommandExecutor[] = [];
-    private readonly _HelpInfoMap = new Map<string[], eds.CommandHelpInfo>();
+    private readonly _HelpInfoMap = new Map<string, eds.CommandHelpInfo>();
 
     public commandHelp: AutoCommandHelp;
 
@@ -47,7 +47,7 @@ export class Loader
     public async load(): Promise<void>
     {
         const paths: string[] = (await expandDirs(this._path)).filter($ => $.endsWith('.js'));
-        paths.forEach(async path => {
+        Promise.all(paths.map(async path => {
             let file: eds.CommandFile<"text" | "slash">;
 
             if (this._checkIgnorePrefix(path) || !this._checkLoadPrefix(path))
@@ -95,7 +95,7 @@ export class Loader
             }
             else if (!this.noLog)
                 console.log(messages.Loader.templateLoadCommandSuccessSlash(file?.info?.name));
-        });
+        }));
 
         if (!this.noLog)
             console.log(`==============================`);
@@ -120,7 +120,7 @@ export class Loader
     {
         if (data.info.type == "slash")
         {
-            this._HelpInfoMap.set([data.info.name], {
+            this._HelpInfoMap.set(data.info.name, {
                 name:           data.info?.name,
                 type:           data.info.type,
                 usage:          data.info?.usage             ?? "NO_USAGE",
@@ -140,11 +140,9 @@ export class Loader
                 let aliases: string[] | null = [];
                 aliases.push(data.info.name);
     
-                if (data.info?.aliases) aliases = aliases.concat(data.info.aliases);
+                this._CallMap.set(data.info.name, data.run);
     
-                this._CallMap.set(aliases, data.run);
-    
-                this._HelpInfoMap.set(aliases, {
+                this._HelpInfoMap.set(data.info.name, {
                     name:           data.info?.name,
                     type:           data.info.type,
                     usage:          data.info?.usage         ?? "NO_USAGE",

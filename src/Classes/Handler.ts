@@ -15,9 +15,9 @@ import * as errors from "../errors.js";
 
 interface _initMaps
 {
-    CallMap:        Map<string[], eds.CommandExecutor>;
+    CallMap:        Map<string, eds.CommandExecutor>;
     AlwaysCallMap:  eds.CommandExecutor[];
-    HelpInfoMap:    Map<string[], eds.CommandHelpInfo>;
+    HelpInfoMap:    Map<string, eds.CommandHelpInfo>;
 }
 
 /**
@@ -88,13 +88,13 @@ export class Handler
         if (this.runtime.config.prefix)
         {
             if (message.content.toLowerCase().startsWith(this.runtime.config.prefix))
-            maps.CallMap.forEach(async (executor, cmdAliases) => {
+            maps.CallMap.forEach(async (executor, cmdName) => {
                 if (this.runtime.config.prefix)
                 {
-                    const cmdInfo = maps.HelpInfoMap.get(cmdAliases);
+                    const cmdInfo = maps.HelpInfoMap.get(cmdName);
                     if (!cmdInfo) return;
                     if (message.content.toLowerCase().startsWith(this.runtime.config.prefix))
-                    if (cmdAliases.includes(context.commandName))
+                    if (cmdName.includes(context.commandName))
                     {
                         try {
                             if (!cmdInfo.noCheckAccess && !this._checkAccess(context, cmdInfo.allowedRoles))
@@ -117,7 +117,7 @@ export class Handler
         this.runtime.loader.getSlashCallMap.forEach((executor, cmdName) => {
             if (cmdName == interaction.commandName)
             {
-                const cmdInfo = maps.HelpInfoMap.get([cmdName]);
+                const cmdInfo = maps.HelpInfoMap.get(cmdName);
                 if (!cmdInfo) return;
                 if (!cmdInfo.noCheckAccess && !this._checkAccess(context, cmdInfo.allowedRoles))
                     return this.runtime.config.noAccess?.(context);
@@ -129,15 +129,18 @@ export class Handler
 
     private _handleInteractionButton(interaction: ButtonInteraction)
     {
-        this.runtime.componentManager.getButtonsMap.forEach(async (v, k) => {
-            if (k == interaction.customId)
+        this.runtime.componentManager.getButtonsMap.forEach(async (btnData, btnName) => {
+            if (btnName == interaction.customId)
             {
+                const btnInfo = btnData.info;
+                const executor = btnData.run;
                 const context = this.runtime.contextFactory.createInteractionContext(interaction);
-                if (!v.info.noCheckAccess && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+                if (!btnInfo.noCheckAccess && !this._checkAccess(context, btnInfo.allowedRoles))
+                    return this.runtime.config.noAccess?.(context);
                 
-                v.run(context, v.info)?.catch(console.error);
+                executor(context, btnInfo)?.catch(console.error);
 
-                if (!v.info.noLog)
+                if (!btnInfo.noLog)
                     this.runtime.config.logInteraction?.(context);
             }
         });
@@ -145,46 +148,54 @@ export class Handler
 
     private _handleInteractionMenu(interaction: AnySelectMenuInteraction)
     {
-        this.runtime.componentManager.getMenusMap.forEach(async (v, k) => {
-            if (k != interaction.customId) return;
+        this.runtime.componentManager.getMenusMap.forEach(async (menuData, menuName) => {
+            const menuInfo = menuData.info;
+            const executor = menuData.run;
+            if (menuName != interaction.customId) return;
             const context = this.runtime.contextFactory.createInteractionContext(interaction);
-            v.info.onSelect?.(context, v.info);
+            menuInfo.onSelect?.(context, menuInfo);
 
             if (interaction.isStringSelectMenu())
-                return void Object.keys(v.run).forEach(async val => {
+                return void Object.keys(executor).forEach(async val => {
                     if (interaction.values.includes(val))
                     {
-                        if (typeof v.run != "object") return;
-                        if (!v.info.noCheckAccess && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
-                        v.run[val](context as eds.InteractionContext<StringSelectMenuInteraction>, v.info)?.catch(console.error);
-                        if (!v.info.noLog)
+                        if (typeof executor != "object") return;
+                        if (!menuInfo.noCheckAccess && !this._checkAccess(context, menuInfo.allowedRoles))
+                            return this.runtime.config.noAccess?.(context);
+                        executor[val](context as eds.InteractionContext<StringSelectMenuInteraction>, menuInfo)
+                            ?.catch(console.error);
+                        if (!menuInfo.noLog)
                             this.runtime.config.logInteraction?.(context);
                     }
                 });
-            if (interaction.isUserSelectMenu() && v.info.type != "user") return;
-            if (interaction.isChannelSelectMenu() && v.info.type != "channel") return;
-            if (interaction.isMentionableSelectMenu() && v.info.type != "mentionable") return;
-            if (interaction.isRoleSelectMenu() && v.info.type != "role") return;
+            if (interaction.isUserSelectMenu() && menuInfo.type != "user") return;
+            if (interaction.isChannelSelectMenu() && menuInfo.type != "channel") return;
+            if (interaction.isMentionableSelectMenu() && menuInfo.type != "mentionable") return;
+            if (interaction.isRoleSelectMenu() && menuInfo.type != "role") return;
             
-            if (typeof v.run != "function") return;
-            if (!v.info.noCheckAccess && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+            if (typeof executor != "function") return;
+            if (!menuInfo.noCheckAccess && !this._checkAccess(context, menuInfo.allowedRoles))
+                return this.runtime.config.noAccess?.(context);
 
-            v.run(context as any, v.info)?.catch(console.error);
-            if (!v.info.noLog)
+            executor(context as any, menuInfo)?.catch(console.error);
+            if (!menuInfo.noLog)
                 this.runtime.config.logInteraction?.(context);
         });
     }
 
     private _handleInteractionModal(interaction: ModalSubmitInteraction)
     {
-        this.runtime.componentManager.getModalsMap.forEach(async (v, k) => {
-            if (k == interaction.customId)
+        this.runtime.componentManager.getModalsMap.forEach(async (modalData, modalName) => {
+            const modalInfo = modalData.info;
+            const executor = modalData.run;
+            if (modalName == interaction.customId)
             {
                 const context = this.runtime.contextFactory.createInteractionContext(interaction);
-                if (!v.info.noCheckAccess && !this._checkAccess(context, v.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+                if (!modalInfo.noCheckAccess && !this._checkAccess(context, modalInfo.allowedRoles))
+                    return this.runtime.config.noAccess?.(context);
 
-                v.run(context, interaction.fields, v.info);
-                if (!v.info.noLog)
+                executor(context, interaction.fields, modalInfo);
+                if (!modalInfo.noLog)
                     this.runtime.config.logInteraction?.(context);
             }
         });
@@ -192,7 +203,7 @@ export class Handler
 
     private _handleMessageContextMenu(interaction: MessageContextMenuCommandInteraction)
     {
-        this.runtime.componentManager
+        //Future
     }
 }
 
