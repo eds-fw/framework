@@ -10,13 +10,13 @@ import {
     ModalSubmitInteraction,
     StringSelectMenuInteraction
 } from "discord.js";
-import { AnyContext, type eds, runtimeStorage, hasRole } from "../index.js";
+import { eds, runtimeStorage } from "../index.js";
 import * as errors from "../errors.js";
 
 interface _initMaps
 {
-    CallMap:        Map<string[], string>;
-    AlwaysCallMap:  string[];
+    CallMap:        Map<string[], eds.CommandExecutor>;
+    AlwaysCallMap:  eds.CommandExecutor[];
     HelpInfoMap:    Map<string[], eds.CommandHelpInfo>;
 }
 
@@ -56,7 +56,7 @@ export class Handler
 
         this.runtime.client.on("interactionCreate", async interaction => {
             if (interaction.type == InteractionType.ApplicationCommand)
-                this._handleInteractionCommand(interaction);
+                this._handleInteractionCommand(interaction, maps);
             else if (interaction.type == InteractionType.MessageComponent)
             {
                 if (interaction.isButton())
@@ -69,14 +69,14 @@ export class Handler
         });
     }
 
-    private _checkAccess(ctx: AnyContext, roles: string[] | undefined)
+    private _checkAccess(ctx: eds.AnyContext, roles: string[] | undefined)
     {
         if (!roles || roles.length == 0) return true;
         if (!ctx.member) return false;
 
         let result = false;
         for (const role of roles)
-            if (hasRole(ctx.member)(role))
+            if (eds.hasRole(ctx.member)(role))
                 result = true;
         return result;
     }
@@ -84,23 +84,23 @@ export class Handler
     private _handleMessage(message: Message, maps: _initMaps)
     {
         const context = this.runtime.contextFactory.createTextContext(message);
-        maps.AlwaysCallMap.forEach(path => require(path).default?.run(context) || require(path).run(context));
+        maps.AlwaysCallMap.forEach(executor => executor(context).catch(console.error));
         if (this.runtime.config.prefix)
         {
             if (message.content.toLowerCase().startsWith(this.runtime.config.prefix))
-            maps.CallMap.forEach(async (v, k) => {
+            maps.CallMap.forEach(async (executor, cmdAliases) => {
                 if (this.runtime.config.prefix)
                 {
+                    const cmdInfo = maps.HelpInfoMap.get(cmdAliases);
+                    if (!cmdInfo) return;
                     if (message.content.toLowerCase().startsWith(this.runtime.config.prefix))
-                    if (k.includes(context.commandName))
+                    if (cmdAliases.includes(context.commandName))
                     {
                         try {
-                            const file: eds.CommandFile<"text"> = require(v).default || require(v);
-                            if (!file.info.noCheckAccess && !this._checkAccess(context, file.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+                            if (!cmdInfo.noCheckAccess && !this._checkAccess(context, cmdInfo.allowedRoles))
+                                return this.runtime.config.noAccess?.(context);
 
-                            file.run(context)?.catch(console.error);
-                            if (!file.pragmaNoLog)
-                                this.runtime.config.logTextCommand?.(context);
+                            executor(context)?.catch(console.error);
                         } catch (err) {
                             return console.error(errors.Handler.runCommandError(err));
                         }
@@ -110,19 +110,19 @@ export class Handler
         }
     }
 
-    private _handleInteractionCommand(interaction: Interaction)
+    private _handleInteractionCommand(interaction: Interaction, maps: _initMaps)
     {
         if (!(interaction instanceof ChatInputCommandInteraction)) return;
         const context = this.runtime.contextFactory.createSlashContext(interaction);
-        this.runtime.loader.getSlashCallMap.forEach((v, k) => {
-            if (k == interaction.commandName)
+        this.runtime.loader.getSlashCallMap.forEach((executor, cmdName) => {
+            if (cmdName == interaction.commandName)
             {
-                const file: eds.CommandFile<"slash"> = require(v).default || require(v);
-                if (!file.info.noCheckAccess && !this._checkAccess(context, file.info.allowedRoles)) return this.runtime.config.noAccess?.(context);
+                const cmdInfo = maps.HelpInfoMap.get([cmdName]);
+                if (!cmdInfo) return;
+                if (!cmdInfo.noCheckAccess && !this._checkAccess(context, cmdInfo.allowedRoles))
+                    return this.runtime.config.noAccess?.(context);
 
-                file.run(context)?.catch(console.error);
-                if (!file.pragmaNoLog)
-                    this.runtime.config.logSlashCommand?.(context);
+                executor(context)?.catch(console.error);
             }
         });
     }

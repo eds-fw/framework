@@ -2,15 +2,14 @@ import type { MessageContextMenuCommandInteraction, UserContextMenuCommandIntera
 import type { ContextType, InteractionContext, SlashContext, TextContext } from "./Context.d.ts";
 
 export type CommandType = Exclude<ContextType, "interaction">;
+export type CommandExecutor<T extends CommandType = CommandType> = (ctx: CommandContext<T>) => Promise<unknown>;
 
 export interface CommandFile<T extends CommandType>
 {
     /** Disables this command loading */
     pragmaSkip?: boolean;
-    /** Disables this command logging */
-    pragmaNoLog?: boolean;
     /** Command code */
-    run: (ctx: CommandContext<T>) => any;
+    run: CommandExecutor<T>;
     /** Command info */
     info: CommandInfo<T>;
 }

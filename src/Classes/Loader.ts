@@ -1,5 +1,6 @@
-import { sep } from "path";
-import { CommandFile, CommandHelpInfo, ConfigExemplar, type eds, expandDirs } from "../index.js";
+import { sep, normalize as normalizePath } from "path";
+import { pathToFileURL } from "url";
+import { type eds, expandDirs } from "../index.js";
 import * as messages from "../errors.js";
 import { AutoCommandHelp } from "./AutoCommandHelp.js";
 
@@ -9,10 +10,10 @@ import { AutoCommandHelp } from "./AutoCommandHelp.js";
 export class Loader
 {
     private _path: string;
-    private readonly _CallMap = new Map<string[], string>();
-    private readonly _SlashCallMap = new Map<string, string>();
-    private _AlwaysCallMap: string[] = [];
-    private readonly _HelpInfoMap = new Map<string[], CommandHelpInfo>();
+    private readonly _CallMap = new Map<string[], eds.CommandExecutor>();
+    private readonly _SlashCallMap = new Map<string, eds.CommandExecutor>();
+    private _AlwaysCallMap: eds.CommandExecutor[] = [];
+    private readonly _HelpInfoMap = new Map<string[], eds.CommandHelpInfo>();
 
     public commandHelp: AutoCommandHelp;
 
@@ -25,7 +26,7 @@ export class Loader
         private noLog: boolean = false,
         private ignorePrefixes: string[] = [],
         private loadPrefixes: string[] = [],
-        private builtinCommands: ConfigExemplar["includeBuiltinCommands"]
+        private builtinCommands: eds.ConfigExemplar["includeBuiltinCommands"]
     ) {
         if (path.startsWith('/') || path.startsWith('\\'))
             this._path = process.cwd() + path.replace(/(\/|\\)/g, sep);
@@ -47,7 +48,7 @@ export class Loader
     {
         const paths: string[] = (await expandDirs(this._path)).filter($ => $.endsWith('.js'));
         paths.forEach(async path => {
-            let file: CommandFile<"text" | "slash">;
+            let file: eds.CommandFile<"text" | "slash">;
 
             if (this._checkIgnorePrefix(path) || !this._checkLoadPrefix(path))
             {
@@ -57,7 +58,9 @@ export class Loader
             }
 
             try {
-                file = (await import(path)).default || await import(path);
+                const bakedPath = pathToFileURL(normalizePath(path)).toString();
+                const _imported = await import(bakedPath);
+                file = _imported.default || _imported;
             } catch (err) {
                 throw new Error(messages.Loader.loadFileError(path, err));
             }
@@ -82,7 +85,7 @@ export class Loader
                 return;
             }
 
-            const isSlash = this._loadFile(file, path);
+            const isSlash = this._loadFile(file);
             this.commandHelp.reg(file);
 
             if (!isSlash)
@@ -105,15 +108,15 @@ export class Loader
         if (this.builtinCommands?.help !== false)
         {
             const path = "@eds-fw/framework/dist/BuiltinCommands/help.js";
-            const file = await import(path);
-            this._loadFile(file, path);
+            const file = (await import(path)).default;
+            this._loadFile(file);
             this.commandHelp.reg(file);
             if (!this.noLog)
                 console.log(messages.Loader.templateLoadBuiultinCommand("help"));
         }
     }
 
-    private _loadFile(data: CommandFile<eds.CommandType>, path: string): boolean
+    private _loadFile(data: eds.CommandFile<eds.CommandType>): boolean
     {
         if (data.info.type == "slash")
         {
@@ -127,19 +130,19 @@ export class Loader
                 hidden:         false,
                 allowInDM:      data.info?.allowInDM         ?? false,
             });
-            this._SlashCallMap.set(data.info.name, path);
+            this._SlashCallMap.set(data.info.name, data.run);
             return true;
         }
         else {
-            if (data.info?.nonPrefixed) {
-                this._AlwaysCallMap.push(path);
-            } else {
+            if (data.info?.nonPrefixed)
+                this._AlwaysCallMap.push(data.run);
+            else {
                 let aliases: string[] | null = [];
                 aliases.push(data.info.name);
     
                 if (data.info?.aliases) aliases = aliases.concat(data.info.aliases);
     
-                this._CallMap.set(aliases, path);
+                this._CallMap.set(aliases, data.run);
     
                 this._HelpInfoMap.set(aliases, {
                     name:           data.info?.name,
