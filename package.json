@@ -3,7 +3,7 @@
   "devDependencies": {
     "@types/array-equal": "^1.0.0",
     "@types/node": "^20.5.0",
-    "typescript": "^5.3.0-dev.20230817"
+    "typescript": "5.4"
   },
   "scripts": {
     "TS_watch": "rm -r ./dist; npx tsc --watch",
