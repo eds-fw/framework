@@ -53,7 +53,6 @@ export class Loader
             {
                 if (!this.noLog)
                     console.log(messages.Loader.templateLoadCommandSkipped(path));
-                this._clear(path);
                 return;
             }
 
@@ -67,7 +66,6 @@ export class Loader
             {
                 if (!this.noLog)
                     console.log(messages.Loader.templateLoadCommandSkipped(path));
-                this._clear(path);
                 return;
             }
 
@@ -75,14 +73,12 @@ export class Loader
             {
                 if (!this.noLog)
                     console.log(messages.Loader.templateLoadCommandError(path, "MISSING RUN() EXPORT"));
-                this._clear(path);
                 return;
             }
             if (file?.info === undefined)
             {
                 if (!this.noLog)
                    console.log(messages.Loader.templateLoadCommandError(path, "MISSING OPTIONS EXPORT"));
-                this._clear(path);
                 return;
             }
 
@@ -109,7 +105,7 @@ export class Loader
         if (this.builtinCommands?.help !== false)
         {
             const path = "@eds-fw/framework/dist/BuiltinCommands/help";
-            const file = require(path);
+            const file = await import(path);
             this._loadFile(file, path);
             this.commandHelp.reg(file);
             if (!this.noLog)
@@ -175,10 +171,6 @@ export class Loader
         return this.loadPrefixes.length > 0
             ? this.loadPrefixes.map($ => filepath.startsWith($)).includes(true)
             : true;
-    }
-    private _clear(path: string): void
-    {
-        delete require.cache[require.resolve(path)];
     }
 
     public get getCallMap()
