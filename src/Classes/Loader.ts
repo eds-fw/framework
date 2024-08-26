@@ -104,7 +104,7 @@ export class Loader
             console.log(`==============================`);
         if (this.builtinCommands?.help !== false)
         {
-            const path = "@eds-fw/framework/dist/BuiltinCommands/help";
+            const path = "@eds-fw/framework/dist/BuiltinCommands/help.js";
             const file = await import(path);
             this._loadFile(file, path);
             this.commandHelp.reg(file);
