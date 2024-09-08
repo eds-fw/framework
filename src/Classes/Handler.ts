@@ -102,7 +102,7 @@ export class Handler
 
                             executor(context)?.catch(console.error);
                         } catch (err) {
-                            return console.error(errors.Handler.runCommandError(err));
+                            return errors.Handler.runCommandError(err);
                         }
                     }
                 }

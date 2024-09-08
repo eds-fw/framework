@@ -1,7 +1,7 @@
 import { ApplicationCommandData } from "discord.js";
 import equal from "fast-deep-equal";
 import { runtimeStorage } from "../index.js";
-import { eds_errors } from "../errors.js";
+import * as errors from "../errors.js";
 
 /**
  * Creates a slash command when starting the bot.
@@ -37,7 +37,7 @@ export class SlashCommandsManager
     public save(): void
     {
         if (!this.runtime.client.application)
-            throw new Error(eds_errors.SlashCommandsManager.clientNotReady());
+            throw errors.SlashCommandsManager.clientNotReady();
         this.runtime.client.application.commands.set(Object.values(this._commands));
     }
 }

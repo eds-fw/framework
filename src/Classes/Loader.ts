@@ -53,7 +53,7 @@ export class Loader
             if (this._checkIgnorePrefix(path) || !this._checkLoadPrefix(path))
             {
                 if (!this.noLog)
-                    console.log(messages.Loader.templateLoadCommandSkipped(path));
+                    messages.Loader.templateLoadCommandSkipped(path);
                 return;
             }
 
@@ -62,26 +62,26 @@ export class Loader
                 const _imported = await import(bakedPath);
                 file = _imported.default || _imported;
             } catch (err) {
-                throw new Error(messages.Loader.loadFileError(path, err));
+                throw messages.Loader.loadFileError(path, err);
             }
 
             if (file?.pragmaSkip === true)
             {
                 if (!this.noLog)
-                    console.log(messages.Loader.templateLoadCommandSkipped(path));
+                    messages.Loader.templateLoadCommandSkipped(path);
                 return;
             }
 
             if (file?.run === undefined)
             {
                 if (!this.noLog)
-                    console.log(messages.Loader.templateLoadCommandError(path, "MISSING RUN() EXPORT"));
+                    messages.Loader.templateLoadCommandError(path, "MISSING RUN() EXPORT");
                 return;
             }
             if (file?.info === undefined)
             {
                 if (!this.noLog)
-                   console.log(messages.Loader.templateLoadCommandError(path, "MISSING OPTIONS EXPORT"));
+                   messages.Loader.templateLoadCommandError(path, "MISSING OPTIONS EXPORT");
                 return;
             }
 
@@ -91,10 +91,10 @@ export class Loader
             if (!isSlash)
             {
                 if (!this.noLog)
-                    console.log(messages.Loader.templateLoadCommandSuccessText(file?.info?.name));
+                    messages.Loader.templateLoadCommandSuccessText(file?.info?.name);
             }
             else if (!this.noLog)
-                console.log(messages.Loader.templateLoadCommandSuccessSlash(file?.info?.name));
+                messages.Loader.templateLoadCommandSuccessSlash(file?.info?.name);
         }));
 
         if (!this.noLog)
@@ -112,7 +112,7 @@ export class Loader
             this._loadFile(file);
             this.commandHelp.reg(file);
             if (!this.noLog)
-                console.log(messages.Loader.templateLoadBuiultinCommand("help"));
+                messages.Loader.templateLoadBuiultinCommand("help");
         }
     }
 

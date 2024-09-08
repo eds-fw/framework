@@ -9,13 +9,13 @@ class _RuntimeStorage
     public getAll<T extends Record<string, any>>(...keys: (keyof T)[]): T
     {
         if (!includesAll(Object.keys(this), keys))
-            throw new TypeError(assertions.defectiveRuntimeObjectWithKeys(keys));
+            throw assertions.defectiveRuntimeObjectWithKeys(keys);
         return this as Pick<this, "get" | "getProp" | "set" | "setProp"> & { [K in keyof T]: T[K] };
     }
     public get<V>(key: string): V
     {
         if (!(key in this))
-            throw new TypeError(assertions.defectiveRuntimeObject(key));
+            throw assertions.defectiveRuntimeObject(key);
         return this[key] as V;
     }
     public setAll<T extends object>(values: T): T
