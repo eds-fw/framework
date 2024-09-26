@@ -13,7 +13,7 @@ export class Loader
     private readonly _CallMap = new Map<string, eds.CommandExecutor>();
     private readonly _SlashCallMap = new Map<string, eds.CommandExecutor>();
     private _AlwaysCallMap: eds.CommandExecutor[] = [];
-    private readonly _HelpInfoMap = new Map<string, eds.CommandHelpInfo>();
+    private readonly _HelpInfoMap = new Map<string, Required<eds.CommandHelpInfo>>();
 
     public commandHelp: AutoCommandHelp;
 
@@ -118,18 +118,20 @@ export class Loader
 
     private _loadFile(data: eds.CommandFile<eds.CommandType>): boolean
     {
+        this._HelpInfoMap.set(data.info.name, {
+            name:           data.info.name,
+            type:           data.info.type,
+            usage:          data.info.usage!,
+            usageDocs:      data.info.usageDocs!,
+            desc:           data.info.desc!,
+            category:       data.info.category!,
+            allowInDM:      data.info.allowInDM!,
+            hidden:         data.info.hidden!,
+            allowedRoles:   data.info.allowedRoles!,
+            noCheckAccess:  data.info.noCheckAccess!
+        } satisfies Required<eds.CommandHelpInfo> satisfies eds.CommandHelpInfo);
         if (data.info.type == "slash")
         {
-            this._HelpInfoMap.set(data.info.name, {
-                name:           data.info?.name,
-                type:           data.info.type,
-                usage:          data.info?.usage             ?? "NO_USAGE",
-                usageDocs:      data.info?.usageDocs,
-                desc:           data.info?.desc,
-                category:       data.info?.category,
-                hidden:         false,
-                allowInDM:      data.info?.allowInDM         ?? false,
-            });
             this._SlashCallMap.set(data.info.name, data.run);
             return true;
         }
@@ -141,18 +143,6 @@ export class Loader
                 aliases.push(data.info.name);
     
                 this._CallMap.set(data.info.name, data.run);
-    
-                this._HelpInfoMap.set(data.info.name, {
-                    name:           data.info?.name,
-                    type:           data.info.type,
-                    usage:          data.info?.usage         ?? "NO_USAGE",
-                    usageDocs:      data.info?.usageDocs,
-                    desc:           data.info?.desc,
-                    category:       data.info?.category,
-                    hidden:         data.info?.hidden        ?? false,
-                    allowInDM:      data.info?.allowInDM     ?? false,
-                });
-    
                 aliases = null;
             }
             return false;
