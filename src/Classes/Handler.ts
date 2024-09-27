@@ -94,7 +94,7 @@ export class Handler
                     const cmdInfo = maps.HelpInfoMap.get(cmdName);
                     if (!cmdInfo) return;
                     if (message.content.toLowerCase().startsWith(this.runtime.config.prefix))
-                    if (cmdName.includes(context.commandName))
+                    if (cmdName == context.commandName)
                     {
                         try {
                             if (!cmdInfo.noCheckAccess && !this._checkAccess(context, cmdInfo.allowedRoles))
