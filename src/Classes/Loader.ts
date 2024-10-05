@@ -1,6 +1,6 @@
 import { sep, normalize as normalizePath } from "path";
 import { pathToFileURL } from "url";
-import { type eds, expandDirs } from "../index.js";
+import { type eds, expandDirs, CommandHelpInfo } from "../index.js";
 import * as messages from "../errors.js";
 import { AutoCommandHelp } from "./AutoCommandHelp.js";
 
@@ -118,18 +118,7 @@ export class Loader
 
     private _loadFile(data: eds.CommandFile<eds.CommandType>): boolean
     {
-        this._HelpInfoMap.set(data.info.name, {
-            name:           data.info.name,
-            type:           data.info.type,
-            usage:          data.info.usage!,
-            usageDocs:      data.info.usageDocs!,
-            desc:           data.info.desc!,
-            category:       data.info.category!,
-            allowInDM:      data.info.allowInDM!,
-            hidden:         data.info.hidden!,
-            allowedRoles:   data.info.allowedRoles!,
-            noCheckAccess:  data.info.noCheckAccess!
-        } satisfies Required<eds.CommandHelpInfo> satisfies eds.CommandHelpInfo);
+        this._HelpInfoMap.set(data.info.name, data.info as Required<CommandHelpInfo>);
         if (data.info.type == "slash")
         {
             this._SlashCallMap.set(data.info.name, data.run);

@@ -29,6 +29,7 @@ export interface CommandHelpInfo<T extends CommandType = CommandType>
     allowedRoles?:      string[];
     /** @functional may affect command execution */
     noCheckAccess?:     boolean;
+    noLog?:             boolean;
 }
 
 export interface CommandInfo<T extends CommandType> extends CommandHelpInfo<T>

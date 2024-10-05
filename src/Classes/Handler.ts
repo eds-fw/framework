@@ -101,6 +101,9 @@ export class Handler
                                 return this.runtime.config.noAccess?.(context);
 
                             executor(context)?.catch(console.error);
+
+                            if (!cmdInfo.noLog)
+                                this.runtime.config.logTextCommand?.(context);
                         } catch (err) {
                             return errors.Handler.runCommandError(err);
                         }
@@ -123,6 +126,9 @@ export class Handler
                     return this.runtime.config.noAccess?.(context);
 
                 executor(context)?.catch(console.error);
+
+                if (!cmdInfo.noLog)
+                    this.runtime.config.logSlashCommand?.(context);
             }
         });
     }
