@@ -18,4 +18,4 @@ export type MessageComponentInteraction =
     | ButtonInteraction
     | AnySelectMenuInteraction
     | ModalMessageModalSubmitInteraction
-    | MessageContextMenuCommandInteraction
+    //| MessageContextMenuCommandInteraction

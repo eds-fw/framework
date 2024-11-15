@@ -41,6 +41,6 @@ export interface CommandInfo<T extends CommandType> extends CommandHelpInfo<T>
 export type CommandContext<T extends CommandType> =
     T extends "text"                    ? TextContext
     : T extends "slash"                 ? SlashContext
-    : T extends "message-context-menu"  ? InteractionContext<MessageContextMenuCommandInteraction>
+    //: T extends "message-context-menu"  ? InteractionContext<MessageContextMenuCommandInteraction>
     : T extends "user-context-menu"     ? InteractionContext<UserContextMenuCommandInteraction>
     : never;
